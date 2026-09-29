@@ -1,0 +1,23 @@
+{
+  "network": "mstTestnet",
+  "chainId": 91562037,
+  "rpcUrl": "https://testnetrpc.mstblockchain.com",
+  "deployedAt": "2026-09-28T16:51:27.375Z",
+  "deployer": "0x3730145b513129B6081d753882536871ea454d46",
+  "contracts": {
+    "MVPControlledResolver": {
+      "address": "0x4d1E37b71Dfd3794Efe856E2A9D74D7ed28B9234",
+      "txHash": "0x26b0accb6261e20bf909dac6f36c1dea1983da12b1e1963f733162d5a421a29d",
+      "blockNumber": 5786336,
+      "explorerUrl": "https://testnet.mstscan.com/address/0x4d1E37b71Dfd3794Efe856E2A9D74D7ed28B9234",
+      "txExplorerUrl": "https://testnet.mstscan.com/tx/0x26b0accb6261e20bf909dac6f36c1dea1983da12b1e1963f733162d5a421a29d"
+    },
+    "SwarmMindCore": {
+      "address": "0x92283AA6983D52A8A3bEa714D5FD8cc6Db360276",
+      "txHash": "0xadaf25706183a9f693cbf6c997168a54c9169a11e6ecd069e694548cef4e7b08",
+      "blockNumber": 5786342,
+      "explorerUrl": "https://testnet.mstscan.com/address/0x92283AA6983D52A8A3bEa714D5FD8cc6Db360276",
+      "txExplorerUrl": "https://testnet.mstscan.com/tx/0xadaf25706183a9f693cbf6c997168a54c9169a11e6ecd069e694548cef4e7b08"
+    }
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "ERA5": {
+    "description": "ECMWF ERA5 Reanalysis Atmospheric Data (Hourly)",
+    "officialUrl": "https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5",
+    "regions": {
+      "bengaluru": {
+        "location": "Bengaluru, Karnataka, India",
+        "coordinates": { "lat": 12.9716, "lon": 77.5946 },
+        "timestamp": "2026-09-29T12:00:00Z",
+        "variables": {
+          "2m_temperature_c": 27.4,
+          "surface_pressure_hpa": 918.2,
+          "relative_humidity_pct": 74.0,
+          "10m_wind_speed_kmh": 14.8,
+          "geopotential_height_500hpa_m": 5860,
+          "total_column_water_vapour_kgm2": 44.5,
+          "total_precipitation_mm_forecast": 4.8,
+          "convective_available_potential_energy_jkg": 1180
+        }
+      },
+      "chennai": {
+        "location": "Chennai, Tamil Nadu, India",
+        "coordinates": { "lat": 13.0827, "lon": 80.2707 },
+        "timestamp": "2026-09-29T12:00:00Z",
+        "variables": {
+          "2m_temperature_c": 31.2,
+          "surface_pressure_hpa": 1008.5,
+          "relative_humidity_pct": 81.0,
+          "10m_wind_speed_kmh": 16.5,
+          "geopotential_height_500hpa_m": 5875,
+          "total_column_water_vapour_kgm2": 52.1,
+          "total_precipitation_mm_forecast": 6.2,
+          "convective_available_potential_energy_jkg": 1450
+        }
+      }
+    }
+  },
+  "SEVIR": {
+    "description": "MIT Storm EVent ImagRy (SEVIR) Aligned Radar & Satellite Observations",
+    "officialUrl": "https://github.com/MIT-AI-Accelerator/eie-sevir",
+    "regions": {
+      "bengaluru": {
+        "event_id": "SEVIR_BENGALURU_NILGIRIS_BAND",
+        "satellite_infrared_cloud_top_temp_c": -58.4,
+        "radar_vertically_integrated_liquid_kgm2": 18.5,
+        "cloud_motion_vector": { "direction": "ENE", "speed_kmh": 22.0 },
+        "lightning_flashes_detected": 14,
+        "nowcast_60min_storm_probability_pct": 73.0,
+        "storm_convective_signature": "Deep convective cellular cluster advancing across plateau"
+      },
+      "chennai": {
+        "event_id": "SEVIR_COROMANDEL_COASTAL_FRONT",
+        "satellite_infrared_cloud_top_temp_c": -62.1,
+        "radar_vertically_integrated_liquid_kgm2": 24.2,
+        "cloud_motion_vector": { "direction": "WNW", "speed_kmh": 18.0 },
+        "lightning_flashes_detected": 28,
+        "nowcast_60min_storm_probability_pct": 82.0,
+        "storm_convective_signature": "Marine-origin convective band intersecting coastal sea-breeze"
+      }
+    }
+  },
+  "WeatherBench": {
+    "description": "WeatherBench Historical ERA5 Climatological Analogue Benchmark",
+    "officialUrl": "https://sites.research.google/gr/weatherbench/",
+    "regions": {
+      "bengaluru": {
+        "period": "1990-2025 Climatological Normals",
+        "month": 9,
+        "mean_monthly_rainfall_mm": 195.0,
+        "historical_rain_day_probability_pct": 62.0,
+        "top_analogue_years": [2018, 2021, 2024],
+        "analogue_rain_occurrence_ratio": "7 out of 10 analogue match days experienced >= 1.0mm",
+        "statistical_rain_probability_pct": 68.0,
+        "mean_temp_normal_c": 26.8
+      },
+      "chennai": {
+        "period": "1990-2025 Climatological Normals",
+        "month": 9,
+        "mean_monthly_rainfall_mm": 140.0,
+        "historical_rain_day_probability_pct": 54.0,
+        "top_analogue_years": [2016, 2019, 2023],
+        "analogue_rain_occurrence_ratio": "6 out of 10 analogue match days experienced >= 1.0mm",
+        "statistical_rain_probability_pct": 60.0,
+        "mean_temp_normal_c": 30.5
+      }
+    }
+  }
+}

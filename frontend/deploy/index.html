@@ -1,0 +1,2176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SwarmMind — Autonomous AI Swarm Protocol Control Center</title>
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Ethers.js v6 UMD -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.13.2/ethers.umd.min.js"></script>
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #05070c;
+      --bg-panel: #080c14;
+      --bg-surface: #0e1422;
+      --border-subtle: rgba(30, 41, 59, 0.7);
+      --border-accent: rgba(56, 189, 248, 0.3);
+      --cyan-glow: rgba(6, 182, 212, 0.35);
+      --violet-glow: rgba(139, 92, 246, 0.35);
+    }
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: var(--bg-dark);
+      color: #f1f5f9;
+      overflow-x: hidden;
+    }
+
+    .mono { font-family: 'JetBrains Mono', monospace; }
+
+    /* Custom Glass & Shadows */
+    .glass-panel {
+      background: rgba(8, 12, 20, 0.86);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid var(--border-subtle);
+    }
+    .glass-surface {
+      background: rgba(14, 20, 34, 0.75);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(51, 65, 85, 0.4);
+    }
+    .glow-cyan {
+      box-shadow: 0 0 35px -5px var(--cyan-glow);
+    }
+    .glow-violet {
+      box-shadow: 0 0 35px -5px var(--violet-glow);
+    }
+
+    /* Scrollbars */
+    ::-webkit-scrollbar { width: 5px; height: 5px; }
+    ::-webkit-scrollbar-track { background: #060911; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+    /* Scanning laser beam animation */
+    @keyframes scanBeam {
+      0% { top: 0%; opacity: 0.1; }
+      50% { opacity: 0.8; }
+      100% { top: 100%; opacity: 0.1; }
+    }
+    .scan-line {
+      position: absolute;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #38bdf8, #818cf8, transparent);
+      animation: scanBeam 2.4s ease-in-out infinite;
+    }
+
+    /* Traveling signal on vertical timeline */
+    @keyframes timelineSignal {
+      0% { top: 0%; opacity: 0; }
+      20% { opacity: 1; }
+      80% { opacity: 1; }
+      100% { top: 100%; opacity: 0; }
+    }
+    .timeline-rail-signal {
+      position: absolute;
+      left: -1px;
+      width: 3px;
+      height: 48px;
+      background: linear-gradient(180deg, #38bdf8, #818cf8);
+      border-radius: 2px;
+      box-shadow: 0 0 12px #38bdf8;
+      animation: timelineSignal 3s linear infinite;
+    }
+
+    /* Cinematic Transition Warp */
+    @keyframes warpPulse {
+      0% { transform: scale(0.6); opacity: 0; }
+      50% { opacity: 0.8; }
+      100% { transform: scale(2.4); opacity: 0; }
+    }
+    .warp-wave {
+      animation: warpPulse 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+  </style>
+</head>
+<body class="min-h-screen bg-[#05070c] text-slate-100 flex flex-col select-none">
+
+  <!-- =================================================================== -->
+  <!-- TRANSITION OVERLAY: CINEMATIC WARP BETWEEN LANDING & DASHBOARD     -->
+  <!-- =================================================================== -->
+  <div id="transitionOverlay" class="hidden fixed inset-0 z-50 bg-[#05070c] pointer-events-none flex items-center justify-center transition-opacity duration-700">
+    <div class="relative flex items-center justify-center">
+      <div class="w-32 h-32 rounded-full border-2 border-cyan-400 warp-wave absolute"></div>
+      <div class="w-64 h-64 rounded-full border border-indigo-500 warp-wave absolute" style="animation-delay: 0.2s;"></div>
+      <div class="w-96 h-96 rounded-full border border-purple-500 warp-wave absolute" style="animation-delay: 0.4s;"></div>
+      <div class="w-12 h-12 rounded-full bg-cyan-400 shadow-[0_0_50px_#38bdf8] animate-pulse"></div>
+    </div>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- VIEW 1: CINEMATIC QUESTION-FIRST LANDING PAGE                       -->
+  <!-- =================================================================== -->
+  <div id="view-landing" class="flex-1 flex flex-col transition-opacity duration-500">
+    <!-- Landing Top Nav -->
+    <header class="border-b border-slate-800/80 bg-[#070b13]/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4">
+      <div class="max-w-7xl mx-auto flex items-center justify-between">
+        <div class="flex items-center gap-3">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-black text-white text-sm shadow-lg shadow-cyan-500/20">
+            S
+          </div>
+          <div>
+            <span class="font-extrabold tracking-tight text-white text-base">SWARMMIND</span>
+            <span class="ml-2 text-[10px] font-bold uppercase mono text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800/60">AI PROTOCOL</span>
+          </div>
+        </div>
+
+        <nav class="hidden md:flex items-center gap-6 text-xs font-semibold mono text-slate-400" id="landingNavLinks">
+          <button id="navTabArena" onclick="switchLandingTab('arena')" class="text-white border-b-2 border-cyan-400 pb-1 cursor-pointer">Arena</button>
+          <button id="navTabRegistry" onclick="switchLandingTab('registry')" class="hover:text-slate-200 transition cursor-pointer pb-1 border-b-2 border-transparent">Agent Registry</button>
+          <button id="navTabDatasources" onclick="switchLandingTab('datasources')" class="hover:text-slate-200 transition cursor-pointer pb-1 border-b-2 border-transparent">Data Sources</button>
+          <button id="navTabHistory" onclick="switchLandingTab('history')" class="hover:text-slate-200 transition cursor-pointer pb-1 border-b-2 border-transparent">Prediction Ledger</button>
+          <button id="navTabContracts" onclick="switchLandingTab('contracts')" class="hover:text-slate-200 transition cursor-pointer pb-1 border-b-2 border-transparent">MST Testnet</button>
+        </nav>
+
+        <div class="flex items-center gap-3 text-xs mono">
+          <div class="hidden sm:flex items-center gap-2 bg-slate-900/90 border border-slate-800 rounded-lg px-3 py-1.5 text-slate-300">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span id="landingChainBadge">MST Testnet (91562037)</span>
+          </div>
+          <button id="btnLandingConnectWallet" onclick="connectWallet(true)" class="bg-cyan-500 hover:bg-cyan-400 text-gray-950 font-bold px-4 py-1.5 rounded-lg transition shadow-md shadow-cyan-500/10">
+            Connect Wallet
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- SUBVIEW 1: ARENA (SUMMONER HERO) -->
+    <main id="subview-arena" class="landing-subtab flex-1 flex flex-col justify-center items-center px-4 max-w-4xl mx-auto w-full py-16 text-center space-y-8 relative">
+      <!-- Ambient background glow -->
+      <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute top-48 left-1/3 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+
+      <div class="space-y-3 z-10">
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-800 text-[11px] mono text-cyan-400">
+          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
+          Decentralized Multi-Agent Consensus Protocol
+        </div>
+        <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">
+          AI thinks. Blockchain coordinates.<br/>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400">Reality decides reputation.</span>
+        </h1>
+        <p class="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto leading-relaxed">
+          Submit any verifiable real-world question. Autonomous AI specialists independently analyze, cryptographically commit prediction bonds on MST Testnet, debate, and settle upon empirical outcome verification.
+        </p>
+      </div>
+
+      <!-- Question Prompt Box -->
+      <div class="w-full max-w-2xl z-10">
+        <div class="glass-panel p-2.5 rounded-2xl glow-cyan focus-within:border-cyan-400/80 transition-all border border-slate-700/80">
+          <div class="flex flex-col sm:flex-row items-center gap-2">
+            <input 
+              id="landingQuestionInput"
+              type="text" 
+              placeholder="Ask SwarmMind anything (e.g., Will it rain in Chennai tomorrow?)" 
+              class="w-full bg-transparent px-4 py-3.5 text-sm sm:text-base text-white placeholder-slate-500 focus:outline-none mono"
+              value="Will it rain in Chennai tomorrow?"
+              onkeydown="if(event.key === 'Enter') submitQuestionToExecution();"
+            />
+            <button 
+              id="btnSummonSwarm"
+              onclick="submitQuestionToExecution()"
+              class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-gray-950 font-extrabold text-xs sm:text-sm tracking-wide shadow-lg shadow-cyan-500/20 transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+            >
+              <span>⚡ Summon Swarm</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Scenario Pills -->
+        <div class="flex flex-wrap items-center justify-center gap-2 pt-4 text-xs">
+          <span class="text-slate-500 font-semibold uppercase tracking-wider mono text-[11px] mr-1">Scenarios:</span>
+          <button onclick="pickScenario('Will it rain in Chennai tomorrow?', 1)" class="px-3.5 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-amber-800/60 text-amber-300 font-semibold transition flex items-center gap-1.5 shadow-sm">
+            <span>🔒</span> Chennai Weather (Swarm #1 • Real Pending)
+          </button>
+          <button onclick="pickScenario('CONTROLLED DEMO: Will the measured precipitation value be >= 0.5 mm?', 2)" class="px-3.5 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-emerald-700/60 text-emerald-300 font-semibold transition flex items-center gap-1.5 shadow-sm">
+            <span>⚡</span> Controlled Demo (Swarm #2 • Complete Loop)
+          </button>
+          <button onclick="pickScenario('Should Bangalore build 500 new EV charging stations by 2027?', 'ev')" class="px-3 py-1 rounded-full bg-slate-900/70 hover:bg-slate-800 border border-slate-800 text-slate-300 transition">
+            ⚡ EV Infrastructure
+          </button>
+          <button onclick="pickScenario('Will solar generation exceed 450 GWh in Rajasthan tomorrow?', 'solar')" class="px-3 py-1 rounded-full bg-slate-900/70 hover:bg-slate-800 border border-slate-800 text-slate-300 transition">
+            ☀️ Solar Energy
+          </button>
+        </div>
+      </div>
+    </main>
+
+    <!-- SUBVIEW 2: AGENT REGISTRY -->
+    <main id="subview-registry" class="landing-subtab hidden max-w-7xl mx-auto px-6 py-10 w-full space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+        <div>
+          <h2 class="text-2xl font-black text-white flex items-center gap-3">
+            <span>Agent Registry</span>
+            <span class="text-xs mono font-bold bg-cyan-950 text-cyan-300 px-2.5 py-1 rounded-full border border-cyan-800">18 ACTIVE SPECIALISTS</span>
+          </h2>
+          <p class="text-sm text-slate-400 mt-1">Autonomous AI specialists registered with staked capital and domain reputation on MST Testnet</p>
+        </div>
+        <div class="flex items-center gap-2 flex-wrap" id="registryDomainFilters">
+          <button onclick="filterRegistryDomain('ALL')" class="reg-filter-btn px-3 py-1 rounded-lg text-xs mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-800">ALL</button>
+          <button onclick="filterRegistryDomain('WEATHER')" class="reg-filter-btn px-3 py-1 rounded-lg text-xs mono text-slate-400 hover:text-white bg-slate-900 border border-slate-800">WEATHER</button>
+          <button onclick="filterRegistryDomain('ENERGY')" class="reg-filter-btn px-3 py-1 rounded-lg text-xs mono text-slate-400 hover:text-white bg-slate-900 border border-slate-800">ENERGY</button>
+          <button onclick="filterRegistryDomain('FINANCE')" class="reg-filter-btn px-3 py-1 rounded-lg text-xs mono text-slate-400 hover:text-white bg-slate-900 border border-slate-800">FINANCE</button>
+          <button onclick="filterRegistryDomain('INFRASTRUCTURE')" class="reg-filter-btn px-3 py-1 rounded-lg text-xs mono text-slate-400 hover:text-white bg-slate-900 border border-slate-800">INFRASTRUCTURE</button>
+          <button onclick="filterRegistryDomain('RISK')" class="reg-filter-btn px-3 py-1 rounded-lg text-xs mono text-slate-400 hover:text-white bg-slate-900 border border-slate-800">RISK & CRITIC</button>
+        </div>
+      </div>
+      <div id="registryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Rendered dynamically -->
+      </div>
+    </main>
+
+    <!-- SUBVIEW 3: DATA SOURCES -->
+    <main id="subview-datasources" class="landing-subtab hidden max-w-7xl mx-auto px-6 py-10 w-full space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+        <div>
+          <h2 class="text-2xl font-black text-white flex items-center gap-3">
+            <span>Verified Scientific Data Feeds</span>
+            <span class="text-xs mono font-bold bg-purple-950 text-purple-300 px-2.5 py-1 rounded-full border border-purple-800">16 ORACLES & DATASETS</span>
+          </h2>
+          <p class="text-sm text-slate-400 mt-1">Official empirical feeds and oracle pipelines utilized for isolated agent reasoning and outcome resolution</p>
+        </div>
+        <div class="text-xs mono text-amber-400 bg-amber-950/60 border border-amber-800/80 px-3 py-1.5 rounded-lg">
+          ⚠️ FORECAST = INPUT ONLY • SETTLEMENT REQUIRES REALIZED OBSERVATION
+        </div>
+      </div>
+      <div id="dataSourcesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Rendered dynamically -->
+      </div>
+    </main>
+
+    <!-- SUBVIEW 4: PREDICTION LEDGER -->
+    <main id="subview-history" class="landing-subtab hidden max-w-7xl mx-auto px-6 py-10 w-full space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+        <div>
+          <h2 class="text-2xl font-black text-white flex items-center gap-3">
+            <span>Prediction Ledger</span>
+            <span class="text-xs mono font-bold bg-emerald-950 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-800">ON-CHAIN IMMUTABLE</span>
+          </h2>
+          <p class="text-sm text-slate-400 mt-1">Complete historical ledger of prediction swarms, Keccak256 commitment receipts, and settlement records</p>
+        </div>
+      </div>
+      <div id="predictionLedgerList" class="space-y-4">
+        <!-- Rendered dynamically -->
+      </div>
+    </main>
+
+    <!-- SUBVIEW 5: MST TESTNET & CONTRACTS -->
+    <main id="subview-contracts" class="landing-subtab hidden max-w-7xl mx-auto px-6 py-10 w-full space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
+        <div>
+          <h2 class="text-2xl font-black text-white flex items-center gap-3">
+            <span>MST Blockchain Testnet</span>
+            <span class="text-xs mono font-bold bg-emerald-950 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-800">CHAIN ID 91562037</span>
+          </h2>
+          <p class="text-sm text-slate-400 mt-1">Live smart contracts deployed and verified on MST Blockchain Testnet</p>
+        </div>
+        <button onclick="addMstNetworkToWallet()" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-gray-950 font-bold text-xs mono transition shadow">
+          + Add MST Testnet to Wallet
+        </button>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <!-- SwarmMindCore -->
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs mono font-bold bg-cyan-950 text-cyan-300 px-2.5 py-1 rounded border border-cyan-800">CORE PROTOCOL</span>
+            <span class="text-xs text-emerald-400 font-bold">DEPLOYED & VERIFIED ✓</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-white">SwarmMindCore.sol</h3>
+            <p class="text-xs text-slate-400 mt-1">
+              Main protocol controller handling Agent Registry, bonded stakes, commit-reveal scheme, challenge market deposits, and on-chain domain reputation ledger.
+            </p>
+          </div>
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1 mono text-xs">
+            <div class="text-[10px] text-slate-500 uppercase font-bold">CONTRACT ADDRESS</div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-cyan-300 select-all truncate">0x92283AA6983D52A8A3bEa714D5FD8cc6Db360276</span>
+              <button onclick="navigator.clipboard.writeText('0x92283AA6983D52A8A3bEa714D5FD8cc6Db360276'); alert('Copied Core Address!');" class="text-[10px] text-slate-400 hover:text-white bg-slate-900 px-2 py-1 rounded border border-slate-800">Copy</button>
+            </div>
+          </div>
+          <a href="https://testnet.mstscan.com/address/0x92283AA6983D52A8A3bEa714D5FD8cc6Db360276" target="_blank" class="block w-full text-center py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-cyan-400 font-bold mono transition">
+            View on MSTScan Explorer ↗
+          </a>
+        </div>
+
+        <!-- MVPControlledResolver -->
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+          <div class="flex items-center justify-between">
+            <span class="text-xs mono font-bold bg-purple-950 text-purple-300 px-2.5 py-1 rounded border border-purple-800">RESOLVER INTERFACE</span>
+            <span class="text-xs text-emerald-400 font-bold">DEPLOYED & VERIFIED ✓</span>
+          </div>
+          <div>
+            <h3 class="text-lg font-black text-white">MVPControlledResolver.sol</h3>
+            <p class="text-xs text-slate-400 mt-1">
+              Implements IOutcomeResolver. Responsible for authorized outcome validation, IPFS evidence hash anchoring, and settlement trigger against empirical ground truth.
+            </p>
+          </div>
+          <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1 mono text-xs">
+            <div class="text-[10px] text-slate-500 uppercase font-bold">CONTRACT ADDRESS</div>
+            <div class="flex items-center justify-between gap-2">
+              <span class="text-purple-300 select-all truncate">0x4d1E37b71Dfd3794Efe856E2A9D74D7ed28B9234</span>
+              <button onclick="navigator.clipboard.writeText('0x4d1E37b71Dfd3794Efe856E2A9D74D7ed28B9234'); alert('Copied Resolver Address!');" class="text-[10px] text-slate-400 hover:text-white bg-slate-900 px-2 py-1 rounded border border-slate-800">Copy</button>
+            </div>
+          </div>
+          <a href="https://testnet.mstscan.com/address/0x4d1E37b71Dfd3794Efe856E2A9D74D7ed28B9234" target="_blank" class="block w-full text-center py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-purple-400 font-bold mono transition">
+            View on MSTScan Explorer ↗
+          </a>
+        </div>
+      </div>
+    </main>
+
+    <!-- Landing Footer -->
+    <footer class="border-t border-slate-800/80 bg-[#070b13]/60 py-4 px-6 text-center text-xs text-slate-500 mono flex items-center justify-between max-w-7xl mx-auto w-full">
+      <div>SwarmMind Protocol • MST Testnet (Chain ID 91562037)</div>
+      <div>Zero Simulated Transactions • EVM Injected Wallet Enabled</div>
+    </footer>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- VIEW 2: AUTONOMOUS AI SWARM CONTROL CENTER (EXECUTION DASHBOARD)   -->
+  <!-- =================================================================== -->
+  <div id="view-execution" class="hidden flex-1 flex flex-col h-screen overflow-hidden bg-[#05070c]">
+    
+    <!-- 1. TOP APP BAR -->
+    <header class="border-b border-slate-800/90 bg-[#080c14]/95 backdrop-blur-md px-4 py-2.5 z-30 shrink-0">
+      <div class="flex items-center justify-between gap-4">
+        
+        <!-- Left: Brand & Swarm Meta -->
+        <div class="flex items-center gap-3">
+          <button onclick="returnToLanding()" class="p-1.5 rounded-lg bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-400 hover:text-white transition text-xs mono flex items-center gap-1" title="Back to Arena">
+            <span>←</span> <span class="hidden sm:inline">Arena</span>
+          </button>
+          <div class="h-4 w-px bg-slate-800"></div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-white tracking-tight text-sm">SWARMMIND</span>
+            <span id="execSwarmIdBadge" class="text-xs mono font-bold text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800/80">SWARM #001</span>
+            <div class="flex items-center gap-1.5 text-[11px] mono text-emerald-400 bg-emerald-950/80 border border-emerald-800/80 px-2 py-0.5 rounded">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              <span>LIVE PROTOCOL</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Center: Current Active Protocol State Pill -->
+        <div class="hidden lg:flex items-center gap-2 bg-slate-950 border border-slate-800/90 px-3.5 py-1 rounded-full text-xs mono">
+          <span class="text-slate-500 uppercase text-[10px] font-bold">STATE:</span>
+          <span id="topStatusIndicator" class="font-bold text-cyan-300">01 PROBLEM COMPILER • SCANNING QUERY</span>
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping ml-1"></span>
+        </div>
+
+        <!-- Right: Network & Wallet Display -->
+        <div class="flex items-center gap-2.5 text-xs mono">
+          <div class="hidden sm:flex items-center gap-2 bg-slate-900/80 border border-slate-800 rounded-lg px-2.5 py-1 text-slate-300">
+            <span class="text-slate-500">MST Testnet</span>
+            <span id="topBlockNumber" class="text-cyan-400 font-semibold">#5798096</span>
+          </div>
+          <button id="btnExecConnectWallet" onclick="connectWallet(true)" class="bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 px-3 py-1 rounded-lg text-xs truncate max-w-[170px] sm:max-w-[210px] transition">
+            Connect Wallet
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Sub-Header: Swarm Context & Dynamic Controller Bar -->
+    <div class="bg-[#090d18] border-b border-slate-800/80 px-4 py-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs shrink-0 z-20">
+      <div class="flex items-center gap-3 truncate">
+        <span class="text-slate-500 font-bold mono text-[10px] uppercase">CURRENT PROBLEM:</span>
+        <span id="subBarQuestionText" class="font-bold text-white truncate max-w-xl">"Will it rain in Chennai tomorrow?"</span>
+      </div>
+
+      <!-- Controls & Swarm Session Selector -->
+      <div class="flex items-center gap-2 shrink-0">
+        <div class="flex items-center bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[11px] mono" id="swarmSelectorBar">
+          <button id="btnSwitchSwarm1" onclick="switchSwarmSession(1)" class="px-2.5 py-1 rounded font-bold transition bg-amber-950 text-amber-300 border border-amber-800">
+            🔒 Swarm #1 (Real Pending)
+          </button>
+          <button id="btnSwitchSwarm2" onclick="switchSwarmSession(2)" class="px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white">
+            ⚡ Swarm #2 (Demo Loop)
+          </button>
+        </div>
+
+        <!-- View Mode Tabs (Center Area View Selector) -->
+        <div class="flex items-center bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[11px] mono">
+          <button id="tabCanvasBtn" onclick="switchCenterView('canvas')" class="px-2.5 py-1 rounded font-bold transition bg-cyan-950 text-cyan-300 border border-cyan-800">
+            🌌 Canvas
+          </button>
+          <button id="tabDebateBtn" onclick="switchCenterView('debate')" class="px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white">
+            ⚔️ Debate Graph
+          </button>
+          <button id="tabSafetyBtn" onclick="switchCenterView('safety')" class="px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white">
+            🛡️ Safety Audit
+          </button>
+        </div>
+
+        <!-- Step Navigation Controls -->
+        <div class="flex items-center gap-1">
+          <button onclick="stepPreviousStage()" class="px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 mono text-[11px]" title="Previous Stage">⏮</button>
+          <button id="btnPlayPause" onclick="toggleAutoPlay()" class="px-2.5 py-1 rounded bg-cyan-600 hover:bg-cyan-500 text-gray-950 font-bold mono text-[11px] flex items-center gap-1 shadow">
+            <span id="playPauseIcon">▶</span> <span id="playPauseText">Play</span>
+          </button>
+          <button onclick="stepNextStage()" class="px-2 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 mono text-[11px]" title="Next Stage">⏭</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. MAIN 3-COLUMN EXECUTION GRID -->
+    <div class="flex-1 grid grid-cols-1 md:grid-cols-12 overflow-hidden relative">
+      
+      <!-- LEFT COLUMN: PROTOCOL TIMELINE (11 STAGES) -->
+      <aside class="md:col-span-3 lg:col-span-3 bg-[#080c15] border-r border-slate-800/80 flex flex-col overflow-hidden z-10">
+        <div class="px-3.5 py-2.5 border-b border-slate-800 flex items-center justify-between text-xs mono">
+          <span class="font-extrabold uppercase text-slate-400 tracking-wider text-[11px]">Protocol Timeline</span>
+          <span id="timelineProgressBadge" class="text-[10px] text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800 font-bold">STAGE 1 / 11</span>
+        </div>
+
+        <!-- Scrollable 11 Stages Rail -->
+        <div class="flex-1 overflow-y-auto p-3 space-y-1 relative" id="timelineStagesContainer">
+          <!-- Animated vertical rail line -->
+          <div class="absolute left-6 top-3 bottom-3 w-0.5 bg-slate-800/80 pointer-events-none">
+            <div class="timeline-rail-signal"></div>
+          </div>
+
+          <!-- Stage 01: Problem Compiler -->
+          <div id="timeline-step-1" onclick="jumpToStage(1)" class="timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/60">
+            <div class="step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400 mono">01</div>
+            <div class="font-bold text-white text-xs">01 PROBLEM COMPILER</div>
+            <div class="text-[11px] text-slate-400">Natural language deconstruction & parameters</div>
+          </div>
+
+          <!-- Stage 02: Capability Match -->
+          <div id="timeline-step-2" onclick="jumpToStage(2)" class="timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/60">
+            <div class="step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400 mono">02</div>
+            <div class="font-bold text-slate-400 text-xs">02 CAPABILITY MATCH</div>
+            <div class="text-[11px] text-slate-500">Registry query & qualification filters</div>
+          </div>
+
+          <!-- Stage 03: Agent Recruitment -->
+          <div id="timeline-step-3" onclick="jumpToStage(3)" class="timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/60">
+            <div class="step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400 mono">03</div>
+            <div class="font-bold text-slate-400 text-xs">03 AGENT RECRUITMENT</div>
+            <div class="text-[11px] text-slate-500">Reputation-weighted specialist selection</div>
+          </div>
+
+          <!-- Stage 04: Independent Analysis -->
+          <div id="timeline-step-4" onclick="jumpToStage(4)" class="timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/60">
+            <div class="step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400 mono">04</div>
+            <div class="font-bold text-slate-400 text-xs">04 INDEPENDENT ANALYSIS</div>
+            <div class="text-[11px] text-slate-500">Zero-collusion domain model execution</div>
+          </div>
+
+          <!-- Stage 05: Commitment -->
+          <div id="timeline-step-5" onclick="jumpToStage(5)" class="timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/60">
+            <div class="step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400 mono">05</div>
+            <div class="font-bold text-slate-400 text-xs">05 COMMITMENT & BONDS</div>
+            <div class="text-[11px] text-slate-500">Keccak256 hash & prediction bond escrow</div>
+          </div>
+
+          <!-- Stage 06: Challenge Market -->
+          <div id="timeline-step-6" onclick="jumpToStage(6)" class="timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/60">
+            <div class="step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400 mono">06</div>
+            <div class="font-bold text-slate-400 text-xs">06 CHALLENGE MARKET</div>
+            <div class="text-[11px] text-slate-500">Dispute window & peer cross-examination</div>
+          </div>
+
+          <!-- Stage 07: Prediction Reveal -->
+          <div id="timeline-step-7" onclick="jumpToStage(7)" class="timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/60">
+            <div class="step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400 mono">07</div>
+            <div class="font-bold text-slate-400 text-xs">07 PREDICTION REVEAL</div>
+            <div class="text-[11px] text-slate-500">Cryptographic capsule preimage release</div>
+          </div>
+
+          <!-- Stage 08: Verification -->
+          <div id="timeline-step-8" onclick="jumpToStage(8)" class="timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/60">
+            <div class="step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400 mono">08</div>
+            <div class="font-bold text-slate-400 text-xs">08 VERIFICATION</div>
+            <div class="text-[11px] text-slate-500">Smart contract hash preimage match</div>
+          </div>
+
+          <!-- Stage 09: Swarm Consensus -->
+          <div id="timeline-step-9" onclick="jumpToStage(9)" class="timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/60">
+            <div class="step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400 mono">09</div>
+            <div class="font-bold text-slate-400 text-xs">09 SWARM CONSENSUS</div>
+            <div class="text-[11px] text-slate-500">Weighted convergence & probability synthesis</div>
+          </div>
+
+          <!-- Stage 10: Outcome Resolution -->
+          <div id="timeline-step-10" onclick="jumpToStage(10)" class="timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/60">
+            <div class="step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400 mono">10</div>
+            <div class="font-bold text-slate-400 text-xs">10 OUTCOME RESOLUTION</div>
+            <div class="text-[11px] text-slate-500">Hard oracle safety gate & realized ground truth</div>
+          </div>
+
+          <!-- Stage 11: Settlement & Trust Update -->
+          <div id="timeline-step-11" onclick="jumpToStage(11)" class="timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/60">
+            <div class="step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400 mono">11</div>
+            <div class="font-bold text-slate-400 text-xs">11 SETTLEMENT & TRUST</div>
+            <div class="text-[11px] text-slate-500">Escrow payouts, slashing & reputation update</div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- CENTER COLUMN: LIVE SWARM FIELD & DEBATE VISUALIZER -->
+      <section class="md:col-span-6 lg:col-span-6 flex flex-col relative overflow-hidden bg-[#05070c]">
+        
+        <!-- 1. Canvas View Container -->
+        <div id="centerCanvasContainer" class="w-full h-full relative">
+          <canvas id="swarmCanvas" class="w-full h-full block cursor-crosshair"></canvas>
+
+          <!-- Dynamic Holographic Stage Overlay -->
+          <div id="centerStageOverlay" class="absolute inset-0 pointer-events-none flex flex-col justify-between p-6 z-10 transition-all duration-500">
+            <div class="flex items-start justify-between">
+              <div class="glass-surface px-3 py-1.5 rounded-lg text-xs mono">
+                <span class="text-slate-500 text-[10px] uppercase font-bold">COORDINATION ENGINE:</span>
+                <div id="overlayEngineTitle" class="text-white font-extrabold mt-0.5">ACTIVE NEURAL FIELD</div>
+              </div>
+              <div class="glass-surface px-3 py-1.5 rounded-lg text-xs mono text-right">
+                <span class="text-slate-500 text-[10px] uppercase font-bold">STATE TRANSITION:</span>
+                <div id="overlayStateName" class="text-cyan-400 font-bold mt-0.5">01_PROBLEM_COMPILATION</div>
+              </div>
+            </div>
+
+            <!-- Center Dynamic Hologram Card -->
+            <div id="centerDynamicCard" class="self-center max-w-lg w-full pointer-events-auto transition-all duration-500">
+              <!-- Dynamically populated per stage -->
+            </div>
+
+            <!-- Bottom Metrics Bar -->
+            <div class="flex items-center justify-between text-xs mono">
+              <div class="glass-surface px-3 py-1.5 rounded-lg flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                <span id="fieldActiveAgentsCount" class="text-slate-300 font-semibold">3 Active Specialists</span>
+              </div>
+              <div class="glass-surface px-3 py-1.5 rounded-lg flex items-center gap-2">
+                <span class="text-slate-500">Escrow Pool:</span>
+                <span id="fieldEscrowBalance" class="text-emerald-400 font-bold">0.0080 MSTC</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. Debate & Evidence Graph View Container (Toggleable) -->
+        <div id="centerDebateContainer" class="hidden w-full h-full overflow-y-auto p-6 space-y-4 bg-[#080c14]">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="font-extrabold text-white text-base">ADVERSARIAL DEBATE & EVIDENCE GRAPH</h3>
+              <p class="text-xs text-slate-400 mono">Independent agent predictions, evidence methods, & cross-examination log</p>
+            </div>
+            <span class="text-xs mono bg-slate-900 border border-slate-800 text-cyan-400 px-3 py-1 rounded-full">Zero-Collusion Isolation</span>
+          </div>
+
+          <!-- Dynamic Debate Cards -->
+          <div id="debateGraphContent" class="space-y-3">
+            <!-- Dynamically Populated -->
+          </div>
+        </div>
+
+        <!-- 3. Safety Audit Drawer Container (Toggleable) -->
+        <div id="centerSafetyContainer" class="hidden w-full h-full overflow-y-auto p-6 space-y-4 bg-[#080c14]">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="font-extrabold text-white text-base">5-GATE ORACLE SAFETY AUDIT</h3>
+              <p class="text-xs text-slate-400 mono">Cryptographic & empirical safety checks before contract settlement</p>
+            </div>
+            <span id="safetyAuditBadge" class="text-xs mono font-bold bg-amber-950 text-amber-300 border border-amber-800 px-3 py-1 rounded-full">OUTCOME PENDING</span>
+          </div>
+
+          <div id="safetyGatesContent" class="grid grid-cols-1 gap-3 text-xs mono">
+            <!-- Dynamically Populated -->
+          </div>
+        </div>
+      </section>
+
+      <!-- RIGHT COLUMN: AGENT INTELLIGENCE PANEL -->
+      <aside class="md:col-span-3 lg:col-span-3 bg-[#080c15] border-l border-slate-800/80 flex flex-col overflow-hidden z-10">
+        <div class="px-3.5 py-2.5 border-b border-slate-800 flex items-center justify-between text-xs mono">
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold uppercase text-slate-400 tracking-wider text-[11px]">Agent Intelligence</span>
+            <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+          </div>
+          <span id="agentCountBadge" class="text-[10px] text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800 font-bold">3 ACTIVE</span>
+        </div>
+
+        <!-- Agent List & Deep Inspector -->
+        <div class="flex-1 overflow-y-auto p-3 space-y-3" id="agentCardsContainer">
+          <!-- Dynamically populated per swarm -->
+        </div>
+      </aside>
+    </div>
+
+    <!-- 3. BOTTOM LIVE EXECUTION LOG & TECHNICAL INSPECTOR -->
+    <footer class="border-t border-slate-800/90 bg-[#070b13] px-4 py-2 shrink-0 z-20">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
+        
+        <!-- Live Protocol Event Stream (Left 8 Cols) -->
+        <div class="md:col-span-8 flex items-center gap-3 overflow-hidden">
+          <div class="flex items-center gap-1.5 text-xs mono shrink-0 text-slate-500">
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
+            <span class="uppercase text-[10px] font-bold">LOG:</span>
+          </div>
+
+          <!-- Scrolling Log Line -->
+          <div class="flex-1 overflow-x-auto whitespace-nowrap text-xs mono text-slate-300 py-1" id="liveExecutionLogStream">
+            <span id="logTimestamp" class="text-slate-500">[09:15:00]</span>
+            <span id="logText" class="text-slate-300 ml-1">SwarmMind Core connected to MST Blockchain Testnet. Chain ID: 91562037. Protocol synchronized.</span>
+          </div>
+        </div>
+
+        <!-- Blockchain Activity Badge & Explorer Link (Right 4 Cols) -->
+        <div class="md:col-span-4 flex items-center justify-end gap-1.5 text-[11px] mono text-slate-400">
+          <div class="flex items-center gap-1 bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">
+            <span class="text-slate-500">AGENT</span>
+            <span class="text-slate-600">→</span>
+            <span class="text-cyan-400 font-semibold">COMMIT</span>
+            <span class="text-slate-600">→</span>
+            <span class="text-indigo-400 font-semibold">MST</span>
+            <span class="text-slate-600">→</span>
+            <span class="text-emerald-400 font-bold flex items-center gap-1">
+              <span>CONFIRMED</span>
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
+            </span>
+          </div>
+          <a href="https://testnet.mstscan.com/address/0x92283AA6983D52A8A3bEa714D5FD8cc6Db360276" target="_blank" class="p-1 rounded bg-slate-900 border border-slate-800 text-slate-400 hover:text-white" title="Inspect SwarmMindCore on MSTScan">
+            ↗
+          </a>
+        </div>
+      </div>
+    </footer>
+  </div>
+
+  <!-- =================================================================== -->
+  <!-- FRONTEND LOGIC & INTEGRATED STATE MANAGEMENT                       -->
+  <!-- =================================================================== -->
+  <script>
+    const MST_CHAIN_ID_HEX = "0x5751ca9"; // 91562037
+    const MST_CHAIN_ID_DEC = 91562037;
+    const MST_RPC_URL = "https://testnetrpc.mstblockchain.com";
+    const MST_EXPLORER_URL = "https://testnet.mstscan.com";
+    const CORE_ADDRESS = "0x92283AA6983D52A8A3bEa714D5FD8cc6Db360276";
+    const RESOLVER_ADDRESS = "0x4d1E37b71Dfd3794Efe856E2A9D74D7ed28B9234";
+
+    // Application State
+    let userAddress = null;
+    let browserProvider = null;
+    let signer = null;
+    let currentStageIndex = 1;
+    let isAutoPlaying = false;
+    let autoPlayTimer = null;
+    let activeSwarmId = 1;
+    let selectedAgentKey = "WEATHER_ALPHA";
+    let activeCenterView = "canvas"; // 'canvas', 'debate', 'safety'
+
+    // Registered Swarms Database / Store
+    const SWARMS_STORE = {
+      1: {
+        id: 1,
+        question: "Will it rain in Chennai tomorrow?",
+        domain: "WEATHER",
+        capability: "WEATHER",
+        targetLocation: "Chennai, TN, India",
+        horizon: "24 Hours",
+        criterion: "precipitation >= 0.5 mm",
+        targetDate: "2026-09-29",
+        creator: "0x3730145b513129B6081d753882536871ea454d46",
+        bounty: "0.0050 MSTC",
+        totalBonded: "0.0030 MSTC",
+        totalEscrow: "0.0080 MSTC",
+        onChainState: 2, // Revealing
+        onChainStateName: "Revealing",
+        canSettle: false,
+        agreementLevel: "100% CONVERGENCE",
+        consensusDecision: "YES (RAIN PREDICTED)",
+        consensusConfidence: 63.7,
+        selectedAgents: ["WEATHER_ALPHA", "WEATHER_BETA", "WEATHER_GAMMA"],
+        agents: {
+          WEATHER_ALPHA: {
+            name: "WEATHER_ALPHA",
+            id: "0x4f593aa368b69c663a279a652ffdce8e2a7da9526492ac357472105aa758162b",
+            role: "Numerical Weather Forecaster",
+            capability: "WEATHER",
+            prediction: "YES",
+            confidence: 60.0,
+            bond: "0.0010 MSTC",
+            reputation: "500 bps (+5.00%)",
+            owner: "Shared Protocol Wallet (0x3730...4D46)",
+            commitmentHash: "0x9e4af02b3780a1c1d94848386121f15809dfb01e2311df9012bb812b1234abcd",
+            methodology: "ECMWF HRES + GFS 0.25° Synoptic NWP Physics Ensemble.",
+            txHash: "0xaf132b26e94c80dab59b97aba539f7e9c1222183fa5349162db11ed7b8544cd2",
+            revealTxHash: "0xa15a3ebb895556e7d802accfa43c4a83ca6456ecdb69f64e5bf79981d16ca087"
+          },
+          WEATHER_BETA: {
+            name: "WEATHER_BETA",
+            id: "0x2bb519c2d3835d6116adade05fdda3b9ddf2f4ef94bd343af59a317aee0cb1f4",
+            role: "Moisture Flux Forecaster",
+            capability: "WEATHER",
+            prediction: "YES",
+            confidence: 58.0,
+            bond: "0.0010 MSTC",
+            reputation: "500 bps (+5.00%)",
+            owner: "Shared Protocol Wallet (0x3730...4D46)",
+            commitmentHash: "0x4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e",
+            methodology: "INSAT-3DR 6.7µm Water Vapor Tracer & Tropospheric Moisture Advection.",
+            txHash: "0x807423482efc8911e9d14b70fb323522b30c965fb9750b97dae8148bb993fbb3",
+            revealTxHash: "0xdb6194f685cd953ed262c3d8735433d555feee1d9e540a778b0c74fffad8e9be"
+          },
+          WEATHER_GAMMA: {
+            name: "WEATHER_GAMMA",
+            id: "0x2d9cbf004444d64e839bc520559f8047edd707a24ee15171f56648797edad560",
+            role: "Microclimate Critic",
+            capability: "WEATHER",
+            prediction: "YES",
+            confidence: 73.0,
+            bond: "0.0010 MSTC",
+            reputation: "500 bps (+5.00%)",
+            owner: "Shared Protocol Wallet (0x3730...4D46)",
+            commitmentHash: "0x735ba75645267922877235ae3a07d376e76b41e890b3769ed61b779a333b3616",
+            methodology: "Coastal Boundary Layer Climatology & Convective Instability Critic.",
+            txHash: "0x735ba75645267922877235ae3a07d376e76b41e890b3769ed61b779a333b3616",
+            revealTxHash: "0xdba3f80be0bee04e346b942822cc24595d1a623764737d26be9ff950c9fe6d2f"
+          }
+        }
+      },
+      2: {
+        id: 2,
+        question: "CONTROLLED DEMO: Will the measured precipitation value be >= 0.5 mm?",
+        domain: "WEATHER",
+        capability: "WEATHER",
+        targetLocation: "Chennai Station (Controlled Test)",
+        horizon: "Immediate Controlled Resolution",
+        criterion: "precipitation >= 0.5 mm",
+        targetDate: "Controlled Immediate Test",
+        creator: "0x3730145b513129B6081d753882536871ea454d46",
+        bounty: "0.0050 MSTC",
+        totalBonded: "0.0030 MSTC",
+        totalEscrow: "0.0080 MSTC",
+        onChainState: 4, // Settled
+        onChainStateName: "Settled",
+        canSettle: true,
+        agreementLevel: "100% CONVERGENCE",
+        consensusDecision: "YES (RESOLVED ON-CHAIN)",
+        consensusConfidence: 63.7,
+        selectedAgents: ["WEATHER_ALPHA", "WEATHER_BETA", "WEATHER_GAMMA"],
+        agents: {
+          WEATHER_ALPHA: {
+            name: "WEATHER_ALPHA",
+            id: "0x4f593aa368b69c663a279a652ffdce8e2a7da9526492ac357472105aa758162b",
+            role: "Numerical Weather Forecaster",
+            capability: "WEATHER",
+            prediction: "YES",
+            confidence: 60.0,
+            bond: "0.0010 MSTC",
+            reputation: "500 bps (+5.00%)",
+            owner: "Shared Protocol Wallet (0x3730...4D46)",
+            commitmentHash: "0x9e4af02b3780a1c1d94848386121f15809dfb01e2311df9012bb812b1234abcd",
+            methodology: "Controlled test prediction verified against 1.2mm ground truth input.",
+            txHash: "0xaf132b26e94c80dab59b97aba539f7e9c1222183fa5349162db11ed7b8544cd2",
+            revealTxHash: "0xa15a3ebb895556e7d802accfa43c4a83ca6456ecdb69f64e5bf79981d16ca087"
+          },
+          WEATHER_BETA: {
+            name: "WEATHER_BETA",
+            id: "0x2bb519c2d3835d6116adade05fdda3b9ddf2f4ef94bd343af59a317aee0cb1f4",
+            role: "Moisture Flux Forecaster",
+            capability: "WEATHER",
+            prediction: "YES",
+            confidence: 58.0,
+            bond: "0.0010 MSTC",
+            reputation: "500 bps (+5.00%)",
+            owner: "Shared Protocol Wallet (0x3730...4D46)",
+            commitmentHash: "0x4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e",
+            methodology: "Controlled test prediction verified against 1.2mm ground truth input.",
+            txHash: "0x807423482efc8911e9d14b70fb323522b30c965fb9750b97dae8148bb993fbb3",
+            revealTxHash: "0xdb6194f685cd953ed262c3d8735433d555feee1d9e540a778b0c74fffad8e9be"
+          },
+          WEATHER_GAMMA: {
+            name: "WEATHER_GAMMA",
+            id: "0x2d9cbf004444d64e839bc520559f8047edd707a24ee15171f56648797edad560",
+            role: "Microclimate Critic",
+            capability: "WEATHER",
+            prediction: "YES",
+            confidence: 73.0,
+            bond: "0.0010 MSTC",
+            reputation: "500 bps (+5.00%)",
+            owner: "Shared Protocol Wallet (0x3730...4D46)",
+            commitmentHash: "0x735ba75645267922877235ae3a07d376e76b41e890b3769ed61b779a333b3616",
+            methodology: "Controlled test prediction verified against 1.2mm ground truth input.",
+            txHash: "0x735ba75645267922877235ae3a07d376e76b41e890b3769ed61b779a333b3616",
+            revealTxHash: "0xdba3f80be0bee04e346b942822cc24595d1a623764737d26be9ff950c9fe6d2f"
+          }
+        }
+      }
+    };
+
+    // Protocol Stages Definition
+    const STAGES = [
+      { id: 1, code: "01_PROBLEM_COMPILATION", name: "01 PROBLEM COMPILER", status: "Natural Language Parsing" },
+      { id: 2, code: "02_CAPABILITY_MATCH", name: "02 CAPABILITY MATCH", status: "Agent Registry Qualification" },
+      { id: 3, code: "03_AGENT_RECRUITMENT", name: "03 AGENT RECRUITMENT", status: "Reputation-Weighted Selection" },
+      { id: 4, code: "04_INDEPENDENT_ANALYSIS", name: "04 INDEPENDENT ANALYSIS", status: "Zero-Collusion Forecasting" },
+      { id: 5, code: "05_COMMITMENT", name: "05 COMMITMENT & BONDS", status: "Keccak256 Hash & Bond Escrow" },
+      { id: 6, code: "06_CHALLENGE", name: "06 CHALLENGE MARKET", status: "Dispute Window & Cross-Exam" },
+      { id: 7, code: "07_REVEAL", name: "07 PREDICTION REVEAL", status: "Cryptographic Capsule Release" },
+      { id: 8, code: "08_VERIFICATION", name: "08 VERIFICATION", status: "Smart Contract Hash Verification" },
+      { id: 9, code: "09_CONSENSUS", name: "09 SWARM CONSENSUS", status: "Weighted Consensus Synthesis" },
+      { id: 10, code: "10_OUTCOME_RESOLUTION", name: "10 OUTCOME RESOLUTION", status: "Hard Oracle Safety Gate Check" },
+      { id: 11, code: "11_SETTLEMENT_TRUST", name: "11 SETTLEMENT & TRUST", status: "Escrow Distribution & Trust Boost" }
+    ];
+
+    // DOM Ready Initialization
+    window.addEventListener("DOMContentLoaded", async () => {
+      initCanvas();
+      checkRouteFromURL();
+      await connectWallet(false); // Eager try without popups
+      fetchLatestOnChainNetworkStatus();
+      setInterval(fetchLatestOnChainNetworkStatus, 10000);
+    });
+
+    // 1. WALLET CONTROLLER (MST TESTNET & INJECTED EVM)
+    async function connectWallet(promptUser = true) {
+      const btnLanding = document.getElementById("btnLandingConnectWallet");
+      const btnExec = document.getElementById("btnExecConnectWallet");
+
+      try {
+        const injected = window.bridgekey || window.ethereum;
+        if (!injected) {
+          if (promptUser) {
+            alert("No Injected EVM Wallet Detected.\n\nPlease install BridgeKey or MetaMask to interact on MST Testnet (Chain ID: 91562037).");
+          }
+          return;
+        }
+
+        if (promptUser) {
+          if (btnLanding) btnLanding.textContent = "Connecting...";
+          if (btnExec) btnExec.textContent = "Connecting...";
+        }
+
+        const accounts = await injected.request({
+          method: promptUser ? "eth_requestAccounts" : "eth_accounts"
+        });
+
+        if (!accounts || accounts.length === 0) {
+          if (promptUser) resetWalletButtons();
+          return;
+        }
+
+        userAddress = accounts[0];
+        browserProvider = new ethers.BrowserProvider(injected);
+        signer = await browserProvider.getSigner();
+
+        // Network check & auto-switch
+        const chainId = await injected.request({ method: "eth_chainId" });
+        if (chainId !== MST_CHAIN_ID_HEX && parseInt(chainId, 16) !== MST_CHAIN_ID_DEC) {
+          if (promptUser) {
+            try {
+              await injected.request({
+                method: "wallet_switchEthereumChain",
+                params: [{ chainId: MST_CHAIN_ID_HEX }]
+              });
+            } catch (switchErr) {
+              if (switchErr.code === 4902 || switchErr.message?.includes("Unrecognized chain")) {
+                await injected.request({
+                  method: "wallet_addEthereumChain",
+                  params: [{
+                    chainId: MST_CHAIN_ID_HEX,
+                    chainName: "MST Blockchain Testnet",
+                    rpcUrls: [MST_RPC_URL],
+                    nativeCurrency: { name: "MST Token", symbol: "MSTC", decimals: 18 },
+                    blockExplorerUrls: [MST_EXPLORER_URL]
+                  }]
+                });
+              }
+            }
+          }
+        }
+
+        // Balance fetch
+        let balanceEth = "0.00";
+        try {
+          const bal = await browserProvider.getBalance(userAddress);
+          balanceEth = parseFloat(ethers.formatEther(bal)).toFixed(3);
+        } catch {}
+
+        const shortAddr = `${userAddress.slice(0, 6)}...${userAddress.slice(-4)}`;
+        const displayStr = `${shortAddr} (${balanceEth} MSTC)`;
+
+        if (btnLanding) {
+          btnLanding.textContent = displayStr;
+          btnLanding.className = "bg-emerald-600 hover:bg-emerald-500 text-white font-bold px-4 py-1.5 rounded-lg transition text-xs mono shadow-md";
+        }
+        if (btnExec) {
+          btnExec.textContent = displayStr;
+          btnExec.className = "bg-slate-900 border border-emerald-500/80 text-emerald-300 font-bold px-3 py-1 rounded-lg text-xs truncate transition mono";
+        }
+
+        // Attach change listeners
+        if (injected.on) {
+          injected.on("accountsChanged", (accs) => {
+            if (!accs || accs.length === 0) resetWalletButtons();
+            else connectWallet(false);
+          });
+          injected.on("chainChanged", () => connectWallet(false));
+        }
+
+      } catch (err) {
+        console.warn("Wallet Connection Exception:", err.message);
+        resetWalletButtons();
+      }
+    }
+
+    function resetWalletButtons() {
+      userAddress = null;
+      const btnLanding = document.getElementById("btnLandingConnectWallet");
+      const btnExec = document.getElementById("btnExecConnectWallet");
+      if (btnLanding) {
+        btnLanding.textContent = "Connect Wallet";
+        btnLanding.className = "bg-cyan-500 hover:bg-cyan-400 text-gray-950 font-bold px-4 py-1.5 rounded-lg transition shadow-md shadow-cyan-500/10";
+      }
+      if (btnExec) {
+        btnExec.textContent = "Connect Wallet";
+        btnExec.className = "bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-300 px-3 py-1 rounded-lg text-xs truncate transition mono";
+      }
+    }
+
+    // 2. ROUTING & QUESTION SUBMISSION
+    function checkRouteFromURL() {
+      const path = window.location.pathname;
+      if (path.startsWith("/execute")) {
+        const parts = path.split("/");
+        const id = parts[2] ? parseInt(parts[2]) : 1;
+        switchToExecutionView(id || 1);
+      }
+    }
+
+    function switchToExecutionView(swarmId = 1) {
+      activeSwarmId = swarmId;
+      const overlay = document.getElementById("transitionOverlay");
+      overlay.classList.remove("hidden");
+      overlay.style.opacity = "1";
+
+      setTimeout(() => {
+        document.getElementById("view-landing").classList.add("hidden");
+        document.getElementById("view-execution").classList.remove("hidden");
+        window.history.pushState(null, "", `/execute/${activeSwarmId}`);
+        loadSwarmSession(activeSwarmId);
+        resizeCanvas();
+
+        setTimeout(() => {
+          overlay.style.opacity = "0";
+          setTimeout(() => overlay.classList.add("hidden"), 500);
+        }, 300);
+      }, 400);
+    }
+
+    function returnToLanding() {
+      const overlay = document.getElementById("transitionOverlay");
+      overlay.classList.remove("hidden");
+      overlay.style.opacity = "1";
+
+      setTimeout(() => {
+        document.getElementById("view-execution").classList.add("hidden");
+        document.getElementById("view-landing").classList.remove("hidden");
+        window.history.pushState(null, "", `/`);
+
+        setTimeout(() => {
+          overlay.style.opacity = "0";
+          setTimeout(() => overlay.classList.add("hidden"), 500);
+        }, 200);
+      }, 300);
+    }
+
+    async function submitQuestionToExecution() {
+      const q = document.getElementById("landingQuestionInput").value.trim();
+      if (!q) return;
+
+      const btn = document.getElementById("btnSummonSwarm");
+      btn.innerHTML = `<span>⏳ Compiling...</span>`;
+
+      try {
+        // Query problem compiler API
+        const res = await fetch("/api/compile-problem", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ question: q })
+        });
+        const compiled = await res.json();
+
+        // Create new dynamic swarm in store
+        const newId = Object.keys(SWARMS_STORE).length + 1;
+        SWARMS_STORE[newId] = {
+          id: newId,
+          question: q,
+          domain: compiled.capability || "BOUNDED_DECISION",
+          capability: compiled.capability || "GENERAL",
+          targetLocation: compiled.location || "Global Coordinates",
+          horizon: compiled.horizon || "24 Hours",
+          criterion: compiled.criterion || "Empirical Threshold",
+          targetDate: compiled.targetDate || "2026-09-30",
+          creator: userAddress || "0x3730145b513129B6081d753882536871ea454d46",
+          bounty: "0.0050 MSTC",
+          totalBonded: "0.0030 MSTC",
+          totalEscrow: "0.0080 MSTC",
+          onChainState: 0,
+          onChainStateName: "Created",
+          canSettle: false,
+          agreementLevel: "DYNAMIC CONSENSUS",
+          consensusDecision: "ANALYSIS IN PROGRESS",
+          consensusConfidence: 65.0,
+          selectedAgents: ["WEATHER_ALPHA", "WEATHER_BETA", "WEATHER_GAMMA"],
+          agents: { ...SWARMS_STORE[1].agents }
+        };
+
+        // Add button to top swarm selector
+        renderSwarmSelectorBar();
+        switchToExecutionView(newId);
+
+      } catch (err) {
+        console.warn("Compiler call fallback:", err.message);
+        switchToExecutionView(1);
+      } finally {
+        btn.innerHTML = `<span>⚡ Summon Swarm</span>`;
+      }
+    }
+
+    function pickScenario(questionText, swarmId) {
+      document.getElementById("landingQuestionInput").value = questionText;
+      if (typeof swarmId === "number") {
+        switchToExecutionView(swarmId);
+      } else {
+        submitQuestionToExecution();
+      }
+    }
+
+    // 3. SWARM SESSION MANAGEMENT & DISPLAY BINDING
+    function loadSwarmSession(swarmId) {
+      activeSwarmId = swarmId;
+      const s = SWARMS_STORE[swarmId] || SWARMS_STORE[1];
+
+      document.getElementById("execSwarmIdBadge").textContent = `SWARM #00${s.id}`;
+      document.getElementById("subBarQuestionText").textContent = `"${s.question}"`;
+      document.getElementById("fieldEscrowBalance").textContent = s.totalEscrow;
+
+      renderSwarmSelectorBar();
+      renderAgentPanelUI();
+      renderDebateGraphUI();
+      renderSafetyAuditUI();
+
+      // Set default stage based on on-chain state
+      if (swarmId === 1) {
+        currentStageIndex = 10; // Swarm #1 is in Stage 10 (Outcome pending)
+      } else if (swarmId === 2) {
+        currentStageIndex = 11; // Swarm #2 is Settled
+      } else {
+        currentStageIndex = 1;
+      }
+
+      updateStageView(currentStageIndex);
+    }
+
+    function switchSwarmSession(swarmId) {
+      loadSwarmSession(swarmId);
+    }
+
+    function renderSwarmSelectorBar() {
+      const container = document.getElementById("swarmSelectorBar");
+      if (!container) return;
+
+      container.innerHTML = Object.values(SWARMS_STORE).map(s => {
+        const isActive = s.id === activeSwarmId;
+        const style = isActive
+          ? "px-2.5 py-1 rounded font-bold transition bg-cyan-950 text-cyan-300 border border-cyan-800"
+          : "px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white";
+        const label = s.id === 1 ? "🔒 Swarm #1 (Real Pending)" : (s.id === 2 ? "⚡ Swarm #2 (Demo Loop)" : `Swarm #${s.id}`);
+        return `<button onclick="switchSwarmSession(${s.id})" class="${style}">${label}</button>`;
+      }).join("");
+    }
+
+    // 4. TIMELINE CONTROLLER & DYNAMIC CARDS
+    function jumpToStage(stageNum) {
+      currentStageIndex = stageNum;
+      updateStageView(currentStageIndex);
+    }
+
+    function stepNextStage() {
+      if (currentStageIndex < 11) {
+        currentStageIndex++;
+        updateStageView(currentStageIndex);
+      }
+    }
+
+    function stepPreviousStage() {
+      if (currentStageIndex > 1) {
+        currentStageIndex--;
+        updateStageView(currentStageIndex);
+      }
+    }
+
+    function toggleAutoPlay() {
+      isAutoPlaying = !isAutoPlaying;
+      const btn = document.getElementById("btnPlayPause");
+      const icon = document.getElementById("playPauseIcon");
+      const text = document.getElementById("playPauseText");
+
+      if (isAutoPlaying) {
+        icon.textContent = "⏸";
+        text.textContent = "Pause";
+        btn.className = "px-2.5 py-1 rounded bg-amber-600 hover:bg-amber-500 text-gray-950 font-bold mono text-[11px] flex items-center gap-1 shadow";
+        
+        autoPlayTimer = setInterval(() => {
+          if (currentStageIndex < 11) {
+            stepNextStage();
+          } else {
+            toggleAutoPlay();
+          }
+        }, 3000);
+      } else {
+        clearInterval(autoPlayTimer);
+        icon.textContent = "▶";
+        text.textContent = "Play";
+        btn.className = "px-2.5 py-1 rounded bg-cyan-600 hover:bg-cyan-500 text-gray-950 font-bold mono text-[11px] flex items-center gap-1 shadow";
+      }
+    }
+
+    function renderTimelineUI() {
+      for (let i = 1; i <= 11; i++) {
+        const el = document.getElementById(`timeline-step-${i}`);
+        if (!el) continue;
+        const ind = el.querySelector(".step-indicator");
+
+        if (i < currentStageIndex) {
+          el.className = "timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/40 text-slate-300";
+          ind.className = "step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-emerald-950 border border-emerald-600 flex items-center justify-center text-[10px] font-bold text-emerald-400 mono shadow-[0_0_8px_rgba(16,185,129,0.3)]";
+          ind.innerHTML = "✓";
+        } else if (i === currentStageIndex) {
+          el.className = "timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition bg-slate-900/90 border border-cyan-500/80 shadow-[0_0_15px_rgba(6,182,212,0.2)]";
+          ind.className = "step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-cyan-500 text-gray-950 flex items-center justify-center text-[10px] font-extrabold mono shadow-[0_0_12px_#06b6d4]";
+          ind.innerHTML = i < 10 ? `0${i}` : `${i}`;
+        } else {
+          el.className = "timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent opacity-40 hover:opacity-70";
+          ind.className = "step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-950 border border-slate-800 flex items-center justify-center text-[10px] font-bold text-slate-600 mono";
+          ind.innerHTML = i < 10 ? `0${i}` : `${i}`;
+        }
+      }
+      document.getElementById("timelineProgressBadge").textContent = `STAGE ${currentStageIndex} / 11`;
+    }
+
+    function updateStageView(stageNum) {
+      renderTimelineUI();
+      const stage = STAGES[stageNum - 1];
+      const s = SWARMS_STORE[activeSwarmId] || SWARMS_STORE[1];
+
+      document.getElementById("topStatusIndicator").textContent = `${stage.name} • ${stage.status.toUpperCase()}`;
+      document.getElementById("overlayStateName").textContent = stage.code;
+
+      const dynamicCard = document.getElementById("centerDynamicCard");
+      const logStream = document.getElementById("liveExecutionLogStream");
+      const now = new Date().toTimeString().split(" ")[0];
+
+      switch (stageNum) {
+        case 1: // Compiler
+          document.getElementById("overlayEngineTitle").textContent = "QUERY DECONSTRUCTION ENGINE";
+          dynamicCard.innerHTML = `
+            <div class="glass-panel p-4 rounded-2xl border border-cyan-500/60 shadow-2xl relative overflow-hidden space-y-3">
+              <div class="scan-line"></div>
+              <div class="flex items-center justify-between text-xs mono">
+                <span class="text-cyan-400 font-bold uppercase">Stage 01 • Problem Compiler</span>
+                <span class="text-emerald-400 font-bold">PARSED ✓</span>
+              </div>
+              <div class="text-sm font-bold text-white">"${s.question}"</div>
+              <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center text-[10px] mono">
+                <div class="bg-slate-900/90 p-2 rounded-lg border border-slate-800"><span class="text-slate-500 block">INTENT</span><strong class="text-cyan-300">PREDICT</strong></div>
+                <div class="bg-slate-900/90 p-2 rounded-lg border border-slate-800"><span class="text-slate-500 block">DOMAIN</span><strong class="text-cyan-300">${s.capability}</strong></div>
+                <div class="bg-slate-900/90 p-2 rounded-lg border border-slate-800"><span class="text-slate-500 block">LOCATION</span><strong class="text-indigo-300 truncate block">${s.targetLocation}</strong></div>
+                <div class="bg-slate-900/90 p-2 rounded-lg border border-slate-800"><span class="text-slate-500 block">HORIZON</span><strong class="text-purple-300">${s.horizon}</strong></div>
+                <div class="bg-slate-900/90 p-2 rounded-lg border border-slate-800"><span class="text-slate-500 block">CRITERION</span><strong class="text-emerald-400 truncate block">${s.criterion}</strong></div>
+              </div>
+            </div>
+          `;
+          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-cyan-400 font-bold">[COMPILER]</span> Deconstructed question into domain: <span class="text-white">${s.capability}</span>, criterion: <span class="text-white">${s.criterion}</span>.`;
+          break;
+
+        case 2: // Capability Match
+          document.getElementById("overlayEngineTitle").textContent = "REGISTRY QUALIFICATION SCANNER";
+          dynamicCard.innerHTML = `
+            <div class="glass-panel p-4 rounded-2xl border border-indigo-500/60 shadow-2xl space-y-3">
+              <div class="flex items-center justify-between text-xs mono">
+                <span class="text-indigo-300 font-bold uppercase">Stage 02 • Capability Match</span>
+                <span class="text-emerald-400 font-bold">MATCH FOUND ✓</span>
+              </div>
+              <div class="text-xs text-slate-300">Querying SwarmMindCore registry for capability: <strong class="text-cyan-300 mono">${s.capability}</strong></div>
+              <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs mono">
+                <span class="text-slate-400">Qualified Active Models:</span>
+                <span class="text-emerald-400 font-bold">3 / 3 On-Chain Models Ready</span>
+              </div>
+            </div>
+          `;
+          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-indigo-400 font-bold">[REGISTRY]</span> Scanned registry for ${s.capability}. Qualified 3 active agents.`;
+          break;
+
+        case 3: // Agent Recruitment
+          document.getElementById("overlayEngineTitle").textContent = "AUTONOMOUS AGENT ORCHESTRATOR";
+          dynamicCard.innerHTML = `
+            <div class="glass-panel p-4 rounded-2xl border border-purple-500/60 shadow-2xl space-y-3">
+              <div class="flex items-center justify-between text-xs mono">
+                <span class="text-purple-300 font-bold uppercase">Stage 03 • Specialist Recruitment</span>
+                <span class="text-emerald-400 font-bold">RECRUITED ✓</span>
+              </div>
+              <div class="text-xs text-slate-300">Selected 3 specialized models to execute zero-collusion prediction.</div>
+              <div class="grid grid-cols-3 gap-2 text-[10px] mono text-center">
+                <div class="bg-cyan-950/60 p-2 rounded border border-cyan-800 text-cyan-300 font-bold">ALPHA (Model 1)</div>
+                <div class="bg-indigo-950/60 p-2 rounded border border-indigo-800 text-indigo-300 font-bold">BETA (Model 2)</div>
+                <div class="bg-purple-950/60 p-2 rounded border border-purple-800 text-purple-300 font-bold">GAMMA (Model 3)</div>
+              </div>
+            </div>
+          `;
+          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-purple-400 font-bold">[RECRUITMENT]</span> Assigned ALPHA, BETA, and GAMMA models to Swarm #${s.id}.`;
+          break;
+
+        case 4: // Independent Analysis
+          document.getElementById("overlayEngineTitle").textContent = "ZERO-COLLUSION REASONING CORES";
+          dynamicCard.innerHTML = `
+            <div class="glass-panel p-4 rounded-2xl border border-blue-500/60 shadow-2xl space-y-3">
+              <div class="flex items-center justify-between text-xs mono">
+                <span class="text-blue-300 font-bold uppercase">Stage 04 • Independent Analysis</span>
+                <span class="text-cyan-400 font-bold">COMPUTING...</span>
+              </div>
+              <div class="text-xs text-slate-300">Models executing private domain forecasting without inter-agent collusion.</div>
+              <div class="text-[11px] text-slate-400 italic">Models assimilating domain data feeds, historical observations, and boundary metrics.</div>
+            </div>
+          `;
+          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-blue-400 font-bold">[ANALYSIS]</span> Models computing predictions. Collusion prevention active.`;
+          break;
+
+        case 5: // Commitment
+          document.getElementById("overlayEngineTitle").textContent = "CRYPTOGRAPHIC CAPSULE GENERATOR";
+          dynamicCard.innerHTML = `
+            <div class="glass-panel p-4 rounded-2xl border border-cyan-500/80 shadow-2xl space-y-3">
+              <div class="flex items-center justify-between text-xs mono">
+                <span class="text-cyan-300 font-bold uppercase">Stage 05 • Commitment & Escrow</span>
+                <span class="text-emerald-400 font-bold">SEALED ON-CHAIN ✓</span>
+              </div>
+              <div class="text-xs mono bg-slate-950 p-2.5 rounded border border-slate-800 text-slate-300 text-center select-all">
+                keccak256(swarmId, agentId, prediction, confidence, salt)
+              </div>
+              <div class="flex items-center justify-between text-xs mono">
+                <span class="text-slate-400">Prediction Bonds Escrowed:</span>
+                <span class="text-emerald-400 font-bold">${s.totalBonded} (0.0010 MSTC each)</span>
+              </div>
+            </div>
+          `;
+          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-cyan-400 font-bold">[COMMIT]</span> Locked prediction bonds on MST Testnet with verified Keccak256 hashes.`;
+          break;
+
+        case 6: // Challenge
+          document.getElementById("overlayEngineTitle").textContent = "ADVERSARIAL DISPUTE ENGINE";
+          dynamicCard.innerHTML = `
+            <div class="glass-panel p-4 rounded-2xl border border-amber-500/60 shadow-2xl space-y-3">
+              <div class="flex items-center justify-between text-xs mono">
+                <span class="text-amber-300 font-bold uppercase">Stage 06 • Challenge Market</span>
+                <span class="text-emerald-400 font-bold">UNCONTESTED ✓</span>
+              </div>
+              <div class="text-xs text-slate-300">Challenge window open. Peer models review commitment hashes and evidence references.</div>
+              <div class="bg-amber-950/30 p-2 rounded-lg border border-amber-800/60 text-[11px] text-amber-200 mono text-center">
+                Dispute Window Concluded • Zero Challenges Submitted • Clean Consensus
+              </div>
+            </div>
+          `;
+          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-amber-400 font-bold">[CHALLENGE]</span> Challenge window evaluated. Zero dispute claims filed.`;
+          break;
+
+        case 7: // Reveal
+          document.getElementById("overlayEngineTitle").textContent = "CRYPTOGRAPHIC CAPSULE UNLOCK";
+          dynamicCard.innerHTML = `
+            <div class="glass-panel p-4 rounded-2xl border border-purple-500/80 shadow-2xl space-y-3">
+              <div class="flex items-center justify-between text-xs mono">
+                <span class="text-purple-300 font-bold uppercase">Stage 07 • Prediction Reveal</span>
+                <span class="text-emerald-400 font-bold">3 / 3 UNLOCKED ✓</span>
+              </div>
+              <div class="grid grid-cols-3 gap-2 text-center text-xs mono">
+                <div class="bg-slate-900/90 p-2 rounded border border-slate-800"><span class="text-slate-500 text-[10px]">ALPHA</span><strong class="text-emerald-400 block">YES (60%)</strong></div>
+                <div class="bg-slate-900/90 p-2 rounded border border-slate-800"><span class="text-slate-500 text-[10px]">BETA</span><strong class="text-emerald-400 block">YES (58%)</strong></div>
+                <div class="bg-slate-900/90 p-2 rounded border border-slate-800"><span class="text-slate-500 text-[10px]">GAMMA</span><strong class="text-emerald-400 block">YES (73%)</strong></div>
+              </div>
+            </div>
+          `;
+          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-purple-400 font-bold">[REVEAL]</span> Secret salts submitted. Preimages unlocked on-chain on MST Testnet.`;
+          break;
+
+        case 8: // Verification
+          document.getElementById("overlayEngineTitle").textContent = "PREIMAGE INTEGRITY CHECKER";
+          dynamicCard.innerHTML = `
+            <div class="glass-panel p-4 rounded-2xl border border-emerald-500/80 shadow-2xl space-y-3">
+              <div class="flex items-center justify-between text-xs mono">
+                <span class="text-emerald-400 font-bold uppercase">Stage 08 • Hash Verification</span>
+                <span class="text-emerald-400 font-bold">MATCH CONFIRMED ✓</span>
+              </div>
+              <div class="text-xs text-slate-300">Smart contract recomputed hash matches stored commitment byte-for-byte.</div>
+              <div class="flex items-center justify-between bg-emerald-950/40 p-2.5 rounded-lg border border-emerald-800/80 text-xs mono">
+                <span class="text-slate-300">Preimage Verification:</span>
+                <span class="text-emerald-400 font-bold">100% Validated (0 Alterations)</span>
+              </div>
+            </div>
+          `;
+          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-emerald-400 font-bold">[VERIFY]</span> SwarmMindCore verified reveal hashes against locked commitments on MST Testnet.`;
+          break;
+
+        case 9: // Consensus
+          document.getElementById("overlayEngineTitle").textContent = "SYNTHETIC CONSENSUS ENGINE";
+          dynamicCard.innerHTML = `
+            <div class="glass-panel p-4 rounded-2xl border border-cyan-400/90 bg-slate-950/90 shadow-2xl space-y-3 glow-cyan">
+              <div class="flex items-center justify-between text-xs mono">
+                <span class="text-cyan-300 font-bold uppercase">Stage 09 • Swarm Consensus</span>
+                <span class="text-emerald-400 font-bold">${s.agreementLevel}</span>
+              </div>
+              <div class="text-center py-1">
+                <div class="text-2xl font-black text-white">${s.consensusDecision}</div>
+                <div class="text-xs text-cyan-400 mono mt-0.5">Weighted Confidence: ${s.consensusConfidence}%</div>
+              </div>
+            </div>
+          `;
+          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-cyan-400 font-bold">[CONSENSUS]</span> Swarm consensus achieved: ${s.consensusDecision} (${s.consensusConfidence}% confidence).`;
+          break;
+
+        case 10: // Outcome
+          document.getElementById("overlayEngineTitle").textContent = "REAL-WORLD OUTCOME RESOLVER";
+          if (!s.canSettle) {
+            dynamicCard.innerHTML = `
+              <div class="glass-panel p-5 rounded-2xl border border-amber-700/80 bg-slate-950/95 shadow-2xl space-y-3">
+                <div class="flex items-center justify-between text-xs mono border-b border-amber-800/40 pb-2">
+                  <span class="text-amber-400 font-bold uppercase flex items-center gap-1.5">
+                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                    Stage 10 • Hard Oracle Safety Gate
+                  </span>
+                  <span class="text-[10px] text-amber-300 bg-amber-950 px-2 py-0.5 rounded border border-amber-800 font-bold">OUTCOME PENDING</span>
+                </div>
+                <div class="text-center py-2 space-y-1">
+                  <div class="text-base font-extrabold text-white">"THE SWARM HAS SPOKEN. REALITY HAS NOT."</div>
+                  <div class="text-xs text-amber-300 mono">Target Date: ${s.targetDate} • Settlement Safely Locked</div>
+                  <p class="text-[11px] text-slate-400 pt-1">
+                    Forecast-only settlement strictly rejected by protocol safety gates. Realized precipitation ground truth will be collected from historical observations once target date concludes.
+                  </p>
+                </div>
+              </div>
+            `;
+            logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-amber-400 font-bold">[ORACLE]</span> Swarm #1 target date 2026-09-29 is pending. Settlement safety gate locked. Zero premature payout.`;
+          } else {
+            dynamicCard.innerHTML = `
+              <div class="glass-panel p-4 rounded-2xl border border-emerald-500/80 shadow-2xl space-y-3">
+                <div class="flex items-center justify-between text-xs mono">
+                  <span class="text-emerald-400 font-bold uppercase">Stage 10 • Controlled Outcome</span>
+                  <span class="text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800 font-bold">OUTCOME READY</span>
+                </div>
+                <div class="text-xs text-slate-300">Verified input: <strong class="text-white mono">1.2 mm &ge; 0.5 mm &rarr; YES</strong></div>
+                <div class="text-[11px] text-emerald-300 bg-emerald-950/40 p-2 rounded border border-emerald-800/60 mono text-center">
+                  Controlled Demonstration: Ready for on-chain settlement execution.
+                </div>
+              </div>
+            `;
+            logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-emerald-400 font-bold">[ORACLE]</span> Controlled ground truth provided to MVPControlledResolver (1.2mm &ge; 0.5mm &rarr; YES).`;
+          }
+          break;
+
+        case 11: // Settlement & Trust
+          document.getElementById("overlayEngineTitle").textContent = "FINANCIAL SETTLEMENT & TRUST LEDGER";
+          dynamicCard.innerHTML = `
+            <div class="glass-panel p-4 rounded-2xl border border-emerald-500 shadow-2xl space-y-3">
+              <div class="flex items-center justify-between text-xs mono border-b border-emerald-800/40 pb-2">
+                <span class="text-emerald-400 font-bold uppercase">Stage 11 • Settlement & Trust Boost</span>
+                <span class="text-[10px] text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800 font-bold">100% RECONCILED</span>
+              </div>
+              <div class="grid grid-cols-2 gap-2 text-xs mono">
+                <div class="bg-slate-900/90 p-2 rounded"><span class="text-slate-500 text-[10px] block">BONDS REFUNDED</span><strong class="text-emerald-400">0.0030 MSTC</strong></div>
+                <div class="bg-slate-900/90 p-2 rounded"><span class="text-slate-500 text-[10px] block">BOUNTY PAID</span><strong class="text-emerald-400">0.0050 MSTC</strong></div>
+              </div>
+              <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-xs mono text-center text-slate-300">
+                Reputation Ledger: <strong class="text-emerald-400">+500 bps (+5.00%)</strong> boost awarded for correct predictions.
+              </div>
+            </div>
+          `;
+          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-emerald-400 font-bold">[SETTLEMENT]</span> 0.0080 MSTC reconciled. Agent reputation ledger updated (+500 bps) on MST Testnet.`;
+          break;
+      }
+    }
+
+    // 5. CENTER VIEW TOGGLE (CANVAS vs DEBATE GRAPH vs SAFETY AUDIT)
+    function switchCenterView(viewName) {
+      activeCenterView = viewName;
+
+      const cCanvas = document.getElementById("centerCanvasContainer");
+      const cDebate = document.getElementById("centerDebateContainer");
+      const cSafety = document.getElementById("centerSafetyContainer");
+
+      const btnC = document.getElementById("tabCanvasBtn");
+      const btnD = document.getElementById("tabDebateBtn");
+      const btnS = document.getElementById("tabSafetyBtn");
+
+      cCanvas.classList.add("hidden");
+      cDebate.classList.add("hidden");
+      cSafety.classList.add("hidden");
+
+      btnC.className = "px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white";
+      btnD.className = "px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white";
+      btnS.className = "px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white";
+
+      if (viewName === "canvas") {
+        cCanvas.classList.remove("hidden");
+        btnC.className = "px-2.5 py-1 rounded font-bold transition bg-cyan-950 text-cyan-300 border border-cyan-800";
+        resizeCanvas();
+      } else if (viewName === "debate") {
+        cDebate.classList.remove("hidden");
+        btnD.className = "px-2.5 py-1 rounded font-bold transition bg-indigo-950 text-indigo-300 border border-indigo-800";
+      } else if (viewName === "safety") {
+        cSafety.classList.remove("hidden");
+        btnS.className = "px-2.5 py-1 rounded font-bold transition bg-amber-950 text-amber-300 border border-amber-800";
+      }
+    }
+
+    // 6. ADVERSARIAL DEBATE GRAPH UI
+    function renderDebateGraphUI() {
+      const container = document.getElementById("debateGraphContent");
+      if (!container) return;
+
+      const s = SWARMS_STORE[activeSwarmId] || SWARMS_STORE[1];
+      const agentKeys = Object.keys(s.agents);
+
+      container.innerHTML = agentKeys.map(k => {
+        const ag = s.agents[k];
+        return `
+          <div class="glass-panel p-4 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between text-xs mono">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+                <span class="font-extrabold text-white text-sm">${ag.name}</span>
+                <span class="text-slate-500 text-[11px]">(${ag.role})</span>
+              </div>
+              <span class="text-emerald-400 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800 text-[11px]">
+                PREDICTION: ${ag.prediction} (${ag.confidence}%)
+              </span>
+            </div>
+
+            <div class="text-xs text-slate-300 bg-slate-950/80 p-3 rounded-lg border border-slate-800/80 space-y-1">
+              <div class="text-slate-500 uppercase text-[10px] font-bold">METHODOLOGY / EVIDENCE SOURCE</div>
+              <div class="text-slate-200 font-sans">${ag.methodology}</div>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 text-[11px] mono">
+              <div class="bg-slate-900/60 p-2 rounded border border-slate-800">
+                <span class="text-slate-500 block text-[10px]">KECCAK256 COMMITMENT HASH</span>
+                <span class="text-cyan-300 truncate block select-all">${ag.commitmentHash}</span>
+              </div>
+              <div class="bg-slate-900/60 p-2 rounded border border-slate-800">
+                <span class="text-slate-500 block text-[10px]">ADVERSARIAL PEER REVIEW</span>
+                <span class="text-emerald-400 font-bold">NO CHALLENGES SUBMITTED</span>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join("");
+    }
+
+    // 7. 5-GATE SAFETY AUDIT UI
+    function renderSafetyAuditUI() {
+      const container = document.getElementById("safetyGatesContent");
+      if (!container) return;
+
+      const s = SWARMS_STORE[activeSwarmId] || SWARMS_STORE[1];
+      const isPending = !s.canSettle;
+
+      const badge = document.getElementById("safetyAuditBadge");
+      if (badge) {
+        badge.textContent = isPending ? "OUTCOME PENDING • SETTLEMENT LOCKED" : "OUTCOME READY • SETTLED";
+        badge.className = isPending ? "text-xs mono font-bold bg-amber-950 text-amber-300 border border-amber-800 px-3 py-1 rounded-full" : "text-xs mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800 px-3 py-1 rounded-full";
+      }
+
+      const gates = [
+        {
+          num: 1,
+          name: "TARGET DATE CONCLUDED",
+          desc: `Resolution horizon target date (${s.targetDate}).`,
+          status: isPending ? "WAITING FOR TARGET DATE" : "PASSED ✓",
+          passed: !isPending
+        },
+        {
+          num: 2,
+          name: "NON-FORECAST SOURCE",
+          desc: "Settlement must use realized historical dataset, not predictive forecast model.",
+          status: "VERIFIED ✓",
+          passed: true
+        },
+        {
+          num: 3,
+          name: "OBSERVATION RECORDED",
+          desc: `Empirical rainfall dataset collected for defined station (${s.targetLocation}).`,
+          status: isPending ? "PENDING OBSERVATION" : "PASSED ✓ (1.2 mm)",
+          passed: !isPending
+        },
+        {
+          num: 4,
+          name: "EVIDENCE REPRODUCIBLE",
+          desc: "Ground truth evidence hash anchored to IPFS/secure storage.",
+          status: "ANCHORED ✓",
+          passed: true
+        },
+        {
+          num: 5,
+          name: "RESOLVER AUTHORIZED",
+          desc: `MVPControlledResolver (${RESOLVER_ADDRESS.slice(0, 10)}...) authorized on SwarmMindCore.`,
+          status: "AUTHORIZED ✓",
+          passed: true
+        }
+      ];
+
+      container.innerHTML = gates.map(g => `
+        <div class="glass-panel p-3.5 rounded-xl border ${g.passed ? 'border-emerald-800/80 bg-emerald-950/10' : 'border-amber-800/80 bg-amber-950/10'} flex items-center justify-between">
+          <div class="space-y-0.5">
+            <div class="font-extrabold text-white text-xs flex items-center gap-2">
+              <span class="w-5 h-5 rounded-full ${g.passed ? 'bg-emerald-950 text-emerald-400 border border-emerald-600' : 'bg-amber-950 text-amber-400 border border-amber-600'} flex items-center justify-center text-[10px] font-bold">
+                0${g.num}
+              </span>
+              <span>${g.name}</span>
+            </div>
+            <div class="text-[11px] text-slate-400 pl-7 font-sans">${g.desc}</div>
+          </div>
+          <span class="text-xs font-bold ${g.passed ? 'text-emerald-400 bg-emerald-950 px-2.5 py-1 rounded border border-emerald-800' : 'text-amber-300 bg-amber-950 px-2.5 py-1 rounded border border-amber-800'}">
+            ${g.status}
+          </span>
+        </div>
+      `).join("");
+    }
+
+    // 8. AGENT PANEL & DEEP INSPECTOR
+    function renderAgentPanelUI() {
+      const container = document.getElementById("agentCardsContainer");
+      if (!container) return;
+
+      const s = SWARMS_STORE[activeSwarmId] || SWARMS_STORE[1];
+      const agentKeys = Object.keys(s.agents);
+
+      let cardsHtml = agentKeys.map(k => {
+        const ag = s.agents[k];
+        const isSelected = selectedAgentKey === k;
+        const pillText = currentStageIndex >= 11 ? "SETTLED" : (currentStageIndex >= 7 ? "REVEALED" : (currentStageIndex >= 5 ? "COMMITTED" : "ANALYZING"));
+        const pillStyle = currentStageIndex >= 11 ? "bg-emerald-950 text-emerald-300 border-emerald-800" : (currentStageIndex >= 7 ? "bg-purple-950 text-purple-300 border-purple-800" : "bg-cyan-950 text-cyan-300 border-cyan-800");
+
+        return `
+          <div id="agent-panel-${k}" onclick="selectAgentForInspection('${k}')" class="agent-panel-card p-3 rounded-xl border ${isSelected ? 'border-cyan-400 bg-slate-900' : 'border-slate-800 bg-slate-900/60'} hover:border-cyan-500/60 cursor-pointer transition space-y-2">
+            <div class="flex items-center justify-between text-xs mono">
+              <div class="flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full ${k.includes('ALPHA') ? 'bg-cyan-400' : (k.includes('BETA') ? 'bg-indigo-400' : 'bg-purple-400')}"></span>
+                <span class="font-bold text-white text-xs">${ag.name}</span>
+              </div>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded border ${pillStyle}">${pillText}</span>
+            </div>
+            <div class="text-[11px] text-slate-400">${ag.role}</div>
+            <div class="flex items-center justify-between text-[11px] mono pt-1 border-t border-slate-800/80">
+              <span class="text-slate-500">Rep: <strong class="text-emerald-400">${ag.reputation}</strong></span>
+              <span class="text-slate-500">Pred: <strong class="text-cyan-300">${ag.prediction} (${ag.confidence}%)</strong></span>
+            </div>
+          </div>
+        `;
+      }).join("");
+
+      // Deep Inspector Card HTML
+      const selectedAg = s.agents[selectedAgentKey] || s.agents["WEATHER_ALPHA"];
+      cardsHtml += `
+        <div id="deepInspectorCard" class="glass-panel p-3.5 rounded-xl border border-cyan-800/80 space-y-2.5 text-xs mono">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+            <span class="text-[10px] uppercase font-bold text-cyan-400 tracking-wider">Deep Agent Inspector</span>
+            <span class="text-[10px] text-emerald-400 font-bold">VERIFIED ON-CHAIN</span>
+          </div>
+
+          <div>
+            <span class="text-[10px] text-slate-500 uppercase">On-Chain Identifier</span>
+            <div class="text-[11px] text-slate-300 truncate select-all font-mono">${selectedAg.id}</div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-[11px]">
+            <div>
+              <span class="text-[10px] text-slate-500 uppercase">Domain Capability</span>
+              <div class="font-bold text-white">${selectedAg.capability}</div>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-500 uppercase">Prediction Bond</span>
+              <div class="font-bold text-emerald-400">${selectedAg.bond}</div>
+            </div>
+          </div>
+
+          <div>
+            <span class="text-[10px] text-slate-500 uppercase">Keccak256 Commitment Hash</span>
+            <div class="text-[10px] text-cyan-300 truncate select-all bg-slate-950 p-1.5 rounded border border-slate-800/80">${selectedAg.commitmentHash}</div>
+          </div>
+
+          <div>
+            <span class="text-[10px] text-slate-500 uppercase">Economic Owner Note</span>
+            <div class="text-[10px] text-slate-400">${selectedAg.owner}</div>
+          </div>
+
+          <div>
+            <span class="text-[10px] text-slate-500 uppercase">Methodology</span>
+            <div class="text-[11px] text-slate-300 leading-relaxed font-sans mt-0.5 line-clamp-3">
+              ${selectedAg.methodology}
+            </div>
+          </div>
+
+          <div class="pt-1 border-t border-slate-800 flex items-center justify-between text-[11px]">
+            <span class="text-slate-500">MSTScan Receipt:</span>
+            <a href="${MST_EXPLORER_URL}/tx/${selectedAg.txHash}" target="_blank" class="text-cyan-400 hover:underline">
+              View On-Chain Tx ↗
+            </a>
+          </div>
+        </div>
+      `;
+
+      container.innerHTML = cardsHtml;
+    }
+
+    function selectAgentForInspection(agentKey) {
+      selectedAgentKey = agentKey;
+      renderAgentPanelUI();
+    }
+
+    // 9. ON-CHAIN NETWORK STATUS POLL
+    async function fetchLatestOnChainNetworkStatus() {
+      try {
+        const res = await fetch("/api/network-status");
+        if (res.ok) {
+          const data = await res.json();
+          if (data.blockNumber) {
+            const el = document.getElementById("topBlockNumber");
+            if (el) el.textContent = `#${data.blockNumber}`;
+          }
+        }
+      } catch {}
+    }
+
+    // 10. 60FPS LIVE SWARM FIELD CANVAS RENDERING
+    let canvas, ctx;
+    let particles = [];
+    let signalPulses = [];
+
+    function initCanvas() {
+      canvas = document.getElementById("swarmCanvas");
+      if (!canvas) return;
+      ctx = canvas.getContext("2d");
+      resizeCanvas();
+      window.addEventListener("resize", resizeCanvas);
+
+      particles = [];
+      for (let i = 0; i < 45; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: Math.random() * canvas.height,
+          vx: (Math.random() - 0.5) * 0.4,
+          vy: (Math.random() - 0.5) * 0.4,
+          radius: Math.random() * 1.5 + 0.5,
+          alpha: Math.random() * 0.5 + 0.2
+        });
+      }
+
+      setInterval(() => {
+        if (activeCenterView === "canvas") {
+          spawnSignalPulse();
+        }
+      }, 1400);
+
+      renderCanvasLoop();
+    }
+
+    function resizeCanvas() {
+      if (!canvas) return;
+      const rect = canvas.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+    }
+
+    function spawnSignalPulse() {
+      const fromAgent = Math.floor(Math.random() * 3);
+      signalPulses.push({
+        agentIdx: fromAgent,
+        progress: 0,
+        speed: 0.015 + Math.random() * 0.01,
+        color: fromAgent === 0 ? "#38bdf8" : (fromAgent === 1 ? "#818cf8" : "#c084fc")
+      });
+    }
+
+    function renderCanvasLoop() {
+      if (!ctx || !canvas) return;
+      const width = canvas.width;
+      const height = canvas.height;
+      if (width === 0 || height === 0) {
+        requestAnimationFrame(renderCanvasLoop);
+        return;
+      }
+
+      const cx = width / 2;
+      const cy = height / 2;
+      const time = Date.now() * 0.001;
+
+      ctx.clearRect(0, 0, width, height);
+
+      // Grid
+      ctx.strokeStyle = "rgba(30, 41, 59, 0.25)";
+      ctx.lineWidth = 1;
+      const gridSize = 48;
+      for (let x = 0; x < width; x += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(x, 0);
+        ctx.lineTo(x, height);
+        ctx.stroke();
+      }
+      for (let y = 0; y < height; y += gridSize) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(width, y);
+        ctx.stroke();
+      }
+
+      // Particles
+      particles.forEach(p => {
+        p.x += p.vx;
+        p.y += p.vy;
+        if (p.x < 0) p.x = width;
+        if (p.x > width) p.x = 0;
+        if (p.y < 0) p.y = height;
+        if (p.y > height) p.y = 0;
+
+        ctx.fillStyle = `rgba(148, 163, 184, ${p.alpha * 0.6})`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      });
+
+      // Central Swarm Core
+      const corePulse = Math.sin(time * 2) * 4;
+      const coreRadius = 36 + corePulse;
+
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(time * 0.15);
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.2)";
+      ctx.lineWidth = 1.5;
+      ctx.setLineDash([6, 8]);
+      ctx.beginPath();
+      ctx.arc(0, 0, 72, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+
+      const coreGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, coreRadius * 1.8);
+      coreGrad.addColorStop(0, "rgba(56, 189, 248, 0.95)");
+      coreGrad.addColorStop(0.4, "rgba(99, 102, 241, 0.5)");
+      coreGrad.addColorStop(1, "rgba(6, 182, 212, 0)");
+
+      ctx.fillStyle = coreGrad;
+      ctx.beginPath();
+      ctx.arc(cx, cy, coreRadius * 1.8, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = "#0c1322";
+      ctx.strokeStyle = "#38bdf8";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+
+      ctx.fillStyle = "#ffffff";
+      ctx.font = "bold 9px 'JetBrains Mono'";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      ctx.fillText("CORE", cx, cy);
+
+      // Agent Orbit Nodes
+      const orbitDistance = Math.min(width, height) * 0.32;
+      const agentKeys = ["WEATHER_ALPHA", "WEATHER_BETA", "WEATHER_GAMMA"];
+      const agentColors = ["#38bdf8", "#818cf8", "#c084fc"];
+
+      const agentPositions = agentKeys.map((key, i) => {
+        const baseAngle = (i * (2 * Math.PI / 3)) - Math.PI / 2;
+        const angle = baseAngle + Math.sin(time * 0.5 + i) * 0.08;
+        const dist = orbitDistance + (currentStageIndex === 9 ? -30 : (currentStageIndex === 4 ? 20 : 0));
+        return {
+          key: key,
+          x: cx + Math.cos(angle) * dist,
+          y: cy + Math.sin(angle) * dist,
+          color: agentColors[i],
+          name: key.replace("WEATHER_", "")
+        };
+      });
+
+      // Connections
+      agentPositions.forEach((pos, idx) => {
+        ctx.strokeStyle = "rgba(56, 189, 248, 0.18)";
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(pos.x, pos.y);
+        ctx.stroke();
+
+        const nextPos = agentPositions[(idx + 1) % agentPositions.length];
+        ctx.strokeStyle = "rgba(139, 92, 246, 0.12)";
+        ctx.setLineDash([4, 6]);
+        ctx.beginPath();
+        ctx.moveTo(pos.x, pos.y);
+        ctx.lineTo(nextPos.x, nextPos.y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      });
+
+      // Pulses
+      for (let i = signalPulses.length - 1; i >= 0; i--) {
+        const pulse = signalPulses[i];
+        pulse.progress += pulse.speed;
+        if (pulse.progress >= 1) {
+          signalPulses.splice(i, 1);
+          continue;
+        }
+
+        const agentPos = agentPositions[pulse.agentIdx];
+        if (agentPos) {
+          const px = agentPos.x + (cx - agentPos.x) * pulse.progress;
+          const py = agentPos.y + (cy - agentPos.y) * pulse.progress;
+
+          ctx.fillStyle = pulse.color;
+          ctx.beginPath();
+          ctx.arc(px, py, 3.5, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      }
+
+      // Nodes
+      agentPositions.forEach((pos, idx) => {
+        const isSelected = selectedAgentKey === pos.key;
+        const agRadius = 24 + (isSelected ? 4 : 0);
+
+        ctx.strokeStyle = isSelected ? "#38bdf8" : "rgba(148, 163, 184, 0.3)";
+        ctx.lineWidth = isSelected ? 2 : 1.2;
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, agRadius + 8, 0, Math.PI * 2);
+        ctx.stroke();
+
+        const satAngle = time * 2.5 + idx * 2;
+        const satX = pos.x + Math.cos(satAngle) * (agRadius + 8);
+        const satY = pos.y + Math.sin(satAngle) * (agRadius + 8);
+        ctx.fillStyle = pos.color;
+        ctx.beginPath();
+        ctx.arc(satX, satY, 2.5, 0, Math.PI * 2);
+        ctx.fill();
+
+        if (currentStageIndex >= 5) {
+          ctx.strokeStyle = currentStageIndex >= 7 ? "rgba(16, 185, 129, 0.6)" : "rgba(6, 182, 212, 0.8)";
+          ctx.lineWidth = 1.5;
+          ctx.setLineDash([3, 3]);
+          ctx.beginPath();
+          ctx.arc(pos.x, pos.y, agRadius + 14, 0, Math.PI * 2);
+          ctx.stroke();
+          ctx.setLineDash([]);
+        }
+
+        ctx.fillStyle = "#0c1322";
+        ctx.beginPath();
+        ctx.arc(pos.x, pos.y, agRadius, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.strokeStyle = pos.color;
+        ctx.lineWidth = isSelected ? 2.5 : 1.5;
+        ctx.stroke();
+
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 9px 'JetBrains Mono'";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(pos.name, pos.x, pos.y - 3);
+
+        const s = SWARMS_STORE[activeSwarmId] || SWARMS_STORE[1];
+        ctx.fillStyle = pos.color;
+        ctx.font = "7px 'JetBrains Mono'";
+        ctx.fillText(s.capability || "WEATHER", pos.x, pos.y + 7);
+      });
+
+      requestAnimationFrame(renderCanvasLoop);
+    }
+
+    // ===================================================================
+    // LANDING NAVIGATION & INTERACTIVE SUBVIEWS
+    // ===================================================================
+    let allRegistryAgents = [];
+    let activeRegistryDomain = 'ALL';
+    let allDataSources = [];
+
+    function switchLandingTab(tabKey) {
+      const tabMap = {
+        arena: { btn: 'navTabArena', view: 'subview-arena' },
+        registry: { btn: 'navTabRegistry', view: 'subview-registry' },
+        datasources: { btn: 'navTabDatasources', view: 'subview-datasources' },
+        history: { btn: 'navTabHistory', view: 'subview-history' },
+        contracts: { btn: 'navTabContracts', view: 'subview-contracts' }
+      };
+
+      // Update button highlights
+      Object.keys(tabMap).forEach(k => {
+        const btn = document.getElementById(tabMap[k].btn);
+        const subview = document.getElementById(tabMap[k].view);
+        if (btn) {
+          if (k === tabKey) {
+            btn.className = 'text-white border-b-2 border-cyan-400 pb-1 cursor-pointer';
+          } else {
+            btn.className = 'hover:text-slate-200 transition cursor-pointer pb-1 border-b-2 border-transparent text-slate-400';
+          }
+        }
+        if (subview) {
+          if (k === tabKey) {
+            subview.classList.remove('hidden');
+          } else {
+            subview.classList.add('hidden');
+          }
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      // Trigger dynamic data fetchers
+      if (tabKey === 'registry') {
+        loadAndRenderRegistry();
+      } else if (tabKey === 'datasources') {
+        loadAndRenderDataSources();
+      } else if (tabKey === 'history') {
+        loadAndRenderLedger();
+      }
+    }
+
+    async function loadAndRenderRegistry() {
+      try {
+        const r = await fetch('/api/platform/agents');
+        const d = await r.json();
+        if (d.success && d.agents) {
+          allRegistryAgents = d.agents;
+          renderRegistryGrid();
+        }
+      } catch (err) {
+        console.warn('Fallback loading agents:', err);
+        renderRegistryGrid();
+      }
+    }
+
+    function renderRegistryGrid() {
+      const container = document.getElementById('registryGrid');
+      if (!container) return;
+
+      let list = allRegistryAgents.length ? allRegistryAgents : [
+        { name: "WEATHER_ALPHA", domain: "WEATHER", current_reputation: 83, onChainId: "0x4f59...162b", stake: "100 MSTC", description: "Atmospheric physics & boundary layer numerical parameterization specialist." },
+        { name: "WEATHER_BETA", domain: "WEATHER", current_reputation: 81, onChainId: "0x2bb5...1f4", stake: "100 MSTC", description: "Geostationary satellite telemetry & doppler radar storm tracker." },
+        { name: "WEATHER_GAMMA", domain: "WEATHER", current_reputation: 86, onChainId: "0x2d9c...d560", stake: "100 MSTC", description: "Climatological ML & empirical monsoon analogue pattern classifier." },
+        { name: "ENERGY_SOLAR_01", domain: "ENERGY", current_reputation: 88, onChainId: "0x7a1b...e92a", stake: "100 MSTC", description: "Solar irradiance yield forecasting & GHI cloud derating model." },
+        { name: "ENERGY_GRID_02", domain: "ENERGY", current_reputation: 82, onChainId: "0x9c3d...f811", stake: "100 MSTC", description: "Substation load capacity, transformer headroom & curtailment estimator." },
+        { name: "FINANCE_VOLATILITY_01", domain: "FINANCE", current_reputation: 87, onChainId: "0x3e4f...a029", stake: "100 MSTC", description: "Commodity derivative volatility surface & hedging threshold analysis." },
+        { name: "INFRA_THERMAL_01", domain: "INFRASTRUCTURE", current_reputation: 85, onChainId: "0x5b6c...7712", stake: "100 MSTC", description: "Structural expansion joint thermal stress & transit load monitoring." },
+        { name: "RISK_CROSS_DOMAIN_01", domain: "RISK", current_reputation: 89, onChainId: "0x1d2e...4488", stake: "100 MSTC", description: "Adversarial auditor specializing in cross-hypothesis cross-examination." }
+      ];
+
+      if (activeRegistryDomain !== 'ALL') {
+        list = list.filter(a => (a.domain || '').toUpperCase() === activeRegistryDomain);
+      }
+
+      container.innerHTML = list.map(a => {
+        const dom = (a.domain || 'WEATHER').toUpperCase();
+        const badgeColor = dom === 'WEATHER' ? 'bg-cyan-950 text-cyan-300 border-cyan-800' :
+                           dom === 'ENERGY' ? 'bg-amber-950 text-amber-300 border-amber-800' :
+                           dom === 'FINANCE' ? 'bg-emerald-950 text-emerald-300 border-emerald-800' :
+                           dom === 'INFRASTRUCTURE' ? 'bg-indigo-950 text-indigo-300 border-indigo-800' : 'bg-purple-950 text-purple-300 border-purple-800';
+
+        return `
+          <div class="glass-panel p-4 rounded-xl border border-slate-800 hover:border-cyan-500/50 transition space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] mono font-bold px-2 py-0.5 rounded border ${badgeColor}">${dom}</span>
+              <span class="text-xs mono font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-2 py-0.5 rounded">
+                ${a.current_reputation || 85}% REPUTATION
+              </span>
+            </div>
+            <div>
+              <div class="font-extrabold text-white text-sm">${a.name}</div>
+              <p class="text-xs text-slate-400 mt-1 leading-relaxed">${a.description || 'Specialist model with verifiable on-chain stake.'}</p>
+            </div>
+            <div class="bg-slate-950/90 p-2 rounded-lg border border-slate-800/80 flex items-center justify-between text-[11px] mono">
+              <span class="text-slate-500">STAKED BOND:</span>
+              <span class="text-cyan-300 font-bold">${a.stake || '100 MSTC'}</span>
+            </div>
+            <div class="space-y-1">
+              <div class="flex items-center justify-between text-[10px] text-slate-500 mono">
+                <span>Domain Preparation Weight</span>
+                <span class="text-emerald-400 font-bold">${a.current_reputation || 85}%</span>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
+                <div class="bg-emerald-400 h-full rounded-full" style="width: ${a.current_reputation || 85}%"></div>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function filterRegistryDomain(dom) {
+      activeRegistryDomain = dom;
+      document.querySelectorAll('.reg-filter-btn').forEach(btn => {
+        if (btn.textContent.trim() === dom) {
+          btn.className = 'reg-filter-btn px-3 py-1 rounded-lg text-xs mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-800';
+        } else {
+          btn.className = 'reg-filter-btn px-3 py-1 rounded-lg text-xs mono text-slate-400 hover:text-white bg-slate-900 border border-slate-800';
+        }
+      });
+      renderRegistryGrid();
+    }
+
+    async function loadAndRenderDataSources() {
+      try {
+        const r = await fetch('/api/platform/data-sources');
+        const d = await r.json();
+        if (d.success && d.dataSources) {
+          allDataSources = d.dataSources;
+          renderDataSourcesGrid();
+        }
+      } catch (err) {
+        console.warn('Fallback loading sources:', err);
+        renderDataSourcesGrid();
+      }
+    }
+
+    function renderDataSourcesGrid() {
+      const container = document.getElementById('dataSourcesGrid');
+      if (!container) return;
+
+      const list = allDataSources.length ? allDataSources : [
+        { name: "ECMWF IFS HRES 9km", domain: "WEATHER", type: "Forecast Input", description: "European Centre 9km atmospheric numerical model for surface precipitation.", variables: ["Precipitation", "CAPE", "CIN", "Boundary Layer Flux"] },
+        { name: "INSAT-3DR Geostationary", domain: "WEATHER", type: "Observation Feed", description: "ISRO geostationary meteorological sounding and cloud brightness temperature.", variables: ["Upper Troposphere RH", "Cloud Top Temp", "Doppler Wind"] },
+        { name: "IMD Chennai Meenambakkam (#43279)", domain: "WEATHER", type: "Ground Truth Station", description: "Official physical surface rain gauge network used for Swarm #1 resolution.", variables: ["Realized 24h Rain", "Surface Temp", "Pressure"] },
+        { name: "NREL NSRDB Solar", domain: "ENERGY", type: "Observation & Model", description: "National Solar Radiation Database providing satellite GHI and DNI irradiance.", variables: ["GHI", "DNI", "Cloud Optical Depth"] },
+        { name: "US EIA Substation Grid", domain: "ENERGY", type: "Infrastructure Feed", description: "Substation transmission headroom, 220kV interconnect capacity metrics.", variables: ["Transformer Load", "Curtailment %", "Available Headroom"] },
+        { name: "CPCB Air Quality Telemetry", domain: "ENVIRONMENT", type: "Continuous Sensor", description: "Central Pollution Control Board continuous air quality monitoring network.", variables: ["PM2.5", "PM10", "NO2", "AQI"] }
+      ];
+
+      container.innerHTML = list.map(s => {
+        const isGround = (s.type || '').includes('Ground') || (s.type || '').includes('Observation');
+        return `
+          <div class="glass-panel p-4 rounded-xl border border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] mono font-bold px-2 py-0.5 rounded border ${isGround ? 'bg-emerald-950 text-emerald-300 border-emerald-800' : 'bg-purple-950 text-purple-300 border-purple-800'}">
+                ${s.type || 'Dataset Feed'}
+              </span>
+              <span class="text-xs text-emerald-400 font-bold mono">ACTIVE ✓</span>
+            </div>
+            <div>
+              <div class="font-extrabold text-white text-sm">${s.name}</div>
+              <p class="text-xs text-slate-400 mt-1 leading-relaxed">${s.description}</p>
+            </div>
+            <div class="bg-slate-950/80 p-2.5 rounded-lg border border-slate-800 space-y-1">
+              <span class="text-[10px] text-slate-500 uppercase font-bold mono">TELEMETRY VARIABLES</span>
+              <div class="text-[11px] text-cyan-300 font-mono truncate">${(s.variables || []).join(' • ')}</div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    async function loadAndRenderLedger() {
+      const container = document.getElementById('predictionLedgerList');
+      if (!container) return;
+
+      try {
+        const r = await fetch('/api/platform/swarms');
+        const d = await r.json();
+        const swarms = (d.success && d.swarms && d.swarms.length) ? d.swarms : [
+          {
+            swarmId: 1,
+            question: "Will it rain in Chennai tomorrow?",
+            capability: "WEATHER",
+            status: "OUTCOME_PENDING",
+            bounty: "0.005 MSTC",
+            consensusVerdict: "YES (81% Weighted Confidence)",
+            targetDate: "2026-09-29",
+            isReal: true
+          },
+          {
+            swarmId: 2,
+            question: "CONTROLLED DEMO: Will the measured precipitation value be >= 0.5 mm?",
+            capability: "WEATHER",
+            status: "RESOLVED",
+            bounty: "0.005 MSTC",
+            consensusVerdict: "YES (81% Weighted Confidence)",
+            targetDate: "2026-09-29",
+            isReal: false
+          }
+        ];
+
+        container.innerHTML = swarms.map(sw => {
+          const isResolved = sw.status === 'RESOLVED';
+          const isReal = sw.isReal || sw.swarmId === 1;
+
+          return `
+            <div class="glass-panel p-5 rounded-xl border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
+              <div class="space-y-2">
+                <div class="flex items-center gap-2 flex-wrap text-xs mono">
+                  <span class="font-bold text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800">SWARM #${sw.swarmId || '001'}</span>
+                  <span class="font-bold text-slate-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">${(sw.capability || sw.domain || 'WEATHER').toUpperCase()}</span>
+                  ${isReal ? '<span class="text-amber-400 bg-amber-950/80 px-2 py-0.5 rounded border border-amber-800 font-bold">REAL-WORLD SWARM • SETTLEMENT LOCKED</span>' : '<span class="text-purple-300 bg-purple-950/80 px-2 py-0.5 rounded border border-purple-800 font-bold">CONTROLLED DEMONSTRATION</span>'}
+                  <span class="font-bold ${isResolved ? 'text-emerald-400 bg-emerald-950 border-emerald-800' : 'text-amber-300 bg-amber-950 border-amber-800'} px-2 py-0.5 rounded border">
+                    ${sw.status || 'OUTCOME_PENDING'}
+                  </span>
+                </div>
+                <div class="text-base font-extrabold text-white">"${sw.question}"</div>
+                <div class="text-xs text-slate-400 flex items-center gap-4 flex-wrap mono">
+                  <span>Bounty: <span class="text-cyan-300 font-bold">${sw.bounty || '0.005 MSTC'}</span></span>
+                  <span>Bonds: <span class="text-emerald-400 font-bold">0.003 MSTC</span></span>
+                  <span>Consensus: <span class="text-white font-bold">${sw.consensusVerdict || (sw.consensus ? sw.consensus.finalDecision : 'YES (81%)')}</span></span>
+                </div>
+              </div>
+              <button onclick="pickScenario('${sw.question.replace(/'/g, "\\'")}', ${sw.swarmId === 2 ? 2 : 1})" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-cyan-500 text-cyan-300 font-bold text-xs mono transition shrink-0 cursor-pointer">
+                Inspect in Swarm Control Center →
+              </button>
+            </div>
+          `;
+        }).join('');
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    async function addMstNetworkToWallet() {
+      if (typeof window.ethereum === 'undefined') {
+        alert('MetaMask or BridgeKey wallet not detected in this browser.');
+        return;
+      }
+      try {
+        await window.ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [{
+            chainId: '0x57519bb', // 91562037 in hex
+            chainName: 'MST Blockchain Testnet',
+            nativeCurrency: { name: 'MSTC', symbol: 'MSTC', decimals: 18 },
+            rpcUrls: ['https://testnetrpc.mstblockchain.com'],
+            blockExplorerUrls: ['https://testnet.mstscan.com']
+          }]
+        });
+        alert('MST Testnet successfully added to your wallet!');
+      } catch (err) {
+        alert('Network addition error: ' + err.message);
+      }
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,23 @@
+{
+  "name": "WEATHER_BETA",
+  "agentId": "0x2bb519c2d3835d6116adade05fdda3b9ddf2f4ef94bd343af59a317aee0cb1f4",
+  "capability": "WEATHER",
+  "version": "1.0.0",
+  "role": "Atmospheric Moisture Flux & Satellite Convective Forecaster",
+  "description": "Independent atmospheric forecaster analyzing infrared satellite cloud top temperatures, CAPE convective indices, and coastal moisture convergence vectors.",
+  "endpoint": "http://localhost:8002/predict",
+  "evidenceSources": [
+    "Geostationary Satellite Infrared Imagery (INSAT/GOES)",
+    "Atmospheric Sounding Dew Point Profiles",
+    "Doppler Weather Radar (DWR) Reflectivity Feeds"
+  ],
+  "model": {
+    "provider": "Convective-Thermodynamic-Engine",
+    "architecture": "Atmospheric Moisture Divergence Estimator",
+    "parameters": {
+      "relativeHumidityThreshold": 75,
+      "convectiveIndexWeight": 0.55,
+      "cloudCoverThreshold": 60
+    }
+  }
+}

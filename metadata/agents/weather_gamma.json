@@ -1,0 +1,23 @@
+{
+  "name": "WEATHER_GAMMA",
+  "agentId": "0x2d9cbf004444d64e839bc520559f8047edd707a24ee15171f56648797edad560",
+  "capability": "WEATHER",
+  "version": "1.0.0",
+  "role": "Microclimate Analyst & Empirical Climatological Critic",
+  "description": "Adversarial analyst that cross-checks numerical predictions against historical anomaly baselines, urban heat island dampening, and radar false-positive signatures.",
+  "endpoint": "http://localhost:8003/predict",
+  "evidenceSources": [
+    "Climatological 30-Year Historical Normals",
+    "Microclimate Urban Heat Island Sensors",
+    "Cross-Model Discrepancy & Verification Matrix"
+  ],
+  "model": {
+    "provider": "Adversarial-Climatology-Engine",
+    "architecture": "Empirical Bayesian Anomaly Evaluator",
+    "parameters": {
+      "climatologyWeight": 0.40,
+      "discrepancyPenalty": 0.25,
+      "adversarialThreshold": 0.70
+    }
+  }
+}

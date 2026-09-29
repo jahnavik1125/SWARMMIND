@@ -1,0 +1,72 @@
+{
+  "swarms": [
+    {
+      "swarmId": 1,
+      "question": "Will it rain in Chennai tomorrow?",
+      "capability": "WEATHER",
+      "bounty": "0.005",
+      "createTxHash": "0xfdfe374556ead89754dfe448b0e2eb23bf528844f444c43d53bec95b24b6fa04",
+      "createBlockNumber": 5786741,
+      "creator": "0x3730145b513129B6081d753882536871ea454d46",
+      "state": 2,
+      "stateName": "Revealing",
+      "totalBonded": "0.003",
+      "createdAt": "2026-09-28T17:11:22.806Z",
+      "selectTxHash": "0x61c9b6dcf4f22b66d4d44a23227a5277a853ff4b217f94956a2064efc196c13e",
+      "selectBlockNumber": 5786744,
+      "selectedAgentIds": [
+        "0x2d9cbf004444d64e839bc520559f8047edd707a24ee15171f56648797edad560",
+        "0x4f593aa368b69c663a279a652ffdce8e2a7da9526492ac357472105aa758162b",
+        "0x2bb519c2d3835d6116adade05fdda3b9ddf2f4ef94bd343af59a317aee0cb1f4"
+      ],
+      "commitments": {
+        "WEATHER_ALPHA": {
+          "txHash": "0xaf132b26e94c80dab59b97aba539f7e9c1222183fa5349162db11ed7b8544cd2",
+          "blockNumber": 5786998,
+          "bond": "0.001 MSTC"
+        },
+        "WEATHER_BETA": {
+          "txHash": "0x807423482efc8911e9d14b70fb323522b30c965fb9750b97dae8148bb993fbb3",
+          "blockNumber": 5787001,
+          "bond": "0.001 MSTC"
+        },
+        "WEATHER_GAMMA": {
+          "txHash": "0x735ba75645267922877235ae3a07d376e76b41e890b3769ed61b779a333b3616",
+          "blockNumber": 5787004,
+          "bond": "0.001 MSTC"
+        }
+      },
+      "reveals": {
+        "WEATHER_ALPHA": {
+          "prediction": 1,
+          "predictionText": "YES",
+          "confidence": 6000,
+          "confidenceFormatted": "60.0%",
+          "txHash": "0xa15a3ebb895556e7d802accfa43c4a83ca6456ecdb69f64e5bf79981d16ca087",
+          "blockNumber": 5787247,
+          "cryptographicVerification": "PASS"
+        },
+        "WEATHER_BETA": {
+          "prediction": 1,
+          "predictionText": "YES",
+          "confidence": 5800,
+          "confidenceFormatted": "58.0%",
+          "txHash": "0xdb6194f685cd953ed262c3d8735433d555feee1d9e540a778b0c74fffad8e9be",
+          "blockNumber": 5787251,
+          "cryptographicVerification": "PASS"
+        },
+        "WEATHER_GAMMA": {
+          "prediction": 1,
+          "predictionText": "YES",
+          "confidence": 7300,
+          "confidenceFormatted": "73.0%",
+          "txHash": "0xdba3f80be0bee04e346b942822cc24595d1a623764737d26be9ff950c9fe6d2f",
+          "blockNumber": 5787254,
+          "cryptographicVerification": "PASS"
+        }
+      },
+      "revealsCompleted": true,
+      "updatedAt": "2026-09-28T17:37:30.000Z"
+    }
+  ]
+}

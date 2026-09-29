@@ -1,0 +1,26 @@
+{
+  "name": "swarmmind",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "npx hardhat test",
+    "compile": "npx hardhat compile",
+    "deploy:ui": "node scripts/deployment-server.js",
+    "deploy:temp-wallet": "node scripts/create-temp-deployer.js",
+    "deploy:temp": "node scripts/deploy-temp.js",
+    "verify:deployment": "node scripts/verify-deployment.js",
+    "verify:agents": "node scripts/verify-agents.js",
+    "verify:swarm": "node scripts/verify-swarm.js",
+    "verify:commitments": "node scripts/verify-commitments.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@nomicfoundation/hardhat-toolbox": "^5.0.0",
+    "@openzeppelin/contracts": "^5.6.1",
+    "dotenv": "^18.0.4",
+    "hardhat": "^2.29.1"
+  }
+}

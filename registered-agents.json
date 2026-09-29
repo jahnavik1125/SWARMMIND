@@ -1,0 +1,34 @@
+{
+  "agents": {
+    "WEATHER_GAMMA": {
+      "agentId": "0x2d9cbf004444d64e839bc520559f8047edd707a24ee15171f56648797edad560",
+      "capability": "WEATHER",
+      "metadataUri": "ipfs://bafkreiaweathergamma03",
+      "txHash": "0x6b9a3667d217c7b72190243c4003ab167335308d132761fa03a7b08c60adcab1",
+      "blockNumber": 5786518,
+      "owner": "0x3730145b513129B6081d753882536871ea454d46",
+      "registeredAt": "2026-09-28T17:00:45.658Z",
+      "explorerUrl": "https://testnet.mstscan.com/tx/0x6b9a3667d217c7b72190243c4003ab167335308d132761fa03a7b08c60adcab1"
+    },
+    "WEATHER_ALPHA": {
+      "agentId": "0x4f593aa368b69c663a279a652ffdce8e2a7da9526492ac357472105aa758162b",
+      "capability": "WEATHER",
+      "metadataUri": "ipfs://bafkreiaweatheralpha01",
+      "txHash": "0xfe05a2fe129a1130aacb0339e4d5dfbb7747517115bc47e1508677df12dec3f0",
+      "blockNumber": 5786530,
+      "owner": "0x3730145b513129B6081d753882536871ea454d46",
+      "registeredAt": "2026-09-28T17:01:04.994Z",
+      "explorerUrl": "https://testnet.mstscan.com/tx/0xfe05a2fe129a1130aacb0339e4d5dfbb7747517115bc47e1508677df12dec3f0"
+    },
+    "WEATHER_BETA": {
+      "agentId": "0x2bb519c2d3835d6116adade05fdda3b9ddf2f4ef94bd343af59a317aee0cb1f4",
+      "capability": "WEATHER",
+      "metadataUri": "ipfs://bafkreiaweatherbeta02",
+      "txHash": "0x3f28fe16015c27ed299be03bd5d3c0c506267b078276a7b59bcf3b3fffc89a36",
+      "blockNumber": 5786539,
+      "owner": "0x3730145b513129B6081d753882536871ea454d46",
+      "registeredAt": "2026-09-28T17:01:39.238Z",
+      "explorerUrl": "https://testnet.mstscan.com/tx/0x3f28fe16015c27ed299be03bd5d3c0c506267b078276a7b59bcf3b3fffc89a36"
+    }
+  }
+}

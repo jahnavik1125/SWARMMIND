@@ -1,0 +1,178 @@
+[
+  {
+    "source_id": "era5",
+    "name": "ECMWF ERA5 Reanalysis",
+    "url": "https://www.ecmwf.int/en/forecasts/datasets/reanalysis-datasets/era5",
+    "domain": "weather",
+    "description": "Hourly global atmospheric reanalysis combining physics-based numerical weather prediction with global observations.",
+    "variables": ["2m_temperature", "surface_pressure", "relative_humidity", "10m_wind_speed", "precipitation", "geopotential_500hpa", "cape"],
+    "last_updated": "2026-09-28",
+    "access_type": "api",
+    "status": "ONLINE"
+  },
+  {
+    "source_id": "weatherbench2",
+    "name": "WeatherBench 2",
+    "url": "https://sites.research.google/gr/weatherbench/",
+    "domain": "weather",
+    "description": "Google Research benchmark for evaluating physics and ML weather forecasting systems.",
+    "variables": ["geopotential_rmse", "precipitation_brier_score", "ensemble_spread", "temperature_bias"],
+    "last_updated": "2026-09-20",
+    "access_type": "dataset",
+    "status": "ONLINE"
+  },
+  {
+    "source_id": "sevir",
+    "name": "MIT SEVIR (Storm EVent ImagRy)",
+    "url": "https://github.com/MIT-AI-Accelerator/eie-sevir",
+    "domain": "weather",
+    "description": "Temporally and spatially aligned weather event imagery with radar VIL, satellite infrared, and lightning flashes.",
+    "variables": ["radar_vil", "infrared_cloud_top_temp", "lightning_flashes", "cloud_motion_vectors"],
+    "last_updated": "2026-09-15",
+    "access_type": "dataset",
+    "status": "ONLINE"
+  },
+  {
+    "source_id": "weatherbench_hist",
+    "name": "WeatherBench Historical Analogue Archive",
+    "url": "https://github.com/pangeo-data/WeatherBench",
+    "domain": "weather",
+    "description": "Decadal historical ERA5 data for statistical analogues and data-driven seasonal weather patterns.",
+    "variables": ["historical_monthly_normals", "precipitation_frequencies", "analogue_matches"],
+    "last_updated": "2026-09-10",
+    "access_type": "dataset",
+    "status": "ONLINE"
+  },
+  {
+    "source_id": "yahoo_finance",
+    "name": "Yahoo Finance Market Data",
+    "url": "https://finance.yahoo.com/",
+    "domain": "finance",
+    "description": "Historical equity prices, intraday volume, drawdown depth, moving averages, and annualized volatility metrics.",
+    "variables": ["open", "high", "low", "close", "volume", "drawdown_3yr", "annualized_volatility", "sma_50_200"],
+    "last_updated": "2026-09-28",
+    "access_type": "api",
+    "status": "ONLINE"
+  },
+  {
+    "source_id": "sec_edgar",
+    "name": "SEC EDGAR Financial Filings",
+    "url": "https://www.sec.gov/search-filings/edgar-application-programming-interfaces",
+    "domain": "finance",
+    "description": "Audited corporate balance sheets, 10-K / 10-Q annual/quarterly reports, revenue, debt, and cash flow health.",
+    "variables": ["revenue_ttm", "net_profit_margin", "debt_to_equity", "operating_cash_flow", "interest_coverage"],
+    "last_updated": "2026-09-25",
+    "access_type": "api",
+    "status": "ONLINE"
+  },
+  {
+    "source_id": "fred",
+    "name": "FRED & World Bank Macroeconomics",
+    "url": "https://fred.stlouisfed.org/",
+    "domain": "finance",
+    "description": "Macroeconomic sovereign rates, central bank repo rates, CPI inflation, GDP forecasts, and bond spreads.",
+    "variables": ["interest_rate", "cpi_inflation", "gdp_growth", "corporate_bond_spread", "exchange_rates"],
+    "last_updated": "2026-09-28",
+    "access_type": "api",
+    "status": "ONLINE"
+  },
+  {
+    "source_id": "fhwa_nbi",
+    "name": "FHWA National Bridge Inventory (NBI)",
+    "url": "https://www.fhwa.dot.gov/bridge/nbi/ascii2025.cfm",
+    "domain": "infrastructure",
+    "description": "Comprehensive structural database of bridge spans, superstructures, substructure pier conditions, and scour critical ratings.",
+    "variables": ["span_length", "deck_width", "scour_critical_index", "pier_foundation_type", "historical_service_life"],
+    "last_updated": "2026-09-01",
+    "access_type": "dataset",
+    "status": "ONLINE"
+  },
+  {
+    "source_id": "fhwa_unit_costs",
+    "name": "FHWA Bridge Replacement Unit Costs (2025)",
+    "url": "https://www.fhwa.dot.gov/bridge/nbi/sd2025.cfm",
+    "domain": "infrastructure",
+    "description": "National replacement cost benchmarks per square meter with substructure, deck, and approach contingency models.",
+    "variables": ["unit_cost_sq_meter", "contingency_buffer", "pier_cost_share", "superstructure_share"],
+    "last_updated": "2026-09-01",
+    "access_type": "dataset",
+    "status": "ONLINE"
+  },
+  {
+    "source_id": "usgs_hydrography",
+    "name": "USGS National Hydrography",
+    "url": "https://www.usgs.gov/national-hydrography/access-national-hydrography-products",
+    "domain": "environment",
+    "description": "Surface water boundaries, perennial stream flows, 100-year flood elevations, and riparian conservation buffer zones.",
+    "variables": ["mean_discharge_m3s", "flood_elevation_head", "riparian_buffer_m", "aquatic_sensitivity"],
+    "last_updated": "2026-09-18",
+    "access_type": "dataset",
+    "status": "ONLINE"
+  },
+  {
+    "source_id": "usgs_3dep",
+    "name": "USGS 3D Elevation Program (3DEP)",
+    "url": "https://www.usgs.gov/3d-elevation-program",
+    "domain": "environment",
+    "description": "High-resolution digital elevation models (DEM), bank slope angle calculations, and cut-and-fill terrain difficulty.",
+    "variables": ["elevation_difference_m", "bank_slope_degrees", "geotechnical_overburden", "terrain_difficulty_score"],
+    "last_updated": "2026-09-12",
+    "access_type": "dataset",
+    "status": "ONLINE"
+  },
+  {
+    "source_id": "nasa_earthdata",
+    "name": "NASA Earthdata Global Observations",
+    "url": "https://www.earthdata.nasa.gov/",
+    "domain": "environment",
+    "description": "Multispectral satellite environmental observations, Normalized Difference Vegetation Index (NDVI), and canopy fraction.",
+    "variables": ["ndvi_vegetation_index", "soil_moisture_saturation", "wetland_canopy_fraction"],
+    "last_updated": "2026-09-24",
+    "access_type": "api",
+    "status": "ONLINE"
+  },
+  {
+    "source_id": "nrel_nsrdb",
+    "name": "NREL National Solar Radiation Database",
+    "url": "https://nsrdb.nrel.gov/",
+    "domain": "energy",
+    "description": "Solar radiation irradiance maps, Global Horizontal Irradiance (GHI), Direct Normal Irradiance (DNI), and seasonal derating.",
+    "variables": ["ghi_kwh_m2_day", "dni_kwh_m2_day", "clearness_index", "specific_yield_kwh_kwp"],
+    "last_updated": "2026-09-20",
+    "access_type": "dataset",
+    "status": "ONLINE"
+  },
+  {
+    "source_id": "us_eia",
+    "name": "US Energy Information Administration (EIA)",
+    "url": "https://www.eia.gov/opendata/",
+    "domain": "energy",
+    "description": "Grid electricity wholesale tariffs, substation headroom capacity, transmission interconnection metrics, and curtailment risks.",
+    "variables": ["transmission_voltage_kv", "substation_headroom_mva", "wholesale_rate_kwh", "curtailment_risk_pct"],
+    "last_updated": "2026-09-22",
+    "access_type": "api",
+    "status": "ONLINE"
+  },
+  {
+    "source_id": "faostat_usda",
+    "name": "FAOSTAT & USDA Agricultural Statistics",
+    "url": "https://www.fao.org/faostat/en/",
+    "domain": "agriculture",
+    "description": "Regional crop yield benchmarks, soil moisture-temperature matrices, drought-tolerance profiles, and water deficit limits.",
+    "variables": ["crop_suitability_score", "water_requirement_mm", "drought_tolerance", "optimal_soil_ph"],
+    "last_updated": "2026-09-14",
+    "access_type": "dataset",
+    "status": "ONLINE"
+  },
+  {
+    "source_id": "metr_la_pems",
+    "name": "Caltrans PeMS & METR-LA Highway Traffic",
+    "url": "https://pems.dot.ca.gov/",
+    "domain": "traffic",
+    "description": "Inductive loop highway speed sensors, volume-to-capacity bottleneck ratios, and peak morning congestion probabilities.",
+    "variables": ["free_flow_speed", "forecasted_speed", "speed_reduction_pct", "volume_capacity_ratio", "congestion_prob"],
+    "last_updated": "2026-09-28",
+    "access_type": "dataset",
+    "status": "ONLINE"
+  }
+]

@@ -1,0 +1,368 @@
+[
+  {
+    "agent_id": "weather_physics_01",
+    "name": "Physics Weather Agent",
+    "domain": "weather",
+    "description": "Applies atmospheric physics equations and numerical weather simulation to compute precipitation, temperature, wind, and barometric trends.",
+    "methodology": "Numerical Weather Prediction (NWP) & Thermodynamic Atmospheric Fluid Modeling",
+    "data_sources": ["era5", "weatherbench2"],
+    "current_reputation": 91,
+    "domain_reputation": {
+      "weather": 91,
+      "energy": 78,
+      "agriculture": 72
+    },
+    "number_of_predictions": 240,
+    "successful_predictions": 218,
+    "failed_predictions": 22,
+    "average_confidence": 84,
+    "stake": 150,
+    "status": "active",
+    "onChainId": "0x4f593aa368b69c663a279a652ffdce8e2a7da9526492ac357472105aa758162b"
+  },
+  {
+    "agent_id": "weather_cloud_02",
+    "name": "Cloud / Satellite Agent",
+    "domain": "weather",
+    "description": "Performs radar and geostationary infrared satellite imagery nowcasting to track cloud-top cooling and short-term convective precipitation bands.",
+    "methodology": "Satellite Infrared Cloud Movement & Radar Vertically Integrated Liquid (VIL) Nowcasting",
+    "data_sources": ["sevir"],
+    "current_reputation": 87,
+    "domain_reputation": {
+      "weather": 87,
+      "traffic": 76
+    },
+    "number_of_predictions": 210,
+    "successful_predictions": 183,
+    "failed_predictions": 27,
+    "average_confidence": 81,
+    "stake": 125,
+    "status": "active",
+    "onChainId": "0x2bb519c2d3835d6116adade05fdda3b9ddf2f4ef94bd343af59a317aee0cb1f4"
+  },
+  {
+    "agent_id": "weather_historical_03",
+    "name": "Historical Weather / ML Agent",
+    "domain": "weather",
+    "description": "Analyzes multi-decade historical weather analogues and empirical meteorological archives to identify recurrence probabilities and seasonal baselines.",
+    "methodology": "Historical Climatological Analogue Matching & Data-Driven Machine Learning Forecasting",
+    "data_sources": ["weatherbench_hist", "weatherbench2"],
+    "current_reputation": 82,
+    "domain_reputation": {
+      "weather": 82,
+      "agriculture": 79
+    },
+    "number_of_predictions": 195,
+    "successful_predictions": 160,
+    "failed_predictions": 35,
+    "average_confidence": 76,
+    "stake": 110,
+    "status": "active",
+    "onChainId": "0x2d9cbf004444d64e839bc520559f8047edd707a24ee15171f56648797edad560"
+  },
+  {
+    "agent_id": "finance_market_01",
+    "name": "Historical Market Agent",
+    "domain": "finance",
+    "description": "Studies historical equity price action, trading volumes, maximum historical drawdowns, and annualized price volatility regimes.",
+    "methodology": "Technical Momentum, Moving Average Regimes & Historical Volatility Profiling",
+    "data_sources": ["yahoo_finance"],
+    "current_reputation": 84,
+    "domain_reputation": {
+      "finance": 84,
+      "risk": 75
+    },
+    "number_of_predictions": 180,
+    "successful_predictions": 151,
+    "failed_predictions": 29,
+    "average_confidence": 79,
+    "stake": 130,
+    "status": "active",
+    "onChainId": "0x1111111111111111111111111111111111111111111111111111111111111101"
+  },
+  {
+    "agent_id": "finance_fundamental_02",
+    "name": "Fundamental Analysis Agent",
+    "domain": "finance",
+    "description": "Performs forensic analysis of corporate SEC 10-K filings, verifying operating cash flows, revenue margins, debt-to-equity, and balance sheet solvency.",
+    "methodology": "Fundamental Ratio Deconstruction & Liquidity / Solvency Assessment",
+    "data_sources": ["sec_edgar"],
+    "current_reputation": 89,
+    "domain_reputation": {
+      "finance": 89,
+      "infrastructure": 77
+    },
+    "number_of_predictions": 165,
+    "successful_predictions": 147,
+    "failed_predictions": 18,
+    "average_confidence": 86,
+    "stake": 160,
+    "status": "active",
+    "onChainId": "0x1111111111111111111111111111111111111111111111111111111111111102"
+  },
+  {
+    "agent_id": "finance_economic_03",
+    "name": "Economic Agent",
+    "domain": "finance",
+    "description": "Integrates macroeconomic datasets including central bank policy rates, CPI inflation, GDP forecasts, and bond spreads to gauge systemic headwinds.",
+    "methodology": "Macroeconomic Regime Modeling & Monetary Transmission Analysis",
+    "data_sources": ["fred"],
+    "current_reputation": 78,
+    "domain_reputation": {
+      "finance": 78,
+      "energy": 71
+    },
+    "number_of_predictions": 140,
+    "successful_predictions": 109,
+    "failed_predictions": 31,
+    "average_confidence": 72,
+    "stake": 100,
+    "status": "active",
+    "onChainId": "0x1111111111111111111111111111111111111111111111111111111111111103"
+  },
+  {
+    "agent_id": "finance_risk_04",
+    "name": "Financial Risk Agent",
+    "domain": "finance",
+    "description": "Adversarial financial specialist that actively challenges bullish assumptions by auditing debt surges, multiple expansion, and cash flow degradation.",
+    "methodology": "Adversarial Stress Testing & Vulnerability / Downside Auditing",
+    "data_sources": ["sec_edgar", "yahoo_finance", "fred"],
+    "current_reputation": 88,
+    "domain_reputation": {
+      "finance": 88,
+      "risk": 91
+    },
+    "number_of_predictions": 175,
+    "successful_predictions": 154,
+    "failed_predictions": 21,
+    "average_confidence": 83,
+    "stake": 145,
+    "status": "active",
+    "onChainId": "0x1111111111111111111111111111111111111111111111111111111111111104"
+  },
+  {
+    "agent_id": "infra_structural_01",
+    "name": "Infrastructure Agent",
+    "domain": "infrastructure",
+    "description": "Compares proposed bridge and civil works parameters against the FHWA National Bridge Inventory (NBI) to evaluate structural archetypes and pier stability.",
+    "methodology": "Empirical Bridge Inventory Benchmarking & Structural Feasibility Profiling",
+    "data_sources": ["fhwa_nbi"],
+    "current_reputation": 86,
+    "domain_reputation": {
+      "infrastructure": 86,
+      "risk": 80
+    },
+    "number_of_predictions": 150,
+    "successful_predictions": 129,
+    "failed_predictions": 21,
+    "average_confidence": 84,
+    "stake": 135,
+    "status": "active",
+    "onChainId": "0x2222222222222222222222222222222222222222222222222222222222222201"
+  },
+  {
+    "agent_id": "infra_cost_02",
+    "name": "Construction Cost Agent",
+    "domain": "infrastructure",
+    "description": "Estimates capital expenditure requirements using FHWA Bridge Replacement Unit Cost databases, applying deck area formulas and regional cost adaptations.",
+    "methodology": "Parametric Unit-Cost Square-Meter Synthesis & Contingency Budgeting",
+    "data_sources": ["fhwa_unit_costs"],
+    "current_reputation": 81,
+    "domain_reputation": {
+      "infrastructure": 81,
+      "finance": 79
+    },
+    "number_of_predictions": 130,
+    "successful_predictions": 105,
+    "failed_predictions": 25,
+    "average_confidence": 76,
+    "stake": 115,
+    "status": "active",
+    "onChainId": "0x2222222222222222222222222222222222222222222222222222222222222202"
+  },
+  {
+    "agent_id": "env_water_01",
+    "name": "Environmental / Water Agent",
+    "domain": "environment",
+    "description": "Audits river flow rates, 100-year flood lines, aquatic migration pathways, and statutory conservation buffers using USGS National Hydrography data.",
+    "methodology": "Hydrological Streamflow Modeling & Riparian Conservation Impact Auditing",
+    "data_sources": ["usgs_hydrography"],
+    "current_reputation": 83,
+    "domain_reputation": {
+      "environment": 83,
+      "infrastructure": 75,
+      "agriculture": 80
+    },
+    "number_of_predictions": 145,
+    "successful_predictions": 120,
+    "failed_predictions": 25,
+    "average_confidence": 78,
+    "stake": 120,
+    "status": "active",
+    "onChainId": "0x3333333333333333333333333333333333333333333333333333333333333301"
+  },
+  {
+    "agent_id": "env_terrain_02",
+    "name": "Terrain / Geospatial Agent",
+    "domain": "environment",
+    "description": "Extracts digital elevation models (DEM) and slope profiles from USGS 3DEP to determine earthwork cut-and-fill feasibility and approach gradients.",
+    "methodology": "Digital Elevation Model (DEM) Topographic & Slope Angle Synthesis",
+    "data_sources": ["usgs_3dep"],
+    "current_reputation": 85,
+    "domain_reputation": {
+      "environment": 85,
+      "infrastructure": 88,
+      "energy": 84
+    },
+    "number_of_predictions": 160,
+    "successful_predictions": 136,
+    "failed_predictions": 24,
+    "average_confidence": 82,
+    "stake": 130,
+    "status": "active",
+    "onChainId": "0x3333333333333333333333333333333333333333333333333333333333333302"
+  },
+  {
+    "agent_id": "env_earth_03",
+    "name": "Earth Observation Agent",
+    "domain": "environment",
+    "description": "Leverages NASA Earthdata multispectral satellite observations to calculate vegetation vigor (NDVI), canopy cover, and surface moisture variations.",
+    "methodology": "Multispectral Satellite Remote Sensing & NDVI Index Quantification",
+    "data_sources": ["nasa_earthdata"],
+    "current_reputation": 80,
+    "domain_reputation": {
+      "environment": 80,
+      "agriculture": 82
+    },
+    "number_of_predictions": 120,
+    "successful_predictions": 96,
+    "failed_predictions": 24,
+    "average_confidence": 77,
+    "stake": 105,
+    "status": "active",
+    "onChainId": "0x3333333333333333333333333333333333333333333333333333333333333303"
+  },
+  {
+    "agent_id": "energy_solar_01",
+    "name": "Solar / Energy Agent",
+    "domain": "energy",
+    "description": "Simulates photovoltaic energy capture based on NREL NSRDB solar radiation datasets, computing GHI, DNI, and seasonal monsoon derating.",
+    "methodology": "Solar Irradiance Resource Modeling (GHI/DNI) & Specific Energy Yield Simulation",
+    "data_sources": ["nrel_nsrdb"],
+    "current_reputation": 92,
+    "domain_reputation": {
+      "energy": 92,
+      "weather": 79
+    },
+    "number_of_predictions": 170,
+    "successful_predictions": 156,
+    "failed_predictions": 14,
+    "average_confidence": 88,
+    "stake": 165,
+    "status": "active",
+    "onChainId": "0x4444444444444444444444444444444444444444444444444444444444444401"
+  },
+  {
+    "agent_id": "energy_grid_02",
+    "name": "Electricity / Grid Agent",
+    "domain": "energy",
+    "description": "Reviews US EIA regional electricity statistics, substation headroom, transmission voltages, and grid interconnection economics.",
+    "methodology": "Transmission Headroom Feasibility & Wholesale Energy Economic Analysis",
+    "data_sources": ["us_eia"],
+    "current_reputation": 83,
+    "domain_reputation": {
+      "energy": 83,
+      "infrastructure": 76
+    },
+    "number_of_predictions": 135,
+    "successful_predictions": 112,
+    "failed_predictions": 23,
+    "average_confidence": 80,
+    "stake": 120,
+    "status": "active",
+    "onChainId": "0x4444444444444444444444444444444444444444444444444444444444444402"
+  },
+  {
+    "agent_id": "agri_crop_01",
+    "name": "Agriculture Agent",
+    "domain": "agriculture",
+    "description": "Combines FAOSTAT crop production data, USDA NASS yield curves, and agro-climatic requirements to identify resilient, high-suitability cultivars.",
+    "methodology": "Agro-Ecological Soil Water Budgeting & Cultivar Suitability Ranking",
+    "data_sources": ["faostat_usda"],
+    "current_reputation": 86,
+    "domain_reputation": {
+      "agriculture": 86,
+      "environment": 78
+    },
+    "number_of_predictions": 140,
+    "successful_predictions": 120,
+    "failed_predictions": 20,
+    "average_confidence": 82,
+    "stake": 125,
+    "status": "active",
+    "onChainId": "0x5555555555555555555555555555555555555555555555555555555555555501"
+  },
+  {
+    "agent_id": "traffic_pems_01",
+    "name": "Traffic Prediction Agent",
+    "domain": "traffic",
+    "description": "Leverages Caltrans PeMS and METR-LA inductive loop road sensors to model spatiotemporal traffic velocity and peak morning congestion bottlenecks.",
+    "methodology": "Spatiotemporal Sensor Flow Dynamics & Volume-Capacity Bottleneck Modeling",
+    "data_sources": ["metr_la_pems"],
+    "current_reputation": 85,
+    "domain_reputation": {
+      "traffic": 85,
+      "infrastructure": 74
+    },
+    "number_of_predictions": 155,
+    "successful_predictions": 132,
+    "failed_predictions": 23,
+    "average_confidence": 83,
+    "stake": 130,
+    "status": "active",
+    "onChainId": "0x6666666666666666666666666666666666666666666666666666666666666601"
+  },
+  {
+    "agent_id": "risk_cross_domain_01",
+    "name": "Cross-Domain Risk Agent",
+    "domain": "risk",
+    "description": "Adversarial cross-examination specialist. Consumes outputs across civil, environmental, financial, and physical domains to detect contradictions and tail risks.",
+    "methodology": "Adversarial Multi-Disciplinary Cross-Examination & Systemic Risk Auditing",
+    "data_sources": ["sec_edgar", "fhwa_nbi", "usgs_hydrography", "yahoo_finance"],
+    "current_reputation": 93,
+    "domain_reputation": {
+      "risk": 93,
+      "finance": 88,
+      "infrastructure": 85,
+      "environment": 87,
+      "energy": 86,
+      "weather": 82
+    },
+    "number_of_predictions": 260,
+    "successful_predictions": 242,
+    "failed_predictions": 18,
+    "average_confidence": 89,
+    "stake": 200,
+    "status": "active",
+    "onChainId": "0x7777777777777777777777777777777777777777777777777777777777777701"
+  },
+  {
+    "agent_id": "agent_router_core",
+    "name": "Agent Router",
+    "domain": "meta",
+    "description": "Deconstructs natural language user queries, determines the required domain expertise, and dynamically recruits specialist agents based on reputation.",
+    "methodology": "Intent & Expertise Taxonomy Deconstruction & Dynamic Multi-Agent Routing",
+    "data_sources": ["era5", "sec_edgar", "fhwa_nbi"],
+    "current_reputation": 96,
+    "domain_reputation": {
+      "meta": 96
+    },
+    "number_of_predictions": 310,
+    "successful_predictions": 298,
+    "failed_predictions": 12,
+    "average_confidence": 92,
+    "stake": 250,
+    "status": "active",
+    "onChainId": "0x8888888888888888888888888888888888888888888888888888888888888801"
+  }
+]

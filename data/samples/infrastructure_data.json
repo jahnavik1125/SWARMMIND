@@ -1,0 +1,40 @@
+{
+  "FHWA_NBI": {
+    "description": "FHWA National Bridge Inventory (NBI) Structural Archive & Benchmark",
+    "officialUrl": "https://www.fhwa.dot.gov/bridge/nbi/ascii2025.cfm",
+    "disclaimer": "AI structural feasibility analysis only; does NOT constitute professional civil engineering or legal stamp approval.",
+    "benchmark_profiles": {
+      "river_crossing_medium": {
+        "span_category": "Multi-Span Pre-stressed Concrete Box Girder / Steel Truss",
+        "reference_span_length_m": 450.0,
+        "deck_width_m": 14.5,
+        "scour_critical_index": 4,
+        "pier_foundation_requirement": "Deep drilled shafts into bedrock due to river scour depth",
+        "average_service_life_years": 75,
+        "structural_feasibility_score_pct": 82.0,
+        "key_engineering_challenges": [
+          "Pier scour during peak flood stages",
+          "Approach embankment geotechnical stabilization",
+          "Navigational clearance clearance envelope"
+        ]
+      }
+    }
+  },
+  "FHWA_UnitCosts": {
+    "description": "FHWA Bridge Replacement Unit Costs Database (2025)",
+    "officialUrl": "https://www.fhwa.dot.gov/bridge/nbi/sd2025.cfm",
+    "cost_framework": {
+      "base_region": "United States National Baseline",
+      "currency": "USD",
+      "us_unit_cost_per_sq_meter_usd": 3850.0,
+      "indian_cost_conversion_note": "Direct US costs cannot be applied to Indian public infrastructure without adjusting for purchasing power parity (PPP), local steel/cement prices, and regional labor rates (~$650 - $950 / m² typical in India).",
+      "typical_contingency_buffer_pct": 20.0,
+      "cost_breakdown_percentages": {
+        "substructure_piers": 35.0,
+        "superstructure_deck": 32.0,
+        "approach_roads": 18.0,
+        "environmental_mitigation": 15.0
+      }
+    }
+  }
+}

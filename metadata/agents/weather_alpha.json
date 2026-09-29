@@ -1,0 +1,23 @@
+{
+  "name": "WEATHER_ALPHA",
+  "agentId": "0x4f593aa368b69c663a279a652ffdce8e2a7da9526492ac357472105aa758162b",
+  "capability": "WEATHER",
+  "version": "1.0.0",
+  "role": "Numerical Weather Prediction & Precipitation Grid Forecaster",
+  "description": "Autonomous forecaster utilizing high-resolution NWP ensemble grids, quantitative precipitation forecasts (QPF), and localized precipitation thresholds.",
+  "endpoint": "http://localhost:8001/predict",
+  "evidenceSources": [
+    "Open-Meteo GFS/ECMWF Ensemble API",
+    "IMD Automated Weather Station (AWS) Grid",
+    "Surface Synoptic Observations (SYNOP)"
+  ],
+  "model": {
+    "provider": "Ensemble-NWP-Engine",
+    "architecture": "Deterministic Multi-Model NWP Regressor",
+    "parameters": {
+      "precipitationThresholdMm": 0.5,
+      "lookaheadHours": 24,
+      "ensembleWeight": 0.65
+    }
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "USGS_Hydrography": {
+    "description": "USGS National Hydrography Dataset & Waterway Vulnerability Index",
+    "officialUrl": "https://www.usgs.gov/national-hydrography/access-national-hydrography-products",
+    "water_bodies": {
+      "river_crossing_site": {
+        "flow_type": "Perennial Major River Stream",
+        "mean_discharge_m3s": 380.0,
+        "100_year_flood_elevation_head_m": 4.8,
+        "riparian_buffer_zone_m": 150.0,
+        "aquatic_sensitivity_rating": "High (Fish spawning migration corridor)",
+        "environmental_suitability_score_pct": 64.0,
+        "mitigation_requirements": [
+          "Silt curtains during in-stream pier drilling",
+          "Dry-season foundation piling schedule",
+          "Zero toxic discharge concrete curing"
+        ]
+      }
+    }
+  },
+  "USGS_3DEP": {
+    "description": "USGS 3D Elevation Program (3DEP) Digital Elevation & Slope Models",
+    "officialUrl": "https://www.usgs.gov/3d-elevation-program",
+    "terrain_models": {
+      "river_valley_crossing": {
+        "left_bank_elevation_m": 84.5,
+        "right_bank_elevation_m": 92.0,
+        "elevation_difference_m": 7.5,
+        "max_bank_slope_degrees": 24.5,
+        "geotechnical_classification": "Alluvial silt overburden with sandstone bedrock at 18m",
+        "terrain_difficulty_score_pct": 71.0,
+        "approach_grade_recommendation": "4.2% gradient with cut-and-fill retaining walls"
+      },
+      "solar_farm_plateau": {
+        "mean_elevation_m": 720.0,
+        "slope_gradient_degrees": 2.1,
+        "aspect_direction": "South-facing",
+        "terrain_difficulty_score_pct": 18.0,
+        "earthwork_grading_requirement": "Minimal leveling required; optimal solar angle"
+      }
+    }
+  },
+  "NASA_Earthdata": {
+    "description": "NASA Earthdata Global Satellite Observation & Vegetation Index (MODIS/Landsat)",
+    "officialUrl": "https://www.earthdata.nasa.gov/",
+    "land_cover": {
+      "river_crossing_site": {
+        "ndvi_vegetation_index": 0.58,
+        "wetland_canopy_fraction_pct": 34.0,
+        "soil_moisture_saturation_pct": 78.0,
+        "ecological_sensitivity": "Sensitive riparian corridor requiring minimal canopy disruption"
+      },
+      "solar_farm_plateau": {
+        "ndvi_vegetation_index": 0.19,
+        "land_cover_type": "Arid barren scrubland with high solar albedo",
+        "soil_moisture_saturation_pct": 21.0,
+        "ecological_sensitivity": "Very Low (minimal wildlife displacement impact)"
+      }
+    }
+  }
+}

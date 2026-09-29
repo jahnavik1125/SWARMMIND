@@ -1,0 +1,84 @@
+{
+  "NREL_NSRDB": {
+    "description": "NREL National Solar Radiation Database (NSRDB) Solar Resource Data",
+    "officialUrl": "https://nsrdb.nrel.gov/",
+    "solar_profiles": {
+      "karnataka_plateau": {
+        "global_horizontal_irradiance_kwh_m2_day": 5.84,
+        "direct_normal_irradiance_kwh_m2_day": 6.12,
+        "diffuse_horizontal_irradiance_kwh_m2_day": 1.78,
+        "annual_clearness_index_kt": 0.62,
+        "expected_specific_yield_kwh_kwp_year": 1720,
+        "seasonal_monsoon_derating_pct": 28.0,
+        "solar_resource_rating": "Exceptional (Top tier solar generation potential)"
+      }
+    }
+  },
+  "US_EIA": {
+    "description": "US Energy Information Administration (EIA) Grid & Electricity Statistics",
+    "officialUrl": "https://www.eia.gov/opendata/",
+    "disclaimer": "EIA data provides macroeconomic energy statistics and wholesale benchmark trends; physical grid interconnection approval requires formal local utility transmission study.",
+    "grid_profiles": {
+      "regional_grid_interconnection": {
+        "transmission_line_voltage_kv": 220,
+        "distance_to_substation_km": 8.4,
+        "substation_transformer_headroom_mva": 45.0,
+        "peak_wholesale_electricity_rate_kwh_inr": 4.85,
+        "curtailment_risk_pct": 8.5,
+        "interconnection_feasibility_score_pct": 85.0
+      }
+    }
+  },
+  "FAOSTAT_USDA": {
+    "description": "FAOSTAT & USDA NASS Agricultural Statistics, Crop Yield & Soil Water Requirements",
+    "officialUrl": "https://www.fao.org/faostat/en/",
+    "crop_profiles": {
+      "karnataka_semi_arid": {
+        "region": "Karnataka Semi-Arid Agrocological Zone",
+        "mean_annual_rainfall_mm": 680.0,
+        "soil_type": "Red Sandy Loam with medium drainage",
+        "recommended_crops": [
+          {
+            "crop": "Finger Millet (Ragi)",
+            "water_requirement_mm": "350 - 450",
+            "drought_tolerance": "Very High",
+            "suitability_score_pct": 92.0,
+            "expected_yield_quintals_hectare": 28.5,
+            "soil_ph_optimal": "5.5 - 7.5"
+          },
+          {
+            "crop": "Pigeon Pea (Tur Dal)",
+            "water_requirement_mm": "500 - 650",
+            "drought_tolerance": "High",
+            "suitability_score_pct": 86.0,
+            "expected_yield_quintals_hectare": 14.2,
+            "soil_ph_optimal": "6.0 - 7.5"
+          },
+          {
+            "crop": "Lowland Paddy Rice",
+            "water_requirement_mm": "1100 - 1400",
+            "drought_tolerance": "Very Low",
+            "suitability_score_pct": 32.0,
+            "limiting_factor": "Severe water deficit without perennial canal irrigation"
+          }
+        ]
+      }
+    }
+  },
+  "METR_LA_PeMS": {
+    "description": "Caltrans PeMS & METR-LA Highway Sensor Traffic Flow & Speed Data",
+    "officialUrl": "https://pems.dot.ca.gov/",
+    "traffic_corridors": {
+      "outer_ring_road_morning": {
+        "corridor_name": "Major Tech Corridor / Outer Ring Road",
+        "target_window": "Tomorrow Morning 08:00 - 10:30 AM",
+        "free_flow_speed_kmh": 65.0,
+        "forecasted_mean_speed_kmh": 18.5,
+        "expected_speed_reduction_pct": 71.5,
+        "volume_to_capacity_ratio": 1.28,
+        "congestion_probability_pct": 88.0,
+        "primary_bottleneck_factor": "Major junction lane merging and peak office commuting inflow"
+      }
+    }
+  }
+}
