@@ -27,7 +27,8 @@ SwarmMind is an **autonomous AI accountability protocol** that coordinates multi
 
 ## 🌐 Live Deployment & Demo Links
 
-- **🚀 Live Web Application (GitHub Pages):** [https://jahnavik1125.github.io/SWARMMIND/](https://jahnavik1125.github.io/SWARMMIND/)
+- **🚀 Public Live Protocol Control Center (Online & Verified):** **[https://850e7ab296e4b2.lhr.life](https://850e7ab296e4b2.lhr.life)**
+- **🌐 GitHub Pages Mirror:** [https://jahnavik1125.github.io/SWARMMIND/](https://jahnavik1125.github.io/SWARMMIND/)
 - **📦 GitHub Repository:** [https://github.com/jahnavik1125/SWARMMIND](https://github.com/jahnavik1125/SWARMMIND)
 - **⚡ 1-Click Vercel Deploy:** [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fjahnavik1125%2FSWARMMIND)
 
