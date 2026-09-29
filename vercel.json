@@ -1,0 +1,20 @@
+{
+  "version": 2,
+  "name": "swarmmind-protocol",
+  "builds": [
+    {
+      "src": "index.html",
+      "use": "@vercel/static"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/execute/(.*)",
+      "dest": "/index.html"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}
