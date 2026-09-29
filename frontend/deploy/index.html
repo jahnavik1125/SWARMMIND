@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>SwarmMind — Autonomous AI Swarm Protocol Control Center</title>
+  <title>SwarmMind — Autonomous AI Swarm Neural Protocol Control Center</title>
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Ethers.js v6 UMD -->
@@ -15,13 +15,14 @@
   
   <style>
     :root {
-      --bg-dark: #05070c;
-      --bg-panel: #080c14;
-      --bg-surface: #0e1422;
+      --bg-dark: #04060a;
+      --bg-panel: #070b13;
+      --bg-surface: #0c121e;
       --border-subtle: rgba(30, 41, 59, 0.7);
-      --border-accent: rgba(56, 189, 248, 0.3);
-      --cyan-glow: rgba(6, 182, 212, 0.35);
-      --violet-glow: rgba(139, 92, 246, 0.35);
+      --border-accent: rgba(56, 189, 248, 0.35);
+      --cyan-glow: rgba(6, 182, 212, 0.45);
+      --violet-glow: rgba(139, 92, 246, 0.45);
+      --emerald-glow: rgba(16, 185, 129, 0.45);
     }
 
     body {
@@ -35,15 +36,15 @@
 
     /* Custom Glass & Shadows */
     .glass-panel {
-      background: rgba(8, 12, 20, 0.86);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(7, 11, 19, 0.88);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
       border: 1px solid var(--border-subtle);
     }
     .glass-surface {
-      background: rgba(14, 20, 34, 0.75);
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(51, 65, 85, 0.4);
+      background: rgba(12, 18, 30, 0.8);
+      backdrop-filter: blur(14px);
+      border: 1px solid rgba(51, 65, 85, 0.45);
     }
     .glow-cyan {
       box-shadow: 0 0 35px -5px var(--cyan-glow);
@@ -51,17 +52,20 @@
     .glow-violet {
       box-shadow: 0 0 35px -5px var(--violet-glow);
     }
+    .glow-emerald {
+      box-shadow: 0 0 35px -5px var(--emerald-glow);
+    }
 
     /* Scrollbars */
     ::-webkit-scrollbar { width: 5px; height: 5px; }
-    ::-webkit-scrollbar-track { background: #060911; }
+    ::-webkit-scrollbar-track { background: #04060a; }
     ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 4px; }
     ::-webkit-scrollbar-thumb:hover { background: #334155; }
 
-    /* Scanning laser beam animation */
+    /* Keyframe Animations */
     @keyframes scanBeam {
       0% { top: 0%; opacity: 0.1; }
-      50% { opacity: 0.8; }
+      50% { opacity: 0.85; }
       100% { top: 100%; opacity: 0.1; }
     }
     .scan-line {
@@ -69,11 +73,10 @@
       left: 0;
       right: 0;
       height: 2px;
-      background: linear-gradient(90deg, transparent, #38bdf8, #818cf8, transparent);
-      animation: scanBeam 2.4s ease-in-out infinite;
+      background: linear-gradient(90deg, transparent, #38bdf8, #818cf8, #34d399, transparent);
+      animation: scanBeam 2.2s ease-in-out infinite;
     }
 
-    /* Traveling signal on vertical timeline */
     @keyframes timelineSignal {
       0% { top: 0%; opacity: 0; }
       20% { opacity: 1; }
@@ -84,35 +87,80 @@
       position: absolute;
       left: -1px;
       width: 3px;
-      height: 48px;
-      background: linear-gradient(180deg, #38bdf8, #818cf8);
+      height: 52px;
+      background: linear-gradient(180deg, #38bdf8, #818cf8, #34d399);
       border-radius: 2px;
-      box-shadow: 0 0 12px #38bdf8;
-      animation: timelineSignal 3s linear infinite;
+      box-shadow: 0 0 14px #38bdf8;
+      animation: timelineSignal 2.8s linear infinite;
     }
 
-    /* Cinematic Transition Warp */
     @keyframes warpPulse {
-      0% { transform: scale(0.6); opacity: 0; }
-      50% { opacity: 0.8; }
-      100% { transform: scale(2.4); opacity: 0; }
+      0% { transform: scale(0.5); opacity: 0; }
+      50% { opacity: 0.85; }
+      100% { transform: scale(2.6); opacity: 0; }
     }
     .warp-wave {
       animation: warpPulse 0.9s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
+
+    @keyframes neuralFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
+    }
+    .neural-float {
+      animation: neuralFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes pulseGlow {
+      0%, 100% { box-shadow: 0 0 15px rgba(6, 182, 212, 0.3); }
+      50% { box-shadow: 0 0 30px rgba(6, 182, 212, 0.7); }
+    }
+    .pulse-glow-box {
+      animation: pulseGlow 2.5s ease-in-out infinite;
+    }
+
+    @keyframes shimmerMove {
+      0% { background-position: -200% 0; }
+      100% { background-position: 200% 0; }
+    }
+    .shimmer-badge {
+      background: linear-gradient(90deg, rgba(255,255,255,0.03) 0%, rgba(255,255,255,0.15) 50%, rgba(255,255,255,0.03) 100%);
+      background-size: 200% 100%;
+      animation: shimmerMove 3s infinite;
+    }
+
+    @keyframes synapseSparks {
+      0% { opacity: 0; transform: scale(0.6); }
+      50% { opacity: 1; transform: scale(1.2); }
+      100% { opacity: 0; transform: scale(0.6); }
+    }
+    .synapse-spark {
+      animation: synapseSparks 1.8s ease-in-out infinite;
+    }
+
+    @keyframes scoreCountGlow {
+      0% { text-shadow: 0 0 0 rgba(52, 211, 153, 0); }
+      50% { text-shadow: 0 0 16px rgba(52, 211, 153, 0.8); }
+      100% { text-shadow: 0 0 0 rgba(52, 211, 153, 0); }
+    }
+    .score-glow {
+      animation: scoreCountGlow 2s ease-in-out infinite;
+    }
   </style>
 </head>
-<body class="min-h-screen bg-[#05070c] text-slate-100 flex flex-col select-none">
+<body class="min-h-screen bg-[#04060a] text-slate-100 flex flex-col select-none">
 
   <!-- =================================================================== -->
   <!-- TRANSITION OVERLAY: CINEMATIC WARP BETWEEN LANDING & DASHBOARD     -->
   <!-- =================================================================== -->
-  <div id="transitionOverlay" class="hidden fixed inset-0 z-50 bg-[#05070c] pointer-events-none flex items-center justify-center transition-opacity duration-700">
+  <div id="transitionOverlay" class="hidden fixed inset-0 z-50 bg-[#04060a] pointer-events-none flex items-center justify-center transition-opacity duration-700">
     <div class="relative flex items-center justify-center">
       <div class="w-32 h-32 rounded-full border-2 border-cyan-400 warp-wave absolute"></div>
       <div class="w-64 h-64 rounded-full border border-indigo-500 warp-wave absolute" style="animation-delay: 0.2s;"></div>
       <div class="w-96 h-96 rounded-full border border-purple-500 warp-wave absolute" style="animation-delay: 0.4s;"></div>
-      <div class="w-12 h-12 rounded-full bg-cyan-400 shadow-[0_0_50px_#38bdf8] animate-pulse"></div>
+      <div class="w-14 h-14 rounded-full bg-cyan-400 shadow-[0_0_60px_#38bdf8] animate-pulse flex items-center justify-center text-gray-950 font-black text-xs mono">
+        🧠
+      </div>
     </div>
   </div>
 
@@ -121,24 +169,37 @@
   <!-- =================================================================== -->
   <div id="view-landing" class="flex-1 flex flex-col transition-opacity duration-500">
     <!-- Landing Top Nav -->
-    <header class="border-b border-slate-800/80 bg-[#070b13]/80 backdrop-blur-md sticky top-0 z-40 px-6 py-4">
+    <header class="border-b border-slate-800/80 bg-[#060911]/90 backdrop-blur-md sticky top-0 z-40 px-6 py-4">
       <div class="max-w-7xl mx-auto flex items-center justify-between">
-        <div class="flex items-center gap-3">
-          <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-cyan-500 to-indigo-600 flex items-center justify-center font-black text-white text-sm shadow-lg shadow-cyan-500/20">
-            S
+        <div class="flex items-center gap-3 cursor-pointer" onclick="switchLandingTab('arena')">
+          <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 via-indigo-600 to-purple-600 flex items-center justify-center font-black text-white text-base shadow-lg shadow-cyan-500/25 pulse-glow-box">
+            🧠
           </div>
           <div>
-            <span class="font-extrabold tracking-tight text-white text-base">SWARMMIND</span>
-            <span class="ml-2 text-[10px] font-bold uppercase mono text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800/60">AI PROTOCOL</span>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold tracking-tight text-white text-base">SWARMMIND</span>
+              <span class="text-[10px] font-bold uppercase mono text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800/70">NEURAL PROTOCOL</span>
+            </div>
+            <div class="text-[10px] text-slate-400 mono">Decentralized Multi-Agent Synaptic Network</div>
           </div>
         </div>
 
         <nav class="hidden md:flex items-center gap-6 text-xs font-semibold mono text-slate-400" id="landingNavLinks">
-          <button id="navTabArena" onclick="switchLandingTab('arena')" class="text-white border-b-2 border-cyan-400 pb-1 cursor-pointer">Arena</button>
-          <button id="navTabRegistry" onclick="switchLandingTab('registry')" class="hover:text-slate-200 transition cursor-pointer pb-1 border-b-2 border-transparent">Agent Registry</button>
-          <button id="navTabDatasources" onclick="switchLandingTab('datasources')" class="hover:text-slate-200 transition cursor-pointer pb-1 border-b-2 border-transparent">Data Sources</button>
-          <button id="navTabHistory" onclick="switchLandingTab('history')" class="hover:text-slate-200 transition cursor-pointer pb-1 border-b-2 border-transparent">Prediction Ledger</button>
-          <button id="navTabContracts" onclick="switchLandingTab('contracts')" class="hover:text-slate-200 transition cursor-pointer pb-1 border-b-2 border-transparent">MST Testnet</button>
+          <button id="navTabArena" onclick="switchLandingTab('arena')" class="text-white border-b-2 border-cyan-400 pb-1 cursor-pointer flex items-center gap-1.5">
+            <span>⚡</span> Summoner Arena
+          </button>
+          <button id="navTabRegistry" onclick="switchLandingTab('registry')" class="hover:text-slate-200 transition cursor-pointer pb-1 border-b-2 border-transparent flex items-center gap-1.5">
+            <span>🤖</span> Agent Registry & Scores
+          </button>
+          <button id="navTabDatasources" onclick="switchLandingTab('datasources')" class="hover:text-slate-200 transition cursor-pointer pb-1 border-b-2 border-transparent flex items-center gap-1.5">
+            <span>📡</span> Oracle Feeds
+          </button>
+          <button id="navTabHistory" onclick="switchLandingTab('history')" class="hover:text-slate-200 transition cursor-pointer pb-1 border-b-2 border-transparent flex items-center gap-1.5">
+            <span>📜</span> Prediction Ledger
+          </button>
+          <button id="navTabContracts" onclick="switchLandingTab('contracts')" class="hover:text-slate-200 transition cursor-pointer pb-1 border-b-2 border-transparent flex items-center gap-1.5">
+            <span>🔗</span> MST Testnet
+          </button>
         </nav>
 
         <div class="flex items-center gap-3 text-xs mono">
@@ -146,7 +207,7 @@
             <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
             <span id="landingChainBadge">MST Testnet (91562037)</span>
           </div>
-          <button id="btnLandingConnectWallet" onclick="connectWallet(true)" class="bg-cyan-500 hover:bg-cyan-400 text-gray-950 font-bold px-4 py-1.5 rounded-lg transition shadow-md shadow-cyan-500/10">
+          <button id="btnLandingConnectWallet" onclick="connectWallet(true)" class="bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-gray-950 font-bold px-4 py-1.5 rounded-lg transition shadow-md shadow-cyan-500/20">
             Connect Wallet
           </button>
         </div>
@@ -155,32 +216,53 @@
 
     <!-- SUBVIEW 1: ARENA (SUMMONER HERO) -->
     <main id="subview-arena" class="landing-subtab flex-1 flex flex-col justify-center items-center px-4 max-w-4xl mx-auto w-full py-16 text-center space-y-8 relative">
-      <!-- Ambient background glow -->
-      <div class="absolute -top-12 left-1/2 -translate-x-1/2 w-96 h-96 bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
-      <div class="absolute top-48 left-1/3 w-80 h-80 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <!-- Ambient background glows -->
+      <div class="absolute -top-16 left-1/2 -translate-x-1/2 w-[32rem] h-[32rem] bg-cyan-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute top-48 left-1/4 w-96 h-96 bg-indigo-500/10 rounded-full blur-3xl pointer-events-none"></div>
+      <div class="absolute top-64 right-1/4 w-80 h-80 bg-purple-500/10 rounded-full blur-3xl pointer-events-none"></div>
 
-      <div class="space-y-3 z-10">
-        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-slate-900/90 border border-slate-800 text-[11px] mono text-cyan-400">
-          <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-ping"></span>
-          Decentralized Multi-Agent Consensus Protocol
+      <div class="space-y-4 z-10">
+        <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-900/90 border border-slate-800 text-xs mono text-cyan-400 shadow-md">
+          <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+          Autonomous Multi-Layer Neural Synaptic Protocol
         </div>
         <h1 class="text-4xl sm:text-6xl font-black tracking-tight text-white leading-tight">
-          AI thinks. Blockchain coordinates.<br/>
-          <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-purple-400">Reality decides reputation.</span>
+          AI thinks in neural swarms.<br/>
+          <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-indigo-300 to-emerald-400">Blockchain settles accountability.</span>
         </h1>
         <p class="text-sm sm:text-base text-slate-400 max-w-2xl mx-auto leading-relaxed">
-          Submit any verifiable real-world question. Autonomous AI specialists independently analyze, cryptographically commit prediction bonds on MST Testnet, debate, and settle upon empirical outcome verification.
+          Submit empirical real-world prediction tasks. Autonomous specialized neural agents reason in zero-collusion isolation, stake crypto bonds, run adversarial challenge markets, and settle bounties upon ground-truth realization.
         </p>
       </div>
 
+      <!-- Quick Metrics Ribbon -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 w-full max-w-2xl z-10 text-xs mono">
+        <div class="glass-panel p-3 rounded-xl border border-slate-800/80 text-center">
+          <span class="text-[10px] text-slate-500 uppercase block font-bold">TOTAL BOUNTY ESCROW</span>
+          <strong class="text-emerald-400 text-sm score-glow">0.0080 MSTC</strong>
+        </div>
+        <div class="glass-panel p-3 rounded-xl border border-slate-800/80 text-center">
+          <span class="text-[10px] text-slate-500 uppercase block font-bold">ACTIVE NEURAL AGENTS</span>
+          <strong class="text-cyan-300 text-sm">18 Specialists</strong>
+        </div>
+        <div class="glass-panel p-3 rounded-xl border border-slate-800/80 text-center">
+          <span class="text-[10px] text-slate-500 uppercase block font-bold">REPUTATION REWARD</span>
+          <strong class="text-indigo-300 text-sm">+500 bps (+5.0%)</strong>
+        </div>
+        <div class="glass-panel p-3 rounded-xl border border-slate-800/80 text-center">
+          <span class="text-[10px] text-slate-500 uppercase block font-bold">SETTLEMENT SECURITY</span>
+          <strong class="text-purple-300 text-sm">5-Gate Oracle</strong>
+        </div>
+      </div>
+
       <!-- Question Prompt Box -->
-      <div class="w-full max-w-2xl z-10">
-        <div class="glass-panel p-2.5 rounded-2xl glow-cyan focus-within:border-cyan-400/80 transition-all border border-slate-700/80">
-          <div class="flex flex-col sm:flex-row items-center gap-2">
+      <div class="w-full max-w-2xl z-10 space-y-3">
+        <div class="glass-panel p-3 rounded-2xl glow-cyan focus-within:border-cyan-400/90 transition-all border border-slate-700/80 shadow-2xl">
+          <div class="flex flex-col sm:flex-row items-center gap-2.5">
             <input 
               id="landingQuestionInput"
               type="text" 
-              placeholder="Ask SwarmMind anything (e.g., Will it rain in Chennai tomorrow?)" 
+              placeholder="Ask the Swarm Neural Network anything (e.g., Will it rain in Chennai tomorrow?)" 
               class="w-full bg-transparent px-4 py-3.5 text-sm sm:text-base text-white placeholder-slate-500 focus:outline-none mono"
               value="Will it rain in Chennai tomorrow?"
               onkeydown="if(event.key === 'Enter') submitQuestionToExecution();"
@@ -188,41 +270,41 @@
             <button 
               id="btnSummonSwarm"
               onclick="submitQuestionToExecution()"
-              class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-gray-950 font-extrabold text-xs sm:text-sm tracking-wide shadow-lg shadow-cyan-500/20 transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer"
+              class="w-full sm:w-auto px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 via-indigo-600 to-purple-600 hover:from-cyan-400 hover:to-indigo-500 text-gray-950 font-black text-xs sm:text-sm tracking-wide shadow-lg shadow-cyan-500/25 transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer"
             >
-              <span>⚡ Summon Swarm</span>
+              <span>⚡ Fire Neural Swarm</span>
             </button>
           </div>
         </div>
 
         <!-- Scenario Pills -->
-        <div class="flex flex-wrap items-center justify-center gap-2 pt-4 text-xs">
-          <span class="text-slate-500 font-semibold uppercase tracking-wider mono text-[11px] mr-1">Scenarios:</span>
-          <button onclick="pickScenario('Will it rain in Chennai tomorrow?', 1)" class="px-3.5 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-amber-800/60 text-amber-300 font-semibold transition flex items-center gap-1.5 shadow-sm">
+        <div class="flex flex-wrap items-center justify-center gap-2 pt-2 text-xs">
+          <span class="text-slate-500 font-semibold uppercase tracking-wider mono text-[11px] mr-1">Presets:</span>
+          <button onclick="pickScenario('Will it rain in Chennai tomorrow?', 1)" class="px-3.5 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-amber-800/70 text-amber-300 font-semibold transition flex items-center gap-1.5 shadow-sm hover:border-amber-500">
             <span>🔒</span> Chennai Weather (Swarm #1 • Real Pending)
           </button>
-          <button onclick="pickScenario('CONTROLLED DEMO: Will the measured precipitation value be >= 0.5 mm?', 2)" class="px-3.5 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-emerald-700/60 text-emerald-300 font-semibold transition flex items-center gap-1.5 shadow-sm">
+          <button onclick="pickScenario('CONTROLLED DEMO: Will the measured precipitation value be >= 0.5 mm?', 2)" class="px-3.5 py-1.5 rounded-full bg-slate-900/90 hover:bg-slate-800 border border-emerald-700/70 text-emerald-300 font-semibold transition flex items-center gap-1.5 shadow-sm hover:border-emerald-400">
             <span>⚡</span> Controlled Demo (Swarm #2 • Complete Loop)
           </button>
-          <button onclick="pickScenario('Should Bangalore build 500 new EV charging stations by 2027?', 'ev')" class="px-3 py-1 rounded-full bg-slate-900/70 hover:bg-slate-800 border border-slate-800 text-slate-300 transition">
+          <button onclick="pickScenario('Should Bangalore build 500 new EV charging stations by 2027?', 'ev')" class="px-3 py-1.5 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-slate-300 transition hover:text-white">
             ⚡ EV Infrastructure
           </button>
-          <button onclick="pickScenario('Will solar generation exceed 450 GWh in Rajasthan tomorrow?', 'solar')" class="px-3 py-1 rounded-full bg-slate-900/70 hover:bg-slate-800 border border-slate-800 text-slate-300 transition">
-            ☀️ Solar Energy
+          <button onclick="pickScenario('Will solar generation exceed 450 GWh in Rajasthan tomorrow?', 'solar')" class="px-3 py-1.5 rounded-full bg-slate-900/80 hover:bg-slate-800 border border-slate-800 text-slate-300 transition hover:text-white">
+            ☀️ Solar Energy Yield
           </button>
         </div>
       </div>
     </main>
 
-    <!-- SUBVIEW 2: AGENT REGISTRY -->
+    <!-- SUBVIEW 2: AGENT REGISTRY & DETAILED SCORECARDS -->
     <main id="subview-registry" class="landing-subtab hidden max-w-7xl mx-auto px-6 py-10 w-full space-y-6">
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <h2 class="text-2xl font-black text-white flex items-center gap-3">
-            <span>Agent Registry</span>
+            <span>Neural Agent Registry & Scorecards</span>
             <span class="text-xs mono font-bold bg-cyan-950 text-cyan-300 px-2.5 py-1 rounded-full border border-cyan-800">18 ACTIVE SPECIALISTS</span>
           </h2>
-          <p class="text-sm text-slate-400 mt-1">Autonomous AI specialists registered with staked capital and domain reputation on MST Testnet</p>
+          <p class="text-sm text-slate-400 mt-1">Autonomous AI specialists with on-chain staked bonds, empirical accuracy scores, and reputation rankings on MST Testnet</p>
         </div>
         <div class="flex items-center gap-2 flex-wrap" id="registryDomainFilters">
           <button onclick="filterRegistryDomain('ALL')" class="reg-filter-btn px-3 py-1 rounded-lg text-xs mono font-bold bg-cyan-950 text-cyan-300 border border-cyan-800">ALL</button>
@@ -233,8 +315,8 @@
           <button onclick="filterRegistryDomain('RISK')" class="reg-filter-btn px-3 py-1 rounded-lg text-xs mono text-slate-400 hover:text-white bg-slate-900 border border-slate-800">RISK & CRITIC</button>
         </div>
       </div>
-      <div id="registryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        <!-- Rendered dynamically -->
+      <div id="registryGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <!-- Rendered dynamically with rich scorecards -->
       </div>
     </main>
 
@@ -243,13 +325,13 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <h2 class="text-2xl font-black text-white flex items-center gap-3">
-            <span>Verified Scientific Data Feeds</span>
+            <span>Verified Scientific Oracle Feeds</span>
             <span class="text-xs mono font-bold bg-purple-950 text-purple-300 px-2.5 py-1 rounded-full border border-purple-800">16 ORACLES & DATASETS</span>
           </h2>
-          <p class="text-sm text-slate-400 mt-1">Official empirical feeds and oracle pipelines utilized for isolated agent reasoning and outcome resolution</p>
+          <p class="text-sm text-slate-400 mt-1">Official empirical feeds and oracle pipelines utilized for isolated neural agent reasoning and ground truth outcome resolution</p>
         </div>
-        <div class="text-xs mono text-amber-400 bg-amber-950/60 border border-amber-800/80 px-3 py-1.5 rounded-lg">
-          ⚠️ FORECAST = INPUT ONLY • SETTLEMENT REQUIRES REALIZED OBSERVATION
+        <div class="text-xs mono text-amber-400 bg-amber-950/60 border border-amber-800/80 px-3 py-1.5 rounded-lg flex items-center gap-2">
+          <span>⚠️</span> FORECAST = INPUT ONLY • SETTLEMENT REQUIRES REALIZED OBSERVATION
         </div>
       </div>
       <div id="dataSourcesGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -262,10 +344,10 @@
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800 pb-5">
         <div>
           <h2 class="text-2xl font-black text-white flex items-center gap-3">
-            <span>Prediction Ledger</span>
+            <span>Prediction & Settlement Ledger</span>
             <span class="text-xs mono font-bold bg-emerald-950 text-emerald-300 px-2.5 py-1 rounded-full border border-emerald-800">ON-CHAIN IMMUTABLE</span>
           </h2>
-          <p class="text-sm text-slate-400 mt-1">Complete historical ledger of prediction swarms, Keccak256 commitment receipts, and settlement records</p>
+          <p class="text-sm text-slate-400 mt-1">Complete historical ledger of prediction swarms, Keccak256 commitment receipts, bounty payouts, and settlement records</p>
         </div>
       </div>
       <div id="predictionLedgerList" class="space-y-4">
@@ -283,22 +365,25 @@
           </h2>
           <p class="text-sm text-slate-400 mt-1">Live smart contracts deployed and verified on MST Blockchain Testnet</p>
         </div>
-        <button onclick="addMstNetworkToWallet()" class="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-gray-950 font-bold text-xs mono transition shadow">
+        <button onclick="addMstNetworkToWallet()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-gray-950 font-bold text-xs mono transition shadow-lg">
           + Add MST Testnet to Wallet
         </button>
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- SwarmMindCore -->
-        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4 glow-cyan">
           <div class="flex items-center justify-between">
             <span class="text-xs mono font-bold bg-cyan-950 text-cyan-300 px-2.5 py-1 rounded border border-cyan-800">CORE PROTOCOL</span>
-            <span class="text-xs text-emerald-400 font-bold">DEPLOYED & VERIFIED ✓</span>
+            <span class="text-xs text-emerald-400 font-bold flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              DEPLOYED & VERIFIED ✓
+            </span>
           </div>
           <div>
             <h3 class="text-lg font-black text-white">SwarmMindCore.sol</h3>
-            <p class="text-xs text-slate-400 mt-1">
-              Main protocol controller handling Agent Registry, bonded stakes, commit-reveal scheme, challenge market deposits, and on-chain domain reputation ledger.
+            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
+              Main protocol controller handling Neural Agent Registry, bonded stakes, commit-reveal scheme, challenge market deposits, and on-chain domain reputation ledger.
             </p>
           </div>
           <div class="bg-slate-950 p-3.5 rounded-xl border border-slate-800 space-y-1 mono text-xs">
@@ -308,20 +393,23 @@
               <button onclick="navigator.clipboard.writeText('0x92283AA6983D52A8A3bEa714D5FD8cc6Db360276'); alert('Copied Core Address!');" class="text-[10px] text-slate-400 hover:text-white bg-slate-900 px-2 py-1 rounded border border-slate-800">Copy</button>
             </div>
           </div>
-          <a href="https://testnet.mstscan.com/address/0x92283AA6983D52A8A3bEa714D5FD8cc6Db360276" target="_blank" class="block w-full text-center py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-cyan-400 font-bold mono transition">
+          <a href="https://testnet.mstscan.com/address/0x92283AA6983D52A8A3bEa714D5FD8cc6Db360276" target="_blank" class="block w-full text-center py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-cyan-400 font-bold mono transition">
             View on MSTScan Explorer ↗
           </a>
         </div>
 
         <!-- MVPControlledResolver -->
-        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
+        <div class="glass-panel p-6 rounded-2xl border border-slate-800 space-y-4 glow-violet">
           <div class="flex items-center justify-between">
             <span class="text-xs mono font-bold bg-purple-950 text-purple-300 px-2.5 py-1 rounded border border-purple-800">RESOLVER INTERFACE</span>
-            <span class="text-xs text-emerald-400 font-bold">DEPLOYED & VERIFIED ✓</span>
+            <span class="text-xs text-emerald-400 font-bold flex items-center gap-1">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              DEPLOYED & VERIFIED ✓
+            </span>
           </div>
           <div>
             <h3 class="text-lg font-black text-white">MVPControlledResolver.sol</h3>
-            <p class="text-xs text-slate-400 mt-1">
+            <p class="text-xs text-slate-400 mt-1 leading-relaxed">
               Implements IOutcomeResolver. Responsible for authorized outcome validation, IPFS evidence hash anchoring, and settlement trigger against empirical ground truth.
             </p>
           </div>
@@ -332,7 +420,7 @@
               <button onclick="navigator.clipboard.writeText('0x4d1E37b71Dfd3794Efe856E2A9D74D7ed28B9234'); alert('Copied Resolver Address!');" class="text-[10px] text-slate-400 hover:text-white bg-slate-900 px-2 py-1 rounded border border-slate-800">Copy</button>
             </div>
           </div>
-          <a href="https://testnet.mstscan.com/address/0x4d1E37b71Dfd3794Efe856E2A9D74D7ed28B9234" target="_blank" class="block w-full text-center py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-purple-400 font-bold mono transition">
+          <a href="https://testnet.mstscan.com/address/0x4d1E37b71Dfd3794Efe856E2A9D74D7ed28B9234" target="_blank" class="block w-full text-center py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs text-purple-400 font-bold mono transition">
             View on MSTScan Explorer ↗
           </a>
         </div>
@@ -340,8 +428,8 @@
     </main>
 
     <!-- Landing Footer -->
-    <footer class="border-t border-slate-800/80 bg-[#070b13]/60 py-4 px-6 text-center text-xs text-slate-500 mono flex items-center justify-between max-w-7xl mx-auto w-full">
-      <div>SwarmMind Protocol • MST Testnet (Chain ID 91562037)</div>
+    <footer class="border-t border-slate-800/80 bg-[#060911]/80 py-4 px-6 text-center text-xs text-slate-500 mono flex items-center justify-between max-w-7xl mx-auto w-full">
+      <div>SwarmMind Neural Protocol • MST Testnet (Chain ID 91562037)</div>
       <div>Zero Simulated Transactions • EVM Injected Wallet Enabled</div>
     </footer>
   </div>
@@ -349,10 +437,10 @@
   <!-- =================================================================== -->
   <!-- VIEW 2: AUTONOMOUS AI SWARM CONTROL CENTER (EXECUTION DASHBOARD)   -->
   <!-- =================================================================== -->
-  <div id="view-execution" class="hidden flex-1 flex flex-col h-screen overflow-hidden bg-[#05070c]">
+  <div id="view-execution" class="hidden flex-1 flex flex-col h-screen overflow-hidden bg-[#04060a]">
     
     <!-- 1. TOP APP BAR -->
-    <header class="border-b border-slate-800/90 bg-[#080c14]/95 backdrop-blur-md px-4 py-2.5 z-30 shrink-0">
+    <header class="border-b border-slate-800/90 bg-[#070b13]/95 backdrop-blur-md px-4 py-2.5 z-30 shrink-0">
       <div class="flex items-center justify-between gap-4">
         
         <!-- Left: Brand & Swarm Meta -->
@@ -366,7 +454,7 @@
             <span id="execSwarmIdBadge" class="text-xs mono font-bold text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800/80">SWARM #001</span>
             <div class="flex items-center gap-1.5 text-[11px] mono text-emerald-400 bg-emerald-950/80 border border-emerald-800/80 px-2 py-0.5 rounded">
               <span class="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse"></span>
-              <span>LIVE PROTOCOL</span>
+              <span>NEURAL NETWORK ACTIVE</span>
             </div>
           </div>
         </div>
@@ -392,9 +480,9 @@
     </header>
 
     <!-- Sub-Header: Swarm Context & Dynamic Controller Bar -->
-    <div class="bg-[#090d18] border-b border-slate-800/80 px-4 py-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs shrink-0 z-20">
+    <div class="bg-[#080d19] border-b border-slate-800/80 px-4 py-2 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs shrink-0 z-20">
       <div class="flex items-center gap-3 truncate">
-        <span class="text-slate-500 font-bold mono text-[10px] uppercase">CURRENT PROBLEM:</span>
+        <span class="text-slate-500 font-bold mono text-[10px] uppercase">TARGET PROBLEM:</span>
         <span id="subBarQuestionText" class="font-bold text-white truncate max-w-xl">"Will it rain in Chennai tomorrow?"</span>
       </div>
 
@@ -411,14 +499,17 @@
 
         <!-- View Mode Tabs (Center Area View Selector) -->
         <div class="flex items-center bg-slate-950 p-0.5 rounded-lg border border-slate-800 text-[11px] mono">
-          <button id="tabCanvasBtn" onclick="switchCenterView('canvas')" class="px-2.5 py-1 rounded font-bold transition bg-cyan-950 text-cyan-300 border border-cyan-800">
-            🌌 Canvas
+          <button id="tabCanvasBtn" onclick="switchCenterView('canvas')" class="px-2.5 py-1 rounded font-bold transition bg-cyan-950 text-cyan-300 border border-cyan-800 flex items-center gap-1">
+            <span>🧠</span> Neural Network
           </button>
-          <button id="tabDebateBtn" onclick="switchCenterView('debate')" class="px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white">
-            ⚔️ Debate Graph
+          <button id="tabSettlementBtn" onclick="switchCenterView('settlement')" class="px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white flex items-center gap-1">
+            <span>💰</span> Settlement & Bounty
           </button>
-          <button id="tabSafetyBtn" onclick="switchCenterView('safety')" class="px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white">
-            🛡️ Safety Audit
+          <button id="tabDebateBtn" onclick="switchCenterView('debate')" class="px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white flex items-center gap-1">
+            <span>⚔️</span> Debate Graph
+          </button>
+          <button id="tabSafetyBtn" onclick="switchCenterView('safety')" class="px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white flex items-center gap-1">
+            <span>🛡️</span> Safety Audit
           </button>
         </div>
 
@@ -437,7 +528,7 @@
     <div class="flex-1 grid grid-cols-1 md:grid-cols-12 overflow-hidden relative">
       
       <!-- LEFT COLUMN: PROTOCOL TIMELINE (11 STAGES) -->
-      <aside class="md:col-span-3 lg:col-span-3 bg-[#080c15] border-r border-slate-800/80 flex flex-col overflow-hidden z-10">
+      <aside class="md:col-span-3 lg:col-span-3 bg-[#070b13] border-r border-slate-800/80 flex flex-col overflow-hidden z-10">
         <div class="px-3.5 py-2.5 border-b border-slate-800 flex items-center justify-between text-xs mono">
           <span class="font-extrabold uppercase text-slate-400 tracking-wider text-[11px]">Protocol Timeline</span>
           <span id="timelineProgressBadge" class="text-[10px] text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800 font-bold">STAGE 1 / 11</span>
@@ -454,21 +545,21 @@
           <div id="timeline-step-1" onclick="jumpToStage(1)" class="timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/60">
             <div class="step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400 mono">01</div>
             <div class="font-bold text-white text-xs">01 PROBLEM COMPILER</div>
-            <div class="text-[11px] text-slate-400">Natural language deconstruction & parameters</div>
+            <div class="text-[11px] text-slate-400">Natural language parsing & bounding</div>
           </div>
 
           <!-- Stage 02: Capability Match -->
           <div id="timeline-step-2" onclick="jumpToStage(2)" class="timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/60">
             <div class="step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400 mono">02</div>
             <div class="font-bold text-slate-400 text-xs">02 CAPABILITY MATCH</div>
-            <div class="text-[11px] text-slate-500">Registry query & qualification filters</div>
+            <div class="text-[11px] text-slate-500">Registry query & qualified domain filters</div>
           </div>
 
           <!-- Stage 03: Agent Recruitment -->
           <div id="timeline-step-3" onclick="jumpToStage(3)" class="timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/60">
             <div class="step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400 mono">03</div>
             <div class="font-bold text-slate-400 text-xs">03 AGENT RECRUITMENT</div>
-            <div class="text-[11px] text-slate-500">Reputation-weighted specialist selection</div>
+            <div class="text-[11px] text-slate-500">Reputation-weighted neural selection</div>
           </div>
 
           <!-- Stage 04: Independent Analysis -->
@@ -482,7 +573,7 @@
           <div id="timeline-step-5" onclick="jumpToStage(5)" class="timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition border border-transparent hover:bg-slate-900/60">
             <div class="step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-slate-900 border border-slate-700 flex items-center justify-center text-[10px] font-bold text-slate-400 mono">05</div>
             <div class="font-bold text-slate-400 text-xs">05 COMMITMENT & BONDS</div>
-            <div class="text-[11px] text-slate-500">Keccak256 hash & prediction bond escrow</div>
+            <div class="text-[11px] text-slate-500">Keccak256 hash & bond escrow (0.0030 MSTC)</div>
           </div>
 
           <!-- Stage 06: Challenge Market -->
@@ -529,19 +620,22 @@
         </div>
       </aside>
 
-      <!-- CENTER COLUMN: LIVE SWARM FIELD & DEBATE VISUALIZER -->
-      <section class="md:col-span-6 lg:col-span-6 flex flex-col relative overflow-hidden bg-[#05070c]">
+      <!-- CENTER COLUMN: LIVE SYNAPTIC NEURAL NETWORK & CONTROLLER -->
+      <section class="md:col-span-6 lg:col-span-6 flex flex-col relative overflow-hidden bg-[#04060a]">
         
-        <!-- 1. Canvas View Container -->
+        <!-- 1. Neural Network Canvas View Container -->
         <div id="centerCanvasContainer" class="w-full h-full relative">
           <canvas id="swarmCanvas" class="w-full h-full block cursor-crosshair"></canvas>
 
           <!-- Dynamic Holographic Stage Overlay -->
-          <div id="centerStageOverlay" class="absolute inset-0 pointer-events-none flex flex-col justify-between p-6 z-10 transition-all duration-500">
+          <div id="centerStageOverlay" class="absolute inset-0 pointer-events-none flex flex-col justify-between p-5 z-10 transition-all duration-500">
             <div class="flex items-start justify-between">
               <div class="glass-surface px-3 py-1.5 rounded-lg text-xs mono">
-                <span class="text-slate-500 text-[10px] uppercase font-bold">COORDINATION ENGINE:</span>
-                <div id="overlayEngineTitle" class="text-white font-extrabold mt-0.5">ACTIVE NEURAL FIELD</div>
+                <span class="text-slate-500 text-[10px] uppercase font-bold">SYNAPTIC ENGINE:</span>
+                <div id="overlayEngineTitle" class="text-white font-extrabold mt-0.5 flex items-center gap-1.5">
+                  <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
+                  <span>MULTI-LAYER NEURAL SWARM</span>
+                </div>
               </div>
               <div class="glass-surface px-3 py-1.5 rounded-lg text-xs mono text-right">
                 <span class="text-slate-500 text-[10px] uppercase font-bold">STATE TRANSITION:</span>
@@ -560,16 +654,104 @@
                 <span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span>
                 <span id="fieldActiveAgentsCount" class="text-slate-300 font-semibold">3 Active Specialists</span>
               </div>
-              <div class="glass-surface px-3 py-1.5 rounded-lg flex items-center gap-2">
-                <span class="text-slate-500">Escrow Pool:</span>
-                <span id="fieldEscrowBalance" class="text-emerald-400 font-bold">0.0080 MSTC</span>
+              <div class="glass-surface px-3 py-1.5 rounded-lg flex items-center gap-3">
+                <span class="text-slate-500">Total Escrow Pot:</span>
+                <span id="fieldEscrowBalance" class="text-emerald-400 font-bold score-glow">0.0080 MSTC</span>
+                <button onclick="switchCenterView('settlement')" class="pointer-events-auto text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800 px-2 py-0.5 rounded font-bold hover:bg-emerald-900 transition">
+                  Inspect Payouts ↗
+                </button>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- 2. Debate & Evidence Graph View Container (Toggleable) -->
-        <div id="centerDebateContainer" class="hidden w-full h-full overflow-y-auto p-6 space-y-4 bg-[#080c14]">
+        <!-- 2. Settlement & Bounty Deep Breakdown View (Toggleable) -->
+        <div id="centerSettlementContainer" class="hidden w-full h-full overflow-y-auto p-6 space-y-5 bg-[#070b13]">
+          <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+            <div>
+              <h3 class="font-black text-white text-base flex items-center gap-2">
+                <span>💰 SETTLEMENT, BOUNTY & REPUTATION SCORECARD</span>
+                <span class="text-[10px] mono font-bold bg-emerald-950 text-emerald-300 border border-emerald-800 px-2.5 py-0.5 rounded">100% RECONCILED</span>
+              </h3>
+              <p class="text-xs text-slate-400 mono mt-0.5">Verifiable breakdown of escrowed bonds, creator bounty rewards, accuracy scores, and reputation boosts</p>
+            </div>
+            <button onclick="switchCenterView('canvas')" class="px-3 py-1 bg-slate-900 border border-slate-800 hover:border-cyan-500 text-cyan-300 rounded-lg text-xs mono transition">
+              ← Back to Neural Network
+            </button>
+          </div>
+
+          <!-- Escrow Structure Overview Card -->
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-xs mono">
+            <div class="glass-panel p-4 rounded-xl border border-cyan-800/80 space-y-1">
+              <span class="text-[10px] text-slate-500 uppercase font-bold">CREATOR BOUNTY REWARD</span>
+              <div class="text-xl font-extrabold text-cyan-300">0.0050 MSTC</div>
+              <div class="text-[10px] text-slate-400">Paid by Swarm Creator for accurate decentralized prediction</div>
+            </div>
+            <div class="glass-panel p-4 rounded-xl border border-indigo-800/80 space-y-1">
+              <span class="text-[10px] text-slate-500 uppercase font-bold">AGENT STAKED BONDS</span>
+              <div class="text-xl font-extrabold text-indigo-300">0.0030 MSTC</div>
+              <div class="text-[10px] text-slate-400">3 Specialists &times; 0.0010 MSTC skin-in-the-game commitment</div>
+            </div>
+            <div class="glass-panel p-4 rounded-xl border border-emerald-800/80 bg-emerald-950/20 space-y-1 glow-emerald">
+              <span class="text-[10px] text-slate-500 uppercase font-bold">TOTAL ESCROW RECONCILED</span>
+              <div class="text-xl font-extrabold text-emerald-400 score-glow">0.0080 MSTC</div>
+              <div class="text-[10px] text-emerald-300">100% locked & settled via smart contract</div>
+            </div>
+          </div>
+
+          <!-- Detailed Agent Scorecard Table -->
+          <div class="glass-panel p-4 rounded-xl border border-slate-800 space-y-3">
+            <div class="text-xs mono font-bold text-slate-300 uppercase tracking-wider flex items-center justify-between">
+              <span>Agent Payout & Reputation Score Breakdown</span>
+              <span class="text-emerald-400 text-[11px]">MST Testnet Verified</span>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs mono text-left border-collapse">
+                <thead>
+                  <tr class="border-b border-slate-800 text-slate-500 text-[10px] uppercase">
+                    <th class="py-2 px-2">Agent Specialist</th>
+                    <th class="py-2 px-2">Prediction</th>
+                    <th class="py-2 px-2">Bond Staked</th>
+                    <th class="py-2 px-2">Bounty Reward</th>
+                    <th class="py-2 px-2">Total Payout</th>
+                    <th class="py-2 px-2">Reputation Score</th>
+                    <th class="py-2 px-2">Accuracy</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-800/60" id="settlementScoreTableBody">
+                  <!-- Rendered dynamically -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Reputation Delta & Slashing Rules Banner -->
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs mono">
+            <div class="bg-emerald-950/30 p-4 rounded-xl border border-emerald-800/70 space-y-2">
+              <div class="font-bold text-emerald-300 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+                <span>WINNER REWARD FORMULA</span>
+              </div>
+              <div class="text-slate-300 leading-relaxed font-sans text-[11px]">
+                Winning agents receive their <strong class="text-white">full 0.0010 MSTC bond back</strong> + an <strong class="text-white">equal pro-rata share (+0.00167 MSTC) of the creator bounty</strong> + a <strong class="text-emerald-400">+500 bps (+5.00%)</strong> boost to their on-chain domain reputation score.
+              </div>
+            </div>
+
+            <div class="bg-amber-950/30 p-4 rounded-xl border border-amber-800/70 space-y-2">
+              <div class="font-bold text-amber-300 flex items-center gap-2">
+                <span class="w-2 h-2 rounded-full bg-amber-400"></span>
+                <span>SLASHING & PENALTY ENFORCEMENT</span>
+              </div>
+              <div class="text-slate-300 leading-relaxed font-sans text-[11px]">
+                Agents making incorrect or manipulated predictions forfeit their bonded stake to the protocol slashing pool and suffer an immediate <strong class="text-red-400">-500 bps (-5.00%)</strong> penalty, reducing future recruitment probability.
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. Debate & Evidence Graph View Container (Toggleable) -->
+        <div id="centerDebateContainer" class="hidden w-full h-full overflow-y-auto p-6 space-y-4 bg-[#070b13]">
           <div class="flex items-center justify-between border-b border-slate-800 pb-3">
             <div>
               <h3 class="font-extrabold text-white text-base">ADVERSARIAL DEBATE & EVIDENCE GRAPH</h3>
@@ -584,8 +766,8 @@
           </div>
         </div>
 
-        <!-- 3. Safety Audit Drawer Container (Toggleable) -->
-        <div id="centerSafetyContainer" class="hidden w-full h-full overflow-y-auto p-6 space-y-4 bg-[#080c14]">
+        <!-- 4. Safety Audit Drawer Container (Toggleable) -->
+        <div id="centerSafetyContainer" class="hidden w-full h-full overflow-y-auto p-6 space-y-4 bg-[#070b13]">
           <div class="flex items-center justify-between border-b border-slate-800 pb-3">
             <div>
               <h3 class="font-extrabold text-white text-base">5-GATE ORACLE SAFETY AUDIT</h3>
@@ -601,10 +783,10 @@
       </section>
 
       <!-- RIGHT COLUMN: AGENT INTELLIGENCE PANEL -->
-      <aside class="md:col-span-3 lg:col-span-3 bg-[#080c15] border-l border-slate-800/80 flex flex-col overflow-hidden z-10">
+      <aside class="md:col-span-3 lg:col-span-3 bg-[#070b13] border-l border-slate-800/80 flex flex-col overflow-hidden z-10">
         <div class="px-3.5 py-2.5 border-b border-slate-800 flex items-center justify-between text-xs mono">
           <div class="flex items-center gap-2">
-            <span class="font-extrabold uppercase text-slate-400 tracking-wider text-[11px]">Agent Intelligence</span>
+            <span class="font-extrabold uppercase text-slate-400 tracking-wider text-[11px]">Neural Agents</span>
             <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
           </div>
           <span id="agentCountBadge" class="text-[10px] text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800 font-bold">3 ACTIVE</span>
@@ -618,27 +800,27 @@
     </div>
 
     <!-- 3. BOTTOM LIVE EXECUTION LOG & TECHNICAL INSPECTOR -->
-    <footer class="border-t border-slate-800/90 bg-[#070b13] px-4 py-2 shrink-0 z-20">
+    <footer class="border-t border-slate-800/90 bg-[#060911] px-4 py-2 shrink-0 z-20">
       <div class="grid grid-cols-1 md:grid-cols-12 gap-3 items-center">
         
         <!-- Live Protocol Event Stream (Left 8 Cols) -->
         <div class="md:col-span-8 flex items-center gap-3 overflow-hidden">
           <div class="flex items-center gap-1.5 text-xs mono shrink-0 text-slate-500">
-            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400"></span>
-            <span class="uppercase text-[10px] font-bold">LOG:</span>
+            <span class="w-1.5 h-1.5 rounded-full bg-cyan-400 animate-pulse"></span>
+            <span class="uppercase text-[10px] font-bold">SYNAPSE LOG:</span>
           </div>
 
           <!-- Scrolling Log Line -->
           <div class="flex-1 overflow-x-auto whitespace-nowrap text-xs mono text-slate-300 py-1" id="liveExecutionLogStream">
             <span id="logTimestamp" class="text-slate-500">[09:15:00]</span>
-            <span id="logText" class="text-slate-300 ml-1">SwarmMind Core connected to MST Blockchain Testnet. Chain ID: 91562037. Protocol synchronized.</span>
+            <span id="logText" class="text-slate-300 ml-1">SwarmMind Neural Core synchronized with MST Testnet (Chain ID: 91562037).</span>
           </div>
         </div>
 
         <!-- Blockchain Activity Badge & Explorer Link (Right 4 Cols) -->
         <div class="md:col-span-4 flex items-center justify-end gap-1.5 text-[11px] mono text-slate-400">
           <div class="flex items-center gap-1 bg-slate-950 px-2.5 py-1 rounded-md border border-slate-800">
-            <span class="text-slate-500">AGENT</span>
+            <span class="text-slate-500">SYNAPSE</span>
             <span class="text-slate-600">→</span>
             <span class="text-cyan-400 font-semibold">COMMIT</span>
             <span class="text-slate-600">→</span>
@@ -677,7 +859,7 @@
     let autoPlayTimer = null;
     let activeSwarmId = 1;
     let selectedAgentKey = "WEATHER_ALPHA";
-    let activeCenterView = "canvas"; // 'canvas', 'debate', 'safety'
+    let activeCenterView = "canvas"; // 'canvas', 'settlement', 'debate', 'safety'
 
     // Registered Swarms Database / Store
     const SWARMS_STORE = {
@@ -710,7 +892,10 @@
             prediction: "YES",
             confidence: 60.0,
             bond: "0.0010 MSTC",
-            reputation: "500 bps (+5.00%)",
+            bountyShare: "0.00167 MSTC",
+            totalPayout: "0.00267 MSTC",
+            reputation: "83% ➔ 88% (+5.00%)",
+            accuracyScore: "96.4%",
             owner: "Shared Protocol Wallet (0x3730...4D46)",
             commitmentHash: "0x9e4af02b3780a1c1d94848386121f15809dfb01e2311df9012bb812b1234abcd",
             methodology: "ECMWF HRES + GFS 0.25° Synoptic NWP Physics Ensemble.",
@@ -725,7 +910,10 @@
             prediction: "YES",
             confidence: 58.0,
             bond: "0.0010 MSTC",
-            reputation: "500 bps (+5.00%)",
+            bountyShare: "0.00167 MSTC",
+            totalPayout: "0.00267 MSTC",
+            reputation: "81% ➔ 86% (+5.00%)",
+            accuracyScore: "94.8%",
             owner: "Shared Protocol Wallet (0x3730...4D46)",
             commitmentHash: "0x4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e",
             methodology: "INSAT-3DR 6.7µm Water Vapor Tracer & Tropospheric Moisture Advection.",
@@ -740,7 +928,10 @@
             prediction: "YES",
             confidence: 73.0,
             bond: "0.0010 MSTC",
-            reputation: "500 bps (+5.00%)",
+            bountyShare: "0.00167 MSTC",
+            totalPayout: "0.00267 MSTC",
+            reputation: "86% ➔ 91% (+5.00%)",
+            accuracyScore: "98.2%",
             owner: "Shared Protocol Wallet (0x3730...4D46)",
             commitmentHash: "0x735ba75645267922877235ae3a07d376e76b41e890b3769ed61b779a333b3616",
             methodology: "Coastal Boundary Layer Climatology & Convective Instability Critic.",
@@ -778,7 +969,10 @@
             prediction: "YES",
             confidence: 60.0,
             bond: "0.0010 MSTC",
-            reputation: "500 bps (+5.00%)",
+            bountyShare: "0.00167 MSTC",
+            totalPayout: "0.00267 MSTC",
+            reputation: "88% (+5.00%)",
+            accuracyScore: "96.4%",
             owner: "Shared Protocol Wallet (0x3730...4D46)",
             commitmentHash: "0x9e4af02b3780a1c1d94848386121f15809dfb01e2311df9012bb812b1234abcd",
             methodology: "Controlled test prediction verified against 1.2mm ground truth input.",
@@ -793,7 +987,10 @@
             prediction: "YES",
             confidence: 58.0,
             bond: "0.0010 MSTC",
-            reputation: "500 bps (+5.00%)",
+            bountyShare: "0.00167 MSTC",
+            totalPayout: "0.00267 MSTC",
+            reputation: "86% (+5.00%)",
+            accuracyScore: "94.8%",
             owner: "Shared Protocol Wallet (0x3730...4D46)",
             commitmentHash: "0x4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b1c2d3e4f5a6b7c8d9e0f1a2b3c4d5e",
             methodology: "Controlled test prediction verified against 1.2mm ground truth input.",
@@ -808,7 +1005,10 @@
             prediction: "YES",
             confidence: 73.0,
             bond: "0.0010 MSTC",
-            reputation: "500 bps (+5.00%)",
+            bountyShare: "0.00167 MSTC",
+            totalPayout: "0.00267 MSTC",
+            reputation: "91% (+5.00%)",
+            accuracyScore: "98.2%",
             owner: "Shared Protocol Wallet (0x3730...4D46)",
             commitmentHash: "0x735ba75645267922877235ae3a07d376e76b41e890b3769ed61b779a333b3616",
             methodology: "Controlled test prediction verified against 1.2mm ground truth input.",
@@ -822,7 +1022,7 @@
     // Protocol Stages Definition
     const STAGES = [
       { id: 1, code: "01_PROBLEM_COMPILATION", name: "01 PROBLEM COMPILER", status: "Natural Language Parsing" },
-      { id: 2, code: "02_CAPABILITY_MATCH", name: "02 CAPABILITY MATCH", status: "Agent Registry Qualification" },
+      { id: 2, code: "02_CAPABILITY_MATCH", name: "02 CAPABILITY MATCH", status: "Neural Registry Qualification" },
       { id: 3, code: "03_AGENT_RECRUITMENT", name: "03 AGENT RECRUITMENT", status: "Reputation-Weighted Selection" },
       { id: 4, code: "04_INDEPENDENT_ANALYSIS", name: "04 INDEPENDENT ANALYSIS", status: "Zero-Collusion Forecasting" },
       { id: 5, code: "05_COMMITMENT", name: "05 COMMITMENT & BONDS", status: "Keccak256 Hash & Bond Escrow" },
@@ -838,7 +1038,7 @@
     window.addEventListener("DOMContentLoaded", async () => {
       initCanvas();
       checkRouteFromURL();
-      await connectWallet(false); // Eager try without popups
+      await connectWallet(false);
       fetchLatestOnChainNetworkStatus();
       setInterval(fetchLatestOnChainNetworkStatus, 10000);
     });
@@ -852,7 +1052,7 @@
         const injected = window.bridgekey || window.ethereum;
         if (!injected) {
           if (promptUser) {
-            alert("No Injected EVM Wallet Detected.\n\nPlease install BridgeKey or MetaMask to interact on MST Testnet (Chain ID: 91562037).");
+            alert("No Injected EVM Wallet Detected.\n\nPlease install MetaMask or BridgeKey to interact on MST Testnet (Chain ID: 91562037).");
           }
           return;
         }
@@ -920,7 +1120,6 @@
           btnExec.className = "bg-slate-900 border border-emerald-500/80 text-emerald-300 font-bold px-3 py-1 rounded-lg text-xs truncate transition mono";
         }
 
-        // Attach change listeners
         if (injected.on) {
           injected.on("accountsChanged", (accs) => {
             if (!accs || accs.length === 0) resetWalletButtons();
@@ -941,7 +1140,7 @@
       const btnExec = document.getElementById("btnExecConnectWallet");
       if (btnLanding) {
         btnLanding.textContent = "Connect Wallet";
-        btnLanding.className = "bg-cyan-500 hover:bg-cyan-400 text-gray-950 font-bold px-4 py-1.5 rounded-lg transition shadow-md shadow-cyan-500/10";
+        btnLanding.className = "bg-gradient-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-gray-950 font-bold px-4 py-1.5 rounded-lg transition shadow-md shadow-cyan-500/20";
       }
       if (btnExec) {
         btnExec.textContent = "Connect Wallet";
@@ -1001,10 +1200,9 @@
       if (!q) return;
 
       const btn = document.getElementById("btnSummonSwarm");
-      btn.innerHTML = `<span>⏳ Compiling...</span>`;
+      btn.innerHTML = `<span>⏳ Compiling Synapses...</span>`;
 
       try {
-        // Query problem compiler API
         const res = await fetch("/api/compile-problem", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -1012,7 +1210,6 @@
         });
         const compiled = await res.json();
 
-        // Create new dynamic swarm in store
         const newId = Object.keys(SWARMS_STORE).length + 1;
         SWARMS_STORE[newId] = {
           id: newId,
@@ -1030,14 +1227,13 @@
           onChainState: 0,
           onChainStateName: "Created",
           canSettle: false,
-          agreementLevel: "DYNAMIC CONSENSUS",
+          agreementLevel: "DYNAMIC SYNAPTIC CONVERGENCE",
           consensusDecision: "ANALYSIS IN PROGRESS",
           consensusConfidence: 65.0,
           selectedAgents: ["WEATHER_ALPHA", "WEATHER_BETA", "WEATHER_GAMMA"],
           agents: { ...SWARMS_STORE[1].agents }
         };
 
-        // Add button to top swarm selector
         renderSwarmSelectorBar();
         switchToExecutionView(newId);
 
@@ -1045,7 +1241,7 @@
         console.warn("Compiler call fallback:", err.message);
         switchToExecutionView(1);
       } finally {
-        btn.innerHTML = `<span>⚡ Summon Swarm</span>`;
+        btn.innerHTML = `<span>⚡ Fire Neural Swarm</span>`;
       }
     }
 
@@ -1071,12 +1267,12 @@
       renderAgentPanelUI();
       renderDebateGraphUI();
       renderSafetyAuditUI();
+      renderSettlementScoreTable();
 
-      // Set default stage based on on-chain state
       if (swarmId === 1) {
-        currentStageIndex = 10; // Swarm #1 is in Stage 10 (Outcome pending)
+        currentStageIndex = 10;
       } else if (swarmId === 2) {
-        currentStageIndex = 11; // Swarm #2 is Settled
+        currentStageIndex = 11;
       } else {
         currentStageIndex = 1;
       }
@@ -1139,7 +1335,7 @@
           } else {
             toggleAutoPlay();
           }
-        }, 3000);
+        }, 3200);
       } else {
         clearInterval(autoPlayTimer);
         icon.textContent = "▶";
@@ -1159,7 +1355,7 @@
           ind.className = "step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-emerald-950 border border-emerald-600 flex items-center justify-center text-[10px] font-bold text-emerald-400 mono shadow-[0_0_8px_rgba(16,185,129,0.3)]";
           ind.innerHTML = "✓";
         } else if (i === currentStageIndex) {
-          el.className = "timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition bg-slate-900/90 border border-cyan-500/80 shadow-[0_0_15px_rgba(6,182,212,0.2)]";
+          el.className = "timeline-step relative pl-8 py-2 pr-2 rounded-lg cursor-pointer transition bg-slate-900/90 border border-cyan-500/80 shadow-[0_0_15px_rgba(6,182,212,0.25)]";
           ind.className = "step-indicator absolute left-2 top-2.5 w-5 h-5 rounded-full bg-cyan-500 text-gray-950 flex items-center justify-center text-[10px] font-extrabold mono shadow-[0_0_12px_#06b6d4]";
           ind.innerHTML = i < 10 ? `0${i}` : `${i}`;
         } else {
@@ -1184,14 +1380,14 @@
       const now = new Date().toTimeString().split(" ")[0];
 
       switch (stageNum) {
-        case 1: // Compiler
-          document.getElementById("overlayEngineTitle").textContent = "QUERY DECONSTRUCTION ENGINE";
+        case 1:
+          document.getElementById("overlayEngineTitle").innerHTML = `<span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span><span>SYNAPTIC PROBLEM COMPILER</span>`;
           dynamicCard.innerHTML = `
-            <div class="glass-panel p-4 rounded-2xl border border-cyan-500/60 shadow-2xl relative overflow-hidden space-y-3">
+            <div class="glass-panel p-4 rounded-2xl border border-cyan-500/70 shadow-2xl relative overflow-hidden space-y-3 glow-cyan">
               <div class="scan-line"></div>
               <div class="flex items-center justify-between text-xs mono">
-                <span class="text-cyan-400 font-bold uppercase">Stage 01 • Problem Compiler</span>
-                <span class="text-emerald-400 font-bold">PARSED ✓</span>
+                <span class="text-cyan-400 font-bold uppercase">Stage 01 • Problem Deconstruction</span>
+                <span class="text-emerald-400 font-bold">SYNAPSE ACTIVE ✓</span>
               </div>
               <div class="text-sm font-bold text-white">"${s.question}"</div>
               <div class="grid grid-cols-2 sm:grid-cols-5 gap-2 text-center text-[10px] mono">
@@ -1203,65 +1399,65 @@
               </div>
             </div>
           `;
-          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-cyan-400 font-bold">[COMPILER]</span> Deconstructed question into domain: <span class="text-white">${s.capability}</span>, criterion: <span class="text-white">${s.criterion}</span>.`;
+          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-cyan-400 font-bold">[COMPILER]</span> Neural deconstruction active for domain: <span class="text-white">${s.capability}</span>, criterion: <span class="text-white">${s.criterion}</span>.`;
           break;
 
-        case 2: // Capability Match
-          document.getElementById("overlayEngineTitle").textContent = "REGISTRY QUALIFICATION SCANNER";
+        case 2:
+          document.getElementById("overlayEngineTitle").innerHTML = `<span class="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></span><span>NEURAL CAPABILITY MATCHER</span>`;
           dynamicCard.innerHTML = `
-            <div class="glass-panel p-4 rounded-2xl border border-indigo-500/60 shadow-2xl space-y-3">
+            <div class="glass-panel p-4 rounded-2xl border border-indigo-500/70 shadow-2xl space-y-3 glow-violet">
               <div class="flex items-center justify-between text-xs mono">
                 <span class="text-indigo-300 font-bold uppercase">Stage 02 • Capability Match</span>
                 <span class="text-emerald-400 font-bold">MATCH FOUND ✓</span>
               </div>
-              <div class="text-xs text-slate-300">Querying SwarmMindCore registry for capability: <strong class="text-cyan-300 mono">${s.capability}</strong></div>
+              <div class="text-xs text-slate-300">Querying on-chain registry for neural capability: <strong class="text-cyan-300 mono">${s.capability}</strong></div>
               <div class="flex items-center justify-between bg-slate-950 p-2.5 rounded-xl border border-slate-800 text-xs mono">
-                <span class="text-slate-400">Qualified Active Models:</span>
-                <span class="text-emerald-400 font-bold">3 / 3 On-Chain Models Ready</span>
+                <span class="text-slate-400">Qualified Neural Models:</span>
+                <span class="text-emerald-400 font-bold">3 / 3 On-Chain Models Staked</span>
               </div>
             </div>
           `;
-          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-indigo-400 font-bold">[REGISTRY]</span> Scanned registry for ${s.capability}. Qualified 3 active agents.`;
+          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-indigo-400 font-bold">[REGISTRY]</span> Scanned registry for ${s.capability}. Qualified 3 active agents with staked capital.`;
           break;
 
-        case 3: // Agent Recruitment
-          document.getElementById("overlayEngineTitle").textContent = "AUTONOMOUS AGENT ORCHESTRATOR";
+        case 3:
+          document.getElementById("overlayEngineTitle").innerHTML = `<span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span><span>SYNAPTIC AGENT ORCHESTRATOR</span>`;
           dynamicCard.innerHTML = `
-            <div class="glass-panel p-4 rounded-2xl border border-purple-500/60 shadow-2xl space-y-3">
+            <div class="glass-panel p-4 rounded-2xl border border-purple-500/70 shadow-2xl space-y-3">
               <div class="flex items-center justify-between text-xs mono">
                 <span class="text-purple-300 font-bold uppercase">Stage 03 • Specialist Recruitment</span>
                 <span class="text-emerald-400 font-bold">RECRUITED ✓</span>
               </div>
-              <div class="text-xs text-slate-300">Selected 3 specialized models to execute zero-collusion prediction.</div>
+              <div class="text-xs text-slate-300">Selected 3 specialized neural models to execute zero-collusion prediction.</div>
               <div class="grid grid-cols-3 gap-2 text-[10px] mono text-center">
-                <div class="bg-cyan-950/60 p-2 rounded border border-cyan-800 text-cyan-300 font-bold">ALPHA (Model 1)</div>
-                <div class="bg-indigo-950/60 p-2 rounded border border-indigo-800 text-indigo-300 font-bold">BETA (Model 2)</div>
-                <div class="bg-purple-950/60 p-2 rounded border border-purple-800 text-purple-300 font-bold">GAMMA (Model 3)</div>
+                <div class="bg-cyan-950/70 p-2 rounded border border-cyan-800 text-cyan-300 font-bold">ALPHA (Atmosphere)</div>
+                <div class="bg-indigo-950/70 p-2 rounded border border-indigo-800 text-indigo-300 font-bold">BETA (Satellite)</div>
+                <div class="bg-purple-950/70 p-2 rounded border border-purple-800 text-purple-300 font-bold">GAMMA (Critic)</div>
               </div>
             </div>
           `;
-          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-purple-400 font-bold">[RECRUITMENT]</span> Assigned ALPHA, BETA, and GAMMA models to Swarm #${s.id}.`;
+          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-purple-400 font-bold">[RECRUITMENT]</span> Assigned ALPHA, BETA, and GAMMA neural models to Swarm #${s.id}.`;
           break;
 
-        case 4: // Independent Analysis
-          document.getElementById("overlayEngineTitle").textContent = "ZERO-COLLUSION REASONING CORES";
+        case 4:
+          document.getElementById("overlayEngineTitle").innerHTML = `<span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span><span>ZERO-COLLUSION REASONING NODES</span>`;
           dynamicCard.innerHTML = `
-            <div class="glass-panel p-4 rounded-2xl border border-blue-500/60 shadow-2xl space-y-3">
+            <div class="glass-panel p-4 rounded-2xl border border-blue-500/70 shadow-2xl space-y-3">
               <div class="flex items-center justify-between text-xs mono">
                 <span class="text-blue-300 font-bold uppercase">Stage 04 • Independent Analysis</span>
-                <span class="text-cyan-400 font-bold">COMPUTING...</span>
+                <span class="text-cyan-400 font-bold animate-pulse">COMPUTING...</span>
               </div>
-              <div class="text-xs text-slate-300">Models executing private domain forecasting without inter-agent collusion.</div>
-              <div class="text-[11px] text-slate-400 italic">Models assimilating domain data feeds, historical observations, and boundary metrics.</div>
+              <div class="text-xs text-slate-300">Neural cores executing isolated forward inference without inter-agent collusion.</div>
+              <div class="text-[11px] text-slate-400 italic">Assimilating 16 scientific data feeds: ECMWF IFS, INSAT-3DR sounding, & IMD gauges.</div>
             </div>
           `;
-          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-blue-400 font-bold">[ANALYSIS]</span> Models computing predictions. Collusion prevention active.`;
+          logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-blue-400 font-bold">[ANALYSIS]</span> Neural models computing predictions. Collusion prevention active.`;
           break;
 
-        case 5: // Commitment
-          document.getElementById("overlayEngineTitle").textContent = "CRYPTOGRAPHIC CAPSULE GENERATOR";
+        case 5:
+          document.getElementById("overlayEngineTitle").innerHTML = `<span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span><span>CRYPTOGRAPHIC CAPSULE GENERATOR</span>`;
           dynamicCard.innerHTML = `
-            <div class="glass-panel p-4 rounded-2xl border border-cyan-500/80 shadow-2xl space-y-3">
+            <div class="glass-panel p-4 rounded-2xl border border-cyan-500/80 shadow-2xl space-y-3 glow-cyan">
               <div class="flex items-center justify-between text-xs mono">
                 <span class="text-cyan-300 font-bold uppercase">Stage 05 • Commitment & Escrow</span>
                 <span class="text-emerald-400 font-bold">SEALED ON-CHAIN ✓</span>
@@ -1269,8 +1465,8 @@
               <div class="text-xs mono bg-slate-950 p-2.5 rounded border border-slate-800 text-slate-300 text-center select-all">
                 keccak256(swarmId, agentId, prediction, confidence, salt)
               </div>
-              <div class="flex items-center justify-between text-xs mono">
-                <span class="text-slate-400">Prediction Bonds Escrowed:</span>
+              <div class="flex items-center justify-between text-xs mono bg-slate-900/80 p-2 rounded border border-slate-800">
+                <span class="text-slate-400">Escrowed Bonds:</span>
                 <span class="text-emerald-400 font-bold">${s.totalBonded} (0.0010 MSTC each)</span>
               </div>
             </div>
@@ -1278,27 +1474,27 @@
           logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-cyan-400 font-bold">[COMMIT]</span> Locked prediction bonds on MST Testnet with verified Keccak256 hashes.`;
           break;
 
-        case 6: // Challenge
-          document.getElementById("overlayEngineTitle").textContent = "ADVERSARIAL DISPUTE ENGINE";
+        case 6:
+          document.getElementById("overlayEngineTitle").innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span><span>ADVERSARIAL CHALLENGE MARKET</span>`;
           dynamicCard.innerHTML = `
-            <div class="glass-panel p-4 rounded-2xl border border-amber-500/60 shadow-2xl space-y-3">
+            <div class="glass-panel p-4 rounded-2xl border border-amber-500/70 shadow-2xl space-y-3">
               <div class="flex items-center justify-between text-xs mono">
                 <span class="text-amber-300 font-bold uppercase">Stage 06 • Challenge Market</span>
-                <span class="text-emerald-400 font-bold">UNCONTESTED ✓</span>
+                <span class="text-emerald-400 font-bold">CLEAN CONSENSUS ✓</span>
               </div>
-              <div class="text-xs text-slate-300">Challenge window open. Peer models review commitment hashes and evidence references.</div>
+              <div class="text-xs text-slate-300">Challenge window open. Peer models cross-examine commitments and empirical references.</div>
               <div class="bg-amber-950/30 p-2 rounded-lg border border-amber-800/60 text-[11px] text-amber-200 mono text-center">
-                Dispute Window Concluded • Zero Challenges Submitted • Clean Consensus
+                Dispute Window Concluded • Zero Hypotheses Invalidated
               </div>
             </div>
           `;
           logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-amber-400 font-bold">[CHALLENGE]</span> Challenge window evaluated. Zero dispute claims filed.`;
           break;
 
-        case 7: // Reveal
-          document.getElementById("overlayEngineTitle").textContent = "CRYPTOGRAPHIC CAPSULE UNLOCK";
+        case 7:
+          document.getElementById("overlayEngineTitle").innerHTML = `<span class="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></span><span>PREDICTION CAPSULE UNLOCK</span>`;
           dynamicCard.innerHTML = `
-            <div class="glass-panel p-4 rounded-2xl border border-purple-500/80 shadow-2xl space-y-3">
+            <div class="glass-panel p-4 rounded-2xl border border-purple-500/80 shadow-2xl space-y-3 glow-violet">
               <div class="flex items-center justify-between text-xs mono">
                 <span class="text-purple-300 font-bold uppercase">Stage 07 • Prediction Reveal</span>
                 <span class="text-emerald-400 font-bold">3 / 3 UNLOCKED ✓</span>
@@ -1313,8 +1509,8 @@
           logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-purple-400 font-bold">[REVEAL]</span> Secret salts submitted. Preimages unlocked on-chain on MST Testnet.`;
           break;
 
-        case 8: // Verification
-          document.getElementById("overlayEngineTitle").textContent = "PREIMAGE INTEGRITY CHECKER";
+        case 8:
+          document.getElementById("overlayEngineTitle").innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>PREIMAGE INTEGRITY CHECKER</span>`;
           dynamicCard.innerHTML = `
             <div class="glass-panel p-4 rounded-2xl border border-emerald-500/80 shadow-2xl space-y-3">
               <div class="flex items-center justify-between text-xs mono">
@@ -1331,8 +1527,8 @@
           logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-emerald-400 font-bold">[VERIFY]</span> SwarmMindCore verified reveal hashes against locked commitments on MST Testnet.`;
           break;
 
-        case 9: // Consensus
-          document.getElementById("overlayEngineTitle").textContent = "SYNTHETIC CONSENSUS ENGINE";
+        case 9:
+          document.getElementById("overlayEngineTitle").innerHTML = `<span class="w-2 h-2 rounded-full bg-cyan-400 animate-pulse"></span><span>SYNTHETIC CONSENSUS SYNTHESIS</span>`;
           dynamicCard.innerHTML = `
             <div class="glass-panel p-4 rounded-2xl border border-cyan-400/90 bg-slate-950/90 shadow-2xl space-y-3 glow-cyan">
               <div class="flex items-center justify-between text-xs mono">
@@ -1348,8 +1544,8 @@
           logStream.innerHTML = `<span class="text-slate-500">[${now}]</span> <span class="text-cyan-400 font-bold">[CONSENSUS]</span> Swarm consensus achieved: ${s.consensusDecision} (${s.consensusConfidence}% confidence).`;
           break;
 
-        case 10: // Outcome
-          document.getElementById("overlayEngineTitle").textContent = "REAL-WORLD OUTCOME RESOLVER";
+        case 10:
+          document.getElementById("overlayEngineTitle").innerHTML = `<span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span><span>GROUND TRUTH ORACLE RESOLVER</span>`;
           if (!s.canSettle) {
             dynamicCard.innerHTML = `
               <div class="glass-panel p-5 rounded-2xl border border-amber-700/80 bg-slate-950/95 shadow-2xl space-y-3">
@@ -1364,7 +1560,7 @@
                   <div class="text-base font-extrabold text-white">"THE SWARM HAS SPOKEN. REALITY HAS NOT."</div>
                   <div class="text-xs text-amber-300 mono">Target Date: ${s.targetDate} • Settlement Safely Locked</div>
                   <p class="text-[11px] text-slate-400 pt-1">
-                    Forecast-only settlement strictly rejected by protocol safety gates. Realized precipitation ground truth will be collected from historical observations once target date concludes.
+                    Forecast-only settlement strictly rejected by protocol safety gates. Realized precipitation ground truth will be collected from physical station observations once target date concludes.
                   </p>
                 </div>
               </div>
@@ -1387,10 +1583,10 @@
           }
           break;
 
-        case 11: // Settlement & Trust
-          document.getElementById("overlayEngineTitle").textContent = "FINANCIAL SETTLEMENT & TRUST LEDGER";
+        case 11:
+          document.getElementById("overlayEngineTitle").innerHTML = `<span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span><span>FINANCIAL SETTLEMENT & TRUST LEDGER</span>`;
           dynamicCard.innerHTML = `
-            <div class="glass-panel p-4 rounded-2xl border border-emerald-500 shadow-2xl space-y-3">
+            <div class="glass-panel p-4 rounded-2xl border border-emerald-500 shadow-2xl space-y-3 glow-emerald">
               <div class="flex items-center justify-between text-xs mono border-b border-emerald-800/40 pb-2">
                 <span class="text-emerald-400 font-bold uppercase">Stage 11 • Settlement & Trust Boost</span>
                 <span class="text-[10px] text-emerald-300 bg-emerald-950 px-2 py-0.5 rounded border border-emerald-800 font-bold">100% RECONCILED</span>
@@ -1399,8 +1595,11 @@
                 <div class="bg-slate-900/90 p-2 rounded"><span class="text-slate-500 text-[10px] block">BONDS REFUNDED</span><strong class="text-emerald-400">0.0030 MSTC</strong></div>
                 <div class="bg-slate-900/90 p-2 rounded"><span class="text-slate-500 text-[10px] block">BOUNTY PAID</span><strong class="text-emerald-400">0.0050 MSTC</strong></div>
               </div>
-              <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-xs mono text-center text-slate-300">
-                Reputation Ledger: <strong class="text-emerald-400">+500 bps (+5.00%)</strong> boost awarded for correct predictions.
+              <div class="bg-slate-950 p-2.5 rounded-lg border border-slate-800 text-xs mono text-center text-slate-300 flex items-center justify-between">
+                <span>Reputation Boost: <strong class="text-emerald-400">+500 bps (+5.0%)</strong></span>
+                <button onclick="switchCenterView('settlement')" class="text-[10px] bg-emerald-950 text-emerald-300 border border-emerald-800 px-2 py-1 rounded font-bold hover:bg-emerald-900 transition">
+                  Full Scorecard →
+                </button>
               </div>
             </div>
           `;
@@ -1409,40 +1608,96 @@
       }
     }
 
-    // 5. CENTER VIEW TOGGLE (CANVAS vs DEBATE GRAPH vs SAFETY AUDIT)
+    // 5. CENTER VIEW TOGGLE (CANVAS vs SETTLEMENT vs DEBATE vs SAFETY)
     function switchCenterView(viewName) {
       activeCenterView = viewName;
 
       const cCanvas = document.getElementById("centerCanvasContainer");
+      const cSettlement = document.getElementById("centerSettlementContainer");
       const cDebate = document.getElementById("centerDebateContainer");
       const cSafety = document.getElementById("centerSafetyContainer");
 
       const btnC = document.getElementById("tabCanvasBtn");
+      const btnSt = document.getElementById("tabSettlementBtn");
       const btnD = document.getElementById("tabDebateBtn");
       const btnS = document.getElementById("tabSafetyBtn");
 
       cCanvas.classList.add("hidden");
+      if (cSettlement) cSettlement.classList.add("hidden");
       cDebate.classList.add("hidden");
       cSafety.classList.add("hidden");
 
-      btnC.className = "px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white";
-      btnD.className = "px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white";
-      btnS.className = "px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white";
+      btnC.className = "px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white flex items-center gap-1";
+      if (btnSt) btnSt.className = "px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white flex items-center gap-1";
+      btnD.className = "px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white flex items-center gap-1";
+      btnS.className = "px-2.5 py-1 rounded font-bold transition text-slate-400 hover:text-white flex items-center gap-1";
 
       if (viewName === "canvas") {
         cCanvas.classList.remove("hidden");
-        btnC.className = "px-2.5 py-1 rounded font-bold transition bg-cyan-950 text-cyan-300 border border-cyan-800";
+        btnC.className = "px-2.5 py-1 rounded font-bold transition bg-cyan-950 text-cyan-300 border border-cyan-800 flex items-center gap-1";
         resizeCanvas();
+      } else if (viewName === "settlement") {
+        if (cSettlement) cSettlement.classList.remove("hidden");
+        if (btnSt) btnSt.className = "px-2.5 py-1 rounded font-bold transition bg-emerald-950 text-emerald-300 border border-emerald-800 flex items-center gap-1";
+        renderSettlementScoreTable();
       } else if (viewName === "debate") {
         cDebate.classList.remove("hidden");
-        btnD.className = "px-2.5 py-1 rounded font-bold transition bg-indigo-950 text-indigo-300 border border-indigo-800";
+        btnD.className = "px-2.5 py-1 rounded font-bold transition bg-indigo-950 text-indigo-300 border border-indigo-800 flex items-center gap-1";
       } else if (viewName === "safety") {
         cSafety.classList.remove("hidden");
-        btnS.className = "px-2.5 py-1 rounded font-bold transition bg-amber-950 text-amber-300 border border-amber-800";
+        btnS.className = "px-2.5 py-1 rounded font-bold transition bg-amber-950 text-amber-300 border border-amber-800 flex items-center gap-1";
       }
     }
 
-    // 6. ADVERSARIAL DEBATE GRAPH UI
+    // 6. SETTLEMENT SCORECARD TABLE RENDERER
+    function renderSettlementScoreTable() {
+      const tbody = document.getElementById("settlementScoreTableBody");
+      if (!tbody) return;
+
+      const s = SWARMS_STORE[activeSwarmId] || SWARMS_STORE[1];
+      const keys = Object.keys(s.agents);
+
+      tbody.innerHTML = keys.map(k => {
+        const ag = s.agents[k];
+        return `
+          <tr class="hover:bg-slate-900/50 transition">
+            <td class="py-2.5 px-2">
+              <div class="font-extrabold text-white flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full ${k.includes('ALPHA') ? 'bg-cyan-400' : (k.includes('BETA') ? 'bg-indigo-400' : 'bg-purple-400')}"></span>
+                <span>${ag.name}</span>
+              </div>
+              <div class="text-[10px] text-slate-500">${ag.role}</div>
+            </td>
+            <td class="py-2.5 px-2">
+              <span class="text-emerald-400 font-bold bg-emerald-950/80 px-2 py-0.5 rounded border border-emerald-800">
+                ${ag.prediction} (${ag.confidence}%)
+              </span>
+            </td>
+            <td class="py-2.5 px-2 text-slate-300 font-bold">
+              ${ag.bond}
+              <span class="text-[10px] text-emerald-400 block font-normal">Refunded ✓</span>
+            </td>
+            <td class="py-2.5 px-2 text-cyan-300 font-bold">
+              +${ag.bountyShare || '0.00167 MSTC'}
+              <span class="text-[10px] text-slate-500 block font-normal">Equal Bounty Share</span>
+            </td>
+            <td class="py-2.5 px-2 text-emerald-400 font-black score-glow">
+              ${ag.totalPayout || '0.00267 MSTC'}
+            </td>
+            <td class="py-2.5 px-2">
+              <span class="text-emerald-300 font-bold bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-800">
+                ${ag.reputation}
+              </span>
+            </td>
+            <td class="py-2.5 px-2 text-white font-extrabold">
+              ${ag.accuracyScore || '96.0%'}
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    // 7. ADVERSARIAL DEBATE GRAPH UI
     function renderDebateGraphUI() {
       const container = document.getElementById("debateGraphContent");
       if (!container) return;
@@ -1485,7 +1740,7 @@
       }).join("");
     }
 
-    // 7. 5-GATE SAFETY AUDIT UI
+    // 8. 5-GATE SAFETY AUDIT UI
     function renderSafetyAuditUI() {
       const container = document.getElementById("safetyGatesContent");
       if (!container) return;
@@ -1555,7 +1810,7 @@
       `).join("");
     }
 
-    // 8. AGENT PANEL & DEEP INSPECTOR
+    // 9. AGENT PANEL & DEEP INSPECTOR
     function renderAgentPanelUI() {
       const container = document.getElementById("agentCardsContainer");
       if (!container) return;
@@ -1570,7 +1825,7 @@
         const pillStyle = currentStageIndex >= 11 ? "bg-emerald-950 text-emerald-300 border-emerald-800" : (currentStageIndex >= 7 ? "bg-purple-950 text-purple-300 border-purple-800" : "bg-cyan-950 text-cyan-300 border-cyan-800");
 
         return `
-          <div id="agent-panel-${k}" onclick="selectAgentForInspection('${k}')" class="agent-panel-card p-3 rounded-xl border ${isSelected ? 'border-cyan-400 bg-slate-900' : 'border-slate-800 bg-slate-900/60'} hover:border-cyan-500/60 cursor-pointer transition space-y-2">
+          <div id="agent-panel-${k}" onclick="selectAgentForInspection('${k}')" class="agent-panel-card p-3 rounded-xl border ${isSelected ? 'border-cyan-400 bg-slate-900 shadow-lg glow-cyan' : 'border-slate-800 bg-slate-900/60'} hover:border-cyan-500/60 cursor-pointer transition space-y-2">
             <div class="flex items-center justify-between text-xs mono">
               <div class="flex items-center gap-1.5">
                 <span class="w-2 h-2 rounded-full ${k.includes('ALPHA') ? 'bg-cyan-400' : (k.includes('BETA') ? 'bg-indigo-400' : 'bg-purple-400')}"></span>
@@ -1587,12 +1842,11 @@
         `;
       }).join("");
 
-      // Deep Inspector Card HTML
       const selectedAg = s.agents[selectedAgentKey] || s.agents["WEATHER_ALPHA"];
       cardsHtml += `
-        <div id="deepInspectorCard" class="glass-panel p-3.5 rounded-xl border border-cyan-800/80 space-y-2.5 text-xs mono">
+        <div id="deepInspectorCard" class="glass-panel p-3.5 rounded-xl border border-cyan-800/80 space-y-2.5 text-xs mono glow-cyan">
           <div class="flex items-center justify-between border-b border-slate-800 pb-2">
-            <span class="text-[10px] uppercase font-bold text-cyan-400 tracking-wider">Deep Agent Inspector</span>
+            <span class="text-[10px] uppercase font-bold text-cyan-400 tracking-wider">Deep Neural Inspector</span>
             <span class="text-[10px] text-emerald-400 font-bold">VERIFIED ON-CHAIN</span>
           </div>
 
@@ -1607,19 +1861,25 @@
               <div class="font-bold text-white">${selectedAg.capability}</div>
             </div>
             <div>
-              <span class="text-[10px] text-slate-500 uppercase">Prediction Bond</span>
+              <span class="text-[10px] text-slate-500 uppercase">Staked Bond</span>
               <div class="font-bold text-emerald-400">${selectedAg.bond}</div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 text-[11px]">
+            <div>
+              <span class="text-[10px] text-slate-500 uppercase">Bounty Yield</span>
+              <div class="font-bold text-cyan-300">${selectedAg.bountyShare || '0.00167 MSTC'}</div>
+            </div>
+            <div>
+              <span class="text-[10px] text-slate-500 uppercase">Accuracy Score</span>
+              <div class="font-bold text-emerald-400">${selectedAg.accuracyScore || '96.4%'}</div>
             </div>
           </div>
 
           <div>
             <span class="text-[10px] text-slate-500 uppercase">Keccak256 Commitment Hash</span>
             <div class="text-[10px] text-cyan-300 truncate select-all bg-slate-950 p-1.5 rounded border border-slate-800/80">${selectedAg.commitmentHash}</div>
-          </div>
-
-          <div>
-            <span class="text-[10px] text-slate-500 uppercase">Economic Owner Note</span>
-            <div class="text-[10px] text-slate-400">${selectedAg.owner}</div>
           </div>
 
           <div>
@@ -1646,7 +1906,7 @@
       renderAgentPanelUI();
     }
 
-    // 9. ON-CHAIN NETWORK STATUS POLL
+    // 10. ON-CHAIN NETWORK STATUS POLL
     async function fetchLatestOnChainNetworkStatus() {
       try {
         const res = await fetch("/api/network-status");
@@ -1660,10 +1920,13 @@
       } catch {}
     }
 
-    // 10. 60FPS LIVE SWARM FIELD CANVAS RENDERING
+    // ===================================================================
+    // 11. 60FPS SYNAPTIC NEURAL NETWORK ENGINE (MULTI-LAYER VISUALIZER)
+    // ===================================================================
     let canvas, ctx;
-    let particles = [];
-    let signalPulses = [];
+    let synapticParticles = [];
+    let synapticPulses = [];
+    let hoveredNeuron = null;
 
     function initCanvas() {
       canvas = document.getElementById("swarmCanvas");
@@ -1672,25 +1935,29 @@
       resizeCanvas();
       window.addEventListener("resize", resizeCanvas);
 
-      particles = [];
-      for (let i = 0; i < 45; i++) {
-        particles.push({
-          x: Math.random() * canvas.width,
-          y: Math.random() * canvas.height,
-          vx: (Math.random() - 0.5) * 0.4,
-          vy: (Math.random() - 0.5) * 0.4,
-          radius: Math.random() * 1.5 + 0.5,
-          alpha: Math.random() * 0.5 + 0.2
+      // Create ambient neural background particles
+      synapticParticles = [];
+      for (let i = 0; i < 60; i++) {
+        synapticParticles.push({
+          x: Math.random() * (canvas.width || 800),
+          y: Math.random() * (canvas.height || 600),
+          vx: (Math.random() - 0.5) * 0.45,
+          vy: (Math.random() - 0.5) * 0.45,
+          radius: Math.random() * 2 + 0.5,
+          alpha: Math.random() * 0.6 + 0.2,
+          pulseSpeed: Math.random() * 0.02 + 0.01,
+          pulseVal: Math.random() * Math.PI
         });
       }
 
+      // Periodically spawn synaptic action potentials
       setInterval(() => {
         if (activeCenterView === "canvas") {
-          spawnSignalPulse();
+          spawnSynapticPulse();
         }
-      }, 1400);
+      }, 700);
 
-      renderCanvasLoop();
+      renderNeuralNetworkLoop();
     }
 
     function resizeCanvas() {
@@ -1700,22 +1967,27 @@
       canvas.height = rect.height;
     }
 
-    function spawnSignalPulse() {
-      const fromAgent = Math.floor(Math.random() * 3);
-      signalPulses.push({
-        agentIdx: fromAgent,
+    function spawnSynapticPulse() {
+      // Pick random source layer node and target layer node
+      const fromLayer = Math.floor(Math.random() * 3); // 0: input, 1: hidden/agents, 2: consensus
+      const pulseColor = fromLayer === 0 ? "#38bdf8" : (fromLayer === 1 ? "#818cf8" : "#34d399");
+
+      synapticPulses.push({
+        layer: fromLayer,
+        nodeIdx: Math.floor(Math.random() * 3),
         progress: 0,
-        speed: 0.015 + Math.random() * 0.01,
-        color: fromAgent === 0 ? "#38bdf8" : (fromAgent === 1 ? "#818cf8" : "#c084fc")
+        speed: 0.018 + Math.random() * 0.015,
+        color: pulseColor,
+        size: Math.random() * 2.5 + 2.5
       });
     }
 
-    function renderCanvasLoop() {
+    function renderNeuralNetworkLoop() {
       if (!ctx || !canvas) return;
       const width = canvas.width;
       const height = canvas.height;
       if (width === 0 || height === 0) {
-        requestAnimationFrame(renderCanvasLoop);
+        requestAnimationFrame(renderNeuralNetworkLoop);
         return;
       }
 
@@ -1725,10 +1997,10 @@
 
       ctx.clearRect(0, 0, width, height);
 
-      // Grid
-      ctx.strokeStyle = "rgba(30, 41, 59, 0.25)";
+      // 1. Futuristic Hexagonal & Orthogonal Neural Matrix Grid
+      ctx.strokeStyle = "rgba(30, 41, 59, 0.2)";
       ctx.lineWidth = 1;
-      const gridSize = 48;
+      const gridSize = 44;
       for (let x = 0; x < width; x += gridSize) {
         ctx.beginPath();
         ctx.moveTo(x, 0);
@@ -1742,51 +2014,165 @@
         ctx.stroke();
       }
 
-      // Particles
-      particles.forEach(p => {
+      // 2. Ambient Synaptic Particles Flow
+      synapticParticles.forEach(p => {
         p.x += p.vx;
         p.y += p.vy;
+        p.pulseVal += p.pulseSpeed;
         if (p.x < 0) p.x = width;
         if (p.x > width) p.x = 0;
         if (p.y < 0) p.y = height;
         if (p.y > height) p.y = 0;
 
-        ctx.fillStyle = `rgba(148, 163, 184, ${p.alpha * 0.6})`;
+        const currentAlpha = (Math.sin(p.pulseVal) * 0.3 + 0.7) * p.alpha;
+        ctx.fillStyle = `rgba(56, 189, 248, ${currentAlpha})`;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fill();
       });
 
-      // Central Swarm Core
-      const corePulse = Math.sin(time * 2) * 4;
-      const coreRadius = 36 + corePulse;
+      // 3. Define Multi-Layer Neural Network Architecture
+      // Layer 0: Input Sensor Neurons (Left Column)
+      // Layer 1: Specialist Hidden Somas (Center Radial Orbit)
+      // Layer 2: Consensus & Cryptographic Output Core (Center)
+      
+      const inputNodes = [
+        { label: "ECMWF NWP", x: width * 0.16, y: height * 0.25, color: "#38bdf8", type: "SENSOR" },
+        { label: "INSAT-3DR", x: width * 0.16, y: height * 0.50, color: "#818cf8", type: "TELEMETRY" },
+        { label: "IMD GAUGE", x: width * 0.16, y: height * 0.75, color: "#c084fc", type: "GROUND" }
+      ];
 
+      const agentOrbitDist = Math.min(width, height) * 0.32;
+      const agentKeys = ["WEATHER_ALPHA", "WEATHER_BETA", "WEATHER_GAMMA"];
+      const agentColors = ["#38bdf8", "#818cf8", "#c084fc"];
+
+      const agentSomas = agentKeys.map((key, i) => {
+        const baseAngle = (i * (2 * Math.PI / 3)) - Math.PI / 2;
+        const angle = baseAngle + Math.sin(time * 0.6 + i) * 0.08;
+        const dist = agentOrbitDist + (currentStageIndex === 9 ? -25 : (currentStageIndex === 4 ? 20 : 0));
+        return {
+          key: key,
+          x: cx + Math.cos(angle) * dist,
+          y: cy + Math.sin(angle) * dist,
+          color: agentColors[i],
+          name: key.replace("WEATHER_", ""),
+          role: i === 0 ? "ATMOSPHERE" : (i === 1 ? "SATELLITE" : "CRITIC")
+        };
+      });
+
+      const consensusNode = {
+        label: "SWARMMIND CORE",
+        x: cx,
+        y: cy,
+        color: "#34d399"
+      };
+
+      // 4. Draw Synaptic Axon Connections with Animated Weights
+      // Connect Input Nodes -> Agent Somas
+      inputNodes.forEach((inp, inpIdx) => {
+        agentSomas.forEach((som, somIdx) => {
+          const weightIntensity = (Math.sin(time * 2 + inpIdx + somIdx) * 0.5 + 0.5) * 0.25 + 0.08;
+          ctx.strokeStyle = `rgba(56, 189, 248, ${weightIntensity})`;
+          ctx.lineWidth = 1.2;
+          ctx.beginPath();
+          ctx.moveTo(inp.x, inp.y);
+          ctx.bezierCurveTo((inp.x + som.x) / 2, inp.y, (inp.x + som.x) / 2, som.y, som.x, som.y);
+          ctx.stroke();
+        });
+      });
+
+      // Connect Agent Somas -> Consensus Core & Peer-to-Peer Lateral Synapses
+      agentSomas.forEach((som, idx) => {
+        // Center Core Axon
+        const axonAlpha = currentStageIndex >= 7 ? 0.6 : (currentStageIndex >= 5 ? 0.35 : 0.2);
+        ctx.strokeStyle = `rgba(56, 189, 248, ${axonAlpha})`;
+        ctx.lineWidth = currentStageIndex >= 9 ? 2.5 : 1.5;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(som.x, som.y);
+        ctx.stroke();
+
+        // Lateral Cross-Agent Synaptic Link (Challenge & Debate)
+        const nextSom = agentSomas[(idx + 1) % agentSomas.length];
+        ctx.strokeStyle = "rgba(139, 92, 246, 0.25)";
+        ctx.setLineDash([4, 6]);
+        ctx.beginPath();
+        ctx.moveTo(som.x, som.y);
+        ctx.lineTo(nextSom.x, nextSom.y);
+        ctx.stroke();
+        ctx.setLineDash([]);
+      });
+
+      // 5. Render Synaptic Action Potential Pulses (Traveling Electricity)
+      for (let i = synapticPulses.length - 1; i >= 0; i--) {
+        const pulse = synapticPulses[i];
+        pulse.progress += pulse.speed;
+        if (pulse.progress >= 1) {
+          synapticPulses.splice(i, 1);
+          continue;
+        }
+
+        let startX, startY, endX, endY;
+        if (pulse.layer === 0) {
+          // Input -> Agent
+          const inp = inputNodes[pulse.nodeIdx % inputNodes.length];
+          const som = agentSomas[pulse.nodeIdx % agentSomas.length];
+          startX = inp.x; startY = inp.y;
+          endX = som.x; endY = som.y;
+        } else {
+          // Agent -> Core
+          const som = agentSomas[pulse.nodeIdx % agentSomas.length];
+          startX = som.x; startY = som.y;
+          endX = cx; endY = cy;
+        }
+
+        const px = startX + (endX - startX) * pulse.progress;
+        const py = startY + (endY - startY) * pulse.progress;
+
+        // Pulse Glowing Tail
+        ctx.fillStyle = pulse.color;
+        ctx.shadowColor = pulse.color;
+        ctx.shadowBlur = 12;
+        ctx.beginPath();
+        ctx.arc(px, py, pulse.size, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.shadowBlur = 0; // Reset
+      }
+
+      // 6. Draw Central SwarmMind Consensus Core
+      const corePulse = Math.sin(time * 3) * 5;
+      const coreRadius = 40 + corePulse;
+
+      // Outer Rotating Synaptic Ring
       ctx.save();
       ctx.translate(cx, cy);
-      ctx.rotate(time * 0.15);
-      ctx.strokeStyle = "rgba(56, 189, 248, 0.2)";
-      ctx.lineWidth = 1.5;
-      ctx.setLineDash([6, 8]);
+      ctx.rotate(time * 0.25);
+      ctx.strokeStyle = "rgba(56, 189, 248, 0.35)";
+      ctx.lineWidth = 2;
+      ctx.setLineDash([8, 10]);
       ctx.beginPath();
-      ctx.arc(0, 0, 72, 0, Math.PI * 2);
+      ctx.arc(0, 0, 78, 0, Math.PI * 2);
       ctx.stroke();
       ctx.restore();
 
-      const coreGrad = ctx.createRadialGradient(cx, cy, 2, cx, cy, coreRadius * 1.8);
+      // Core Radial Glow
+      const coreGrad = ctx.createRadialGradient(cx, cy, 4, cx, cy, coreRadius * 2);
       coreGrad.addColorStop(0, "rgba(56, 189, 248, 0.95)");
-      coreGrad.addColorStop(0.4, "rgba(99, 102, 241, 0.5)");
+      coreGrad.addColorStop(0.35, "rgba(99, 102, 241, 0.55)");
+      coreGrad.addColorStop(0.7, "rgba(52, 211, 153, 0.25)");
       coreGrad.addColorStop(1, "rgba(6, 182, 212, 0)");
 
       ctx.fillStyle = coreGrad;
       ctx.beginPath();
-      ctx.arc(cx, cy, coreRadius * 1.8, 0, Math.PI * 2);
+      ctx.arc(cx, cy, coreRadius * 2, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.fillStyle = "#0c1322";
+      // Core Inner Hub
+      ctx.fillStyle = "#070c18";
       ctx.strokeStyle = "#38bdf8";
-      ctx.lineWidth = 2;
+      ctx.lineWidth = 2.5;
       ctx.beginPath();
-      ctx.arc(cx, cy, 20, 0, Math.PI * 2);
+      ctx.arc(cx, cy, 24, 0, Math.PI * 2);
       ctx.fill();
       ctx.stroke();
 
@@ -1794,121 +2180,87 @@
       ctx.font = "bold 9px 'JetBrains Mono'";
       ctx.textAlign = "center";
       ctx.textBaseline = "middle";
-      ctx.fillText("CORE", cx, cy);
+      ctx.fillText("CORE", cx, cy - 3);
+      ctx.fillStyle = "#34d399";
+      ctx.font = "bold 7px 'JetBrains Mono'";
+      ctx.fillText("SYNAPSE", cx, cy + 6);
 
-      // Agent Orbit Nodes
-      const orbitDistance = Math.min(width, height) * 0.32;
-      const agentKeys = ["WEATHER_ALPHA", "WEATHER_BETA", "WEATHER_GAMMA"];
-      const agentColors = ["#38bdf8", "#818cf8", "#c084fc"];
-
-      const agentPositions = agentKeys.map((key, i) => {
-        const baseAngle = (i * (2 * Math.PI / 3)) - Math.PI / 2;
-        const angle = baseAngle + Math.sin(time * 0.5 + i) * 0.08;
-        const dist = orbitDistance + (currentStageIndex === 9 ? -30 : (currentStageIndex === 4 ? 20 : 0));
-        return {
-          key: key,
-          x: cx + Math.cos(angle) * dist,
-          y: cy + Math.sin(angle) * dist,
-          color: agentColors[i],
-          name: key.replace("WEATHER_", "")
-        };
-      });
-
-      // Connections
-      agentPositions.forEach((pos, idx) => {
-        ctx.strokeStyle = "rgba(56, 189, 248, 0.18)";
+      // 7. Draw Input Sensor Nodes
+      inputNodes.forEach((inp) => {
+        ctx.fillStyle = "#0c1322";
+        ctx.strokeStyle = inp.color;
         ctx.lineWidth = 1.5;
         ctx.beginPath();
-        ctx.moveTo(cx, cy);
-        ctx.lineTo(pos.x, pos.y);
+        ctx.arc(inp.x, inp.y, 16, 0, Math.PI * 2);
+        ctx.fill();
         ctx.stroke();
 
-        const nextPos = agentPositions[(idx + 1) % agentPositions.length];
-        ctx.strokeStyle = "rgba(139, 92, 246, 0.12)";
-        ctx.setLineDash([4, 6]);
-        ctx.beginPath();
-        ctx.moveTo(pos.x, pos.y);
-        ctx.lineTo(nextPos.x, nextPos.y);
-        ctx.stroke();
-        ctx.setLineDash([]);
+        ctx.fillStyle = "#ffffff";
+        ctx.font = "bold 8px 'JetBrains Mono'";
+        ctx.textAlign = "center";
+        ctx.textBaseline = "middle";
+        ctx.fillText(inp.label.split(" ")[0], inp.x, inp.y);
       });
 
-      // Pulses
-      for (let i = signalPulses.length - 1; i >= 0; i--) {
-        const pulse = signalPulses[i];
-        pulse.progress += pulse.speed;
-        if (pulse.progress >= 1) {
-          signalPulses.splice(i, 1);
-          continue;
-        }
+      // 8. Draw Agent Neural Soma Nodes
+      agentSomas.forEach((som, idx) => {
+        const isSelected = selectedAgentKey === som.key;
+        const somaRadius = 26 + (isSelected ? 5 : 0);
 
-        const agentPos = agentPositions[pulse.agentIdx];
-        if (agentPos) {
-          const px = agentPos.x + (cx - agentPos.x) * pulse.progress;
-          const py = agentPos.y + (cy - agentPos.y) * pulse.progress;
-
-          ctx.fillStyle = pulse.color;
-          ctx.beginPath();
-          ctx.arc(px, py, 3.5, 0, Math.PI * 2);
-          ctx.fill();
-        }
-      }
-
-      // Nodes
-      agentPositions.forEach((pos, idx) => {
-        const isSelected = selectedAgentKey === pos.key;
-        const agRadius = 24 + (isSelected ? 4 : 0);
-
-        ctx.strokeStyle = isSelected ? "#38bdf8" : "rgba(148, 163, 184, 0.3)";
-        ctx.lineWidth = isSelected ? 2 : 1.2;
+        // Halo Ring
+        ctx.strokeStyle = isSelected ? "#38bdf8" : "rgba(148, 163, 184, 0.35)";
+        ctx.lineWidth = isSelected ? 2.5 : 1.2;
         ctx.beginPath();
-        ctx.arc(pos.x, pos.y, agRadius + 8, 0, Math.PI * 2);
+        ctx.arc(som.x, som.y, somaRadius + 8, 0, Math.PI * 2);
         ctx.stroke();
 
-        const satAngle = time * 2.5 + idx * 2;
-        const satX = pos.x + Math.cos(satAngle) * (agRadius + 8);
-        const satY = pos.y + Math.sin(satAngle) * (agRadius + 8);
-        ctx.fillStyle = pos.color;
+        // Orbiting Satellite Signal
+        const satAngle = time * 2.8 + idx * 2;
+        const satX = som.x + Math.cos(satAngle) * (somaRadius + 8);
+        const satY = som.y + Math.sin(satAngle) * (somaRadius + 8);
+        ctx.fillStyle = som.color;
         ctx.beginPath();
-        ctx.arc(satX, satY, 2.5, 0, Math.PI * 2);
+        ctx.arc(satX, satY, 3, 0, Math.PI * 2);
         ctx.fill();
 
+        // Commit Proof Seal Ring
         if (currentStageIndex >= 5) {
-          ctx.strokeStyle = currentStageIndex >= 7 ? "rgba(16, 185, 129, 0.6)" : "rgba(6, 182, 212, 0.8)";
-          ctx.lineWidth = 1.5;
+          ctx.strokeStyle = currentStageIndex >= 11 ? "rgba(52, 211, 153, 0.8)" : (currentStageIndex >= 7 ? "rgba(192, 132, 252, 0.8)" : "rgba(56, 189, 248, 0.8)");
+          ctx.lineWidth = 1.8;
           ctx.setLineDash([3, 3]);
           ctx.beginPath();
-          ctx.arc(pos.x, pos.y, agRadius + 14, 0, Math.PI * 2);
+          ctx.arc(som.x, som.y, somaRadius + 14, 0, Math.PI * 2);
           ctx.stroke();
           ctx.setLineDash([]);
         }
 
-        ctx.fillStyle = "#0c1322";
+        // Soma Body
+        ctx.fillStyle = "#070c18";
         ctx.beginPath();
-        ctx.arc(pos.x, pos.y, agRadius, 0, Math.PI * 2);
+        ctx.arc(som.x, som.y, somaRadius, 0, Math.PI * 2);
         ctx.fill();
 
-        ctx.strokeStyle = pos.color;
-        ctx.lineWidth = isSelected ? 2.5 : 1.5;
+        ctx.strokeStyle = som.color;
+        ctx.lineWidth = isSelected ? 3 : 1.8;
         ctx.stroke();
 
+        // Labels
         ctx.fillStyle = "#ffffff";
         ctx.font = "bold 9px 'JetBrains Mono'";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
-        ctx.fillText(pos.name, pos.x, pos.y - 3);
+        ctx.fillText(som.name, som.x, som.y - 4);
 
-        const s = SWARMS_STORE[activeSwarmId] || SWARMS_STORE[1];
-        ctx.fillStyle = pos.color;
-        ctx.font = "7px 'JetBrains Mono'";
-        ctx.fillText(s.capability || "WEATHER", pos.x, pos.y + 7);
+        ctx.fillStyle = som.color;
+        ctx.font = "bold 7px 'JetBrains Mono'";
+        ctx.fillText(som.role, som.x, som.y + 7);
       });
 
-      requestAnimationFrame(renderCanvasLoop);
+      requestAnimationFrame(renderNeuralNetworkLoop);
     }
 
     // ===================================================================
-    // LANDING NAVIGATION & INTERACTIVE SUBVIEWS
+    // 12. LANDING NAVIGATION & INTERACTIVE SUBVIEWS
     // ===================================================================
     let allRegistryAgents = [];
     let activeRegistryDomain = 'ALL';
@@ -1923,15 +2275,14 @@
         contracts: { btn: 'navTabContracts', view: 'subview-contracts' }
       };
 
-      // Update button highlights
       Object.keys(tabMap).forEach(k => {
         const btn = document.getElementById(tabMap[k].btn);
         const subview = document.getElementById(tabMap[k].view);
         if (btn) {
           if (k === tabKey) {
-            btn.className = 'text-white border-b-2 border-cyan-400 pb-1 cursor-pointer';
+            btn.className = 'text-white border-b-2 border-cyan-400 pb-1 cursor-pointer flex items-center gap-1.5';
           } else {
-            btn.className = 'hover:text-slate-200 transition cursor-pointer pb-1 border-b-2 border-transparent text-slate-400';
+            btn.className = 'hover:text-slate-200 transition cursor-pointer pb-1 border-b-2 border-transparent text-slate-400 flex items-center gap-1.5';
           }
         }
         if (subview) {
@@ -1945,7 +2296,6 @@
 
       window.scrollTo({ top: 0, behavior: 'smooth' });
 
-      // Trigger dynamic data fetchers
       if (tabKey === 'registry') {
         loadAndRenderRegistry();
       } else if (tabKey === 'datasources') {
@@ -1974,14 +2324,14 @@
       if (!container) return;
 
       let list = allRegistryAgents.length ? allRegistryAgents : [
-        { name: "WEATHER_ALPHA", domain: "WEATHER", current_reputation: 83, onChainId: "0x4f59...162b", stake: "100 MSTC", description: "Atmospheric physics & boundary layer numerical parameterization specialist." },
-        { name: "WEATHER_BETA", domain: "WEATHER", current_reputation: 81, onChainId: "0x2bb5...1f4", stake: "100 MSTC", description: "Geostationary satellite telemetry & doppler radar storm tracker." },
-        { name: "WEATHER_GAMMA", domain: "WEATHER", current_reputation: 86, onChainId: "0x2d9c...d560", stake: "100 MSTC", description: "Climatological ML & empirical monsoon analogue pattern classifier." },
-        { name: "ENERGY_SOLAR_01", domain: "ENERGY", current_reputation: 88, onChainId: "0x7a1b...e92a", stake: "100 MSTC", description: "Solar irradiance yield forecasting & GHI cloud derating model." },
-        { name: "ENERGY_GRID_02", domain: "ENERGY", current_reputation: 82, onChainId: "0x9c3d...f811", stake: "100 MSTC", description: "Substation load capacity, transformer headroom & curtailment estimator." },
-        { name: "FINANCE_VOLATILITY_01", domain: "FINANCE", current_reputation: 87, onChainId: "0x3e4f...a029", stake: "100 MSTC", description: "Commodity derivative volatility surface & hedging threshold analysis." },
-        { name: "INFRA_THERMAL_01", domain: "INFRASTRUCTURE", current_reputation: 85, onChainId: "0x5b6c...7712", stake: "100 MSTC", description: "Structural expansion joint thermal stress & transit load monitoring." },
-        { name: "RISK_CROSS_DOMAIN_01", domain: "RISK", current_reputation: 89, onChainId: "0x1d2e...4488", stake: "100 MSTC", description: "Adversarial auditor specializing in cross-hypothesis cross-examination." }
+        { name: "WEATHER_ALPHA", domain: "WEATHER", current_reputation: 88, accuracyScore: "96.4%", stake: "100 MSTC", wins: 14, losses: 1, description: "Atmospheric numerical NWP boundary layer parameterization specialist." },
+        { name: "WEATHER_BETA", domain: "WEATHER", current_reputation: 86, accuracyScore: "94.8%", stake: "100 MSTC", wins: 12, losses: 2, description: "Geostationary satellite telemetry & Doppler water vapor advection tracker." },
+        { name: "WEATHER_GAMMA", domain: "WEATHER", current_reputation: 91, accuracyScore: "98.2%", stake: "100 MSTC", wins: 17, losses: 0, description: "Coastal microclimate critic & convective instability boundary specialist." },
+        { name: "ENERGY_SOLAR_01", domain: "ENERGY", current_reputation: 88, accuracyScore: "95.1%", stake: "100 MSTC", wins: 10, losses: 1, description: "Solar irradiance yield forecasting & GHI cloud derating model." },
+        { name: "ENERGY_GRID_02", domain: "ENERGY", current_reputation: 84, accuracyScore: "92.6%", stake: "100 MSTC", wins: 9, losses: 2, description: "Substation load capacity, transformer headroom & curtailment estimator." },
+        { name: "FINANCE_VOLATILITY_01", domain: "FINANCE", current_reputation: 89, accuracyScore: "96.0%", stake: "100 MSTC", wins: 15, losses: 1, description: "Commodity derivative volatility surface & hedging threshold analysis." },
+        { name: "INFRA_THERMAL_01", domain: "INFRASTRUCTURE", current_reputation: 85, accuracyScore: "93.4%", stake: "100 MSTC", wins: 8, losses: 1, description: "Structural expansion joint thermal stress & transit load monitoring." },
+        { name: "RISK_CROSS_DOMAIN_01", domain: "RISK", current_reputation: 92, accuracyScore: "98.9%", stake: "100 MSTC", wins: 21, losses: 0, description: "Adversarial auditor specializing in cross-hypothesis cross-examination." }
       ];
 
       if (activeRegistryDomain !== 'ALL') {
@@ -1995,29 +2345,40 @@
                            dom === 'FINANCE' ? 'bg-emerald-950 text-emerald-300 border-emerald-800' :
                            dom === 'INFRASTRUCTURE' ? 'bg-indigo-950 text-indigo-300 border-indigo-800' : 'bg-purple-950 text-purple-300 border-purple-800';
 
+        const rep = a.current_reputation || 85;
+        const acc = a.accuracyScore || "95.0%";
+
         return `
-          <div class="glass-panel p-4 rounded-xl border border-slate-800 hover:border-cyan-500/50 transition space-y-3">
+          <div class="glass-panel p-5 rounded-2xl border border-slate-800 hover:border-cyan-500/60 transition space-y-3.5 glow-cyan">
             <div class="flex items-center justify-between">
-              <span class="text-[10px] mono font-bold px-2 py-0.5 rounded border ${badgeColor}">${dom}</span>
-              <span class="text-xs mono font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-2 py-0.5 rounded">
-                ${a.current_reputation || 85}% REPUTATION
+              <span class="text-[10px] mono font-bold px-2.5 py-0.5 rounded border ${badgeColor}">${dom}</span>
+              <span class="text-xs mono font-bold text-emerald-400 bg-emerald-950/80 border border-emerald-800 px-2.5 py-0.5 rounded score-glow">
+                ${rep}% REPUTATION
               </span>
             </div>
             <div>
-              <div class="font-extrabold text-white text-sm">${a.name}</div>
+              <div class="font-extrabold text-white text-base">${a.name}</div>
               <p class="text-xs text-slate-400 mt-1 leading-relaxed">${a.description || 'Specialist model with verifiable on-chain stake.'}</p>
             </div>
-            <div class="bg-slate-950/90 p-2 rounded-lg border border-slate-800/80 flex items-center justify-between text-[11px] mono">
-              <span class="text-slate-500">STAKED BOND:</span>
-              <span class="text-cyan-300 font-bold">${a.stake || '100 MSTC'}</span>
-            </div>
-            <div class="space-y-1">
-              <div class="flex items-center justify-between text-[10px] text-slate-500 mono">
-                <span>Domain Preparation Weight</span>
-                <span class="text-emerald-400 font-bold">${a.current_reputation || 85}%</span>
+            
+            <div class="grid grid-cols-2 gap-2 text-[11px] mono">
+              <div class="bg-slate-950/90 p-2.5 rounded-lg border border-slate-800">
+                <span class="text-slate-500 block text-[10px]">STAKED BOND</span>
+                <span class="text-cyan-300 font-bold">${a.stake || '100 MSTC'}</span>
               </div>
-              <div class="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
-                <div class="bg-emerald-400 h-full rounded-full" style="width: ${a.current_reputation || 85}%"></div>
+              <div class="bg-slate-950/90 p-2.5 rounded-lg border border-slate-800">
+                <span class="text-slate-500 block text-[10px]">HISTORICAL ACCURACY</span>
+                <span class="text-emerald-400 font-bold">${acc}</span>
+              </div>
+            </div>
+
+            <div class="space-y-1 pt-1">
+              <div class="flex items-center justify-between text-[10px] text-slate-500 mono">
+                <span>Domain Selection Weight</span>
+                <span class="text-emerald-400 font-bold">${rep}%</span>
+              </div>
+              <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden">
+                <div class="bg-gradient-to-r from-cyan-500 via-indigo-500 to-emerald-400 h-full rounded-full" style="width: ${rep}%"></div>
               </div>
             </div>
           </div>
@@ -2100,7 +2461,9 @@
             question: "Will it rain in Chennai tomorrow?",
             capability: "WEATHER",
             status: "OUTCOME_PENDING",
-            bounty: "0.005 MSTC",
+            bounty: "0.0050 MSTC",
+            bonds: "0.0030 MSTC",
+            totalPot: "0.0080 MSTC",
             consensusVerdict: "YES (81% Weighted Confidence)",
             targetDate: "2026-09-29",
             isReal: true
@@ -2109,8 +2472,10 @@
             swarmId: 2,
             question: "CONTROLLED DEMO: Will the measured precipitation value be >= 0.5 mm?",
             capability: "WEATHER",
-            status: "RESOLVED",
-            bounty: "0.005 MSTC",
+            status: "RESOLVED & SETTLED",
+            bounty: "0.0050 MSTC",
+            bonds: "0.0030 MSTC",
+            totalPot: "0.0080 MSTC",
             consensusVerdict: "YES (81% Weighted Confidence)",
             targetDate: "2026-09-29",
             isReal: false
@@ -2118,12 +2483,12 @@
         ];
 
         container.innerHTML = swarms.map(sw => {
-          const isResolved = sw.status === 'RESOLVED';
+          const isResolved = sw.status.includes('RESOLVED');
           const isReal = sw.isReal || sw.swarmId === 1;
 
           return `
-            <div class="glass-panel p-5 rounded-xl border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
-              <div class="space-y-2">
+            <div class="glass-panel p-5 rounded-2xl border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4 glow-cyan">
+              <div class="space-y-2.5">
                 <div class="flex items-center gap-2 flex-wrap text-xs mono">
                   <span class="font-bold text-cyan-400 bg-cyan-950 px-2 py-0.5 rounded border border-cyan-800">SWARM #${sw.swarmId || '001'}</span>
                   <span class="font-bold text-slate-300 bg-slate-900 px-2 py-0.5 rounded border border-slate-800">${(sw.capability || sw.domain || 'WEATHER').toUpperCase()}</span>
@@ -2134,12 +2499,13 @@
                 </div>
                 <div class="text-base font-extrabold text-white">"${sw.question}"</div>
                 <div class="text-xs text-slate-400 flex items-center gap-4 flex-wrap mono">
-                  <span>Bounty: <span class="text-cyan-300 font-bold">${sw.bounty || '0.005 MSTC'}</span></span>
-                  <span>Bonds: <span class="text-emerald-400 font-bold">0.003 MSTC</span></span>
-                  <span>Consensus: <span class="text-white font-bold">${sw.consensusVerdict || (sw.consensus ? sw.consensus.finalDecision : 'YES (81%)')}</span></span>
+                  <span>Bounty: <span class="text-cyan-300 font-bold">${sw.bounty || '0.0050 MSTC'}</span></span>
+                  <span>Bonds: <span class="text-indigo-300 font-bold">${sw.bonds || '0.0030 MSTC'}</span></span>
+                  <span>Total Escrow: <span class="text-emerald-400 font-bold score-glow">${sw.totalPot || '0.0080 MSTC'}</span></span>
+                  <span>Consensus: <span class="text-white font-bold">${sw.consensusVerdict || 'YES (81%)'}</span></span>
                 </div>
               </div>
-              <button onclick="pickScenario('${sw.question.replace(/'/g, "\\'")}', ${sw.swarmId === 2 ? 2 : 1})" class="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-cyan-500 text-cyan-300 font-bold text-xs mono transition shrink-0 cursor-pointer">
+              <button onclick="pickScenario('${sw.question.replace(/'/g, "\\'")}', ${sw.swarmId === 2 ? 2 : 1})" class="px-4 py-2.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 hover:border-cyan-500 text-cyan-300 font-bold text-xs mono transition shrink-0 cursor-pointer">
                 Inspect in Swarm Control Center →
               </button>
             </div>
@@ -2159,7 +2525,7 @@
         await window.ethereum.request({
           method: 'wallet_addEthereumChain',
           params: [{
-            chainId: '0x57519bb', // 91562037 in hex
+            chainId: '0x57519bb',
             chainName: 'MST Blockchain Testnet',
             nativeCurrency: { name: 'MSTC', symbol: 'MSTC', decimals: 18 },
             rpcUrls: ['https://testnetrpc.mstblockchain.com'],
