@@ -1,329 +1,208 @@
-# 🧠 SwarmMind — Autonomous AI Accountability Protocol
+# 🧠 SwarmMind — Agent-Native Blockchain Protocol
 
-> **Decentralized swarm intelligence on the MST Testnet blockchain. AI agents make predictions, stake bonds, challenge each other, and settle outcomes — all on-chain.**
+> **“We don’t ask which AI to trust. We build a system where AI agents have to earn trust.”**
 
 <div align="center">
 
-![SwarmMind](https://img.shields.io/badge/SwarmMind-v1.0.0-6366f1?style=for-the-badge&logo=ethereum)
-![MST Testnet](https://img.shields.io/badge/MST_Testnet-Chain_91562037-22d3ee?style=for-the-badge)
-![Solidity](https://img.shields.io/badge/Solidity-^0.8.19-e2e8f0?style=for-the-badge&logo=solidity)
-![Node.js](https://img.shields.io/badge/Node.js-18+-84cc16?style=for-the-badge&logo=node.js)
+[![MST Testnet](https://img.shields.io/badge/MST_Testnet-Chain_91562037-22d3ee?style=for-the-badge&logo=blockchain)](https://testnet.mstscan.com)
+[![Solidity](https://img.shields.io/badge/Solidity-^0.8.19-6366f1?style=for-the-badge&logo=solidity)](https://soliditylang.org/)
+[![Ethers.js](https://img.shields.io/badge/Ethers.js-v6-f59e0b?style=for-the-badge)](https://docs.ethers.org/)
+[![Node.js](https://img.shields.io/badge/Node.js-18+-84cc16?style=for-the-badge&logo=node.js)](https://nodejs.org/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-slate?style=for-the-badge)](LICENSE)
 
 </div>
 
 ---
 
-## 📖 What is SwarmMind?
+## 🌐 Live Protocol & Verified Deployments
 
-SwarmMind is an **autonomous AI accountability protocol** that coordinates multiple AI agents to collaboratively make predictions, then holds them accountable via:
+- **🚀 Live Application (GitHub Pages):** **[https://jahnavik1125.github.io/SWARMMIND/](https://jahnavik1125.github.io/SWARMMIND/)**
+- **📦 GitHub Repository:** **[https://github.com/jahnavik1125/SWARMMIND](https://github.com/jahnavik1125/SWARMMIND)**
+- **⚡ 1-Click Vercel Deployment:** [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fjahnavik1125%2FSWARMMIND)
 
-- 🔐 **Commit-reveal cryptography** — agents commit hashed predictions before revealing, preventing manipulation
-- 💰 **Bond staking** — agents stake `MSTC` tokens as skin-in-the-game
-- ⚖️ **Challenge market** — agents can challenge each other's methodology with evidence
-- 🏆 **Reputation settlement** — correct agents earn reputation + bond rewards; wrong ones lose
-- 🔗 **On-chain accountability** — every step anchored to MST Testnet blockchain
+### ⛓️ Deployed Smart Contracts (MST Testnet — Chain ID `91562037`)
 
----
-
-## 🌐 Live Deployment & Demo Links
-
-- **🚀 Public Live Protocol Control Center (Online & Verified):** **[https://850e7ab296e4b2.lhr.life](https://850e7ab296e4b2.lhr.life)**
-- **🌐 GitHub Pages Mirror:** [https://jahnavik1125.github.io/SWARMMIND/](https://jahnavik1125.github.io/SWARMMIND/)
-- **📦 GitHub Repository:** [https://github.com/jahnavik1125/SWARMMIND](https://github.com/jahnavik1125/SWARMMIND)
-- **⚡ 1-Click Vercel Deploy:** [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fjahnavik1125%2FSWARMMIND)
-
-### Smart Contracts (MST Testnet)
-
-| Contract | Address |
-|---|---|
-| `SwarmMindCore.sol` | [`0x92283AA6983D52A8A3bEa714D5FD8cc6Db360276`](https://testnet.mstscan.io/address/0x92283AA6983D52A8A3bEa714D5FD8cc6Db360276) |
-| `MVPControlledResolver.sol` | [`0x4d1E37b71Dfd3794Efe856E2A9D74D7ed28B9234`](https://testnet.mstscan.io/address/0x4d1E37b71Dfd3794Efe856E2A9D74D7ed28B9234) |
-
-### Network Config
-
-```
-Network:  MST Testnet
-Chain ID: 91562037
-RPC URL:  https://testnetrpc.mstblockchain.com
-```
-
-### On-Chain Transaction History
-
-| Event | Tx Hash | Block |
+| Contract | Address | Explorer Link |
 |---|---|---|
-| Deploy `MVPControlledResolver` | `0x26b0accb...a29d` | `5786336` |
-| Deploy `SwarmMindCore` | `0xadaf2570...e7b08` | `5786342` |
-| Register `WEATHER_GAMMA` | `0x6b9a3667...ab1` | `5786518` |
-| Register `WEATHER_ALPHA` | `0xfe05a2fe...c3f0` | `5786530` |
-| Register `WEATHER_BETA` | `0x3f28fe16...9a36` | `5786539` |
-| Create Swarm #1 | `0xfdfe3745...fa04` | `5786741` |
-| Select Agents | `0x61c9b6dc...c13e` | `5786744` |
-| WEATHER_ALPHA Commit | `0xaf132b26...cd2` | `5786998` |
-| WEATHER_BETA Commit | `0x80742348...bb3` | `5787001` |
-| WEATHER_GAMMA Commit | `0x735ba756...616` | `5787004` |
-| WEATHER_ALPHA Reveal → YES 60% | `0xa15a3ebb...087` | `5787247` |
-| WEATHER_BETA Reveal → YES 58% | `0xdb6194f6...9be` | `5787251` |
-| WEATHER_GAMMA Reveal → YES 73% | `0xdba3f80b...2f` | `5787254` |
+| **`SwarmMindCore.sol`** | `0x92283AA6983D52A8A3bEa714D5FD8cc6Db360276` | [View on MSTScan ↗](https://testnet.mstscan.com/address/0x92283AA6983D52A8A3bEa714D5FD8cc6Db360276) |
+| **`MVPControlledResolver.sol`** | `0x4d1E37b71Dfd3794Efe856E2A9D74D7ed28B9234` | [View on MSTScan ↗](https://testnet.mstscan.com/address/0x4d1E37b71Dfd3794Efe856E2A9D74D7ed28B9234) |
+
+```
+Network Name : MST Blockchain Testnet
+Chain ID     : 91562037 (0x5751ca9)
+RPC URL      : https://testnetrpc.mstblockchain.com
+Explorer     : https://testnet.mstscan.com
+Deployer     : 0x3730145b513129B6081d753882536871ea454d46
+```
 
 ---
 
-## 🤖 Registered Agents
+## 💡 What is SwarmMind?
 
-| Agent | Agent ID | Domain | Reputation |
+SwarmMind is a **blockchain-first protocol for autonomous AI accountability**. Instead of relying on a single centralized LLM or blind trust, SwarmMind coordinates multiple specialized AI agents that must **stake financial bonds (`MSTC`)**, **cryptographically commit their reasoning**, **cross-examine peers in an adversarial challenge market**, and **settle on-chain upon empirical ground-truth verification**.
+
+```
+  ┌─────────────────┐       ┌─────────────────┐       ┌─────────────────┐
+  │  Problem Input  │ ────> │ Multi-Agent     │ ────> │  Keccak256      │
+  │  (Natural Lang) │       │ Selection       │       │  Commit & Bond  │
+  └─────────────────┘       └─────────────────┘       └─────────────────┘
+                                                               │
+  ┌─────────────────┐       ┌─────────────────┐                ▼
+  │ On-Chain Trust  │ <──── │ Ground Truth    │ <──── ┌─────────────────┐
+  │ & Payout Update │       │ Oracle Gate     │       │ Reveal & Debate │
+  └─────────────────┘       └─────────────────┘       │ Consensus Graph │
+                                                      └─────────────────┘
+```
+
+---
+
+## 🎯 Key Pillars & Protocol Architecture
+
+### 1. 🔐 Cryptographic Commit-Reveal Scheme
+- Prevents last-minute front-running and copycat agent collusion.
+- **Commit Phase:** Agents hash their prediction, secret nonce, and identifier:
+  $$\text{commitHash} = \text{keccak256}(\text{abi.encodePacked}(\text{prediction}, \text{nonce}, \text{agentId}))$$
+  The hash is anchored on-chain with a locked bond ($0.0010\text{ MSTC}$).
+- **Reveal Phase:** Agents submit raw values; the smart contract verifies bytecode match before accepting.
+
+### 2. 💰 Bond Escrow & Stake Alignment
+- Every agent puts economic **skin-in-the-game**.
+- Creator funds a bounty pool (e.g., $0.0050\text{ MSTC}$).
+- Correct agents earn: $\text{Full Bond Refund} + \text{Pro-Rata Bounty Share} + 500\text{ bps (+5.00%) Reputation Boost}$.
+- Incorrect agents forfeit their bond to the slashing pool and incur a $-500\text{ bps (-5.00%)}$ reputation penalty.
+
+### 3. ⚔️ Adversarial Peer Review & Challenge Market
+- Agents cross-examine methodologies (e.g., boundary layer atmospheric models vs geostationary satellite water-vapor advection).
+- Unsubstantiated claims can be challenged with on-chain evidence stakes.
+
+### 4. 🛡️ 5-Gate Oracle Safety System
+Settlement is gated against premature or forecast-only inputs:
+1. **Target Date Concluded**: Realized timestamp must be reached.
+2. **Non-Forecast Source**: Only empirical historical station observations allowed for resolution.
+3. **Observation Recorded**: Physical gauge/sensor data logged.
+4. **Reproducible Evidence**: Evidence hash anchored.
+5. **Authorized Resolver**: `MVPControlledResolver` validates authorization on `SwarmMindCore`.
+
+---
+
+## 🤖 Registered On-Chain Agents
+
+| Agent Name | Agent ID Hash | Domain Specialization | Base Rep |
 |---|---|---|---|
-| `WEATHER_ALPHA` | `0x4f593aa3...162b` | Atmospheric Science | 88% |
-| `WEATHER_BETA` | `0x2bb519c2...1f4` | Numerical Weather Prediction | 85% |
-| `WEATHER_GAMMA` | `0x2d9cbf00...d560` | Satellite Data Analysis | 91% |
+| `WEATHER_ALPHA` | `0x4f593aa368b69c663a279a652ffdce8e2a7da9526492ac357472105aa758162b` | Numerical Weather Prediction (ECMWF/GFS) | 88% |
+| `WEATHER_BETA` | `0x2bb519c2d3835d6116adade05fdda3b9ddf2f4ef94bd343af59a317aee0cb1f4` | Satellite Moisture Flux (INSAT-3DR) | 86% |
+| `WEATHER_GAMMA` | `0x2d9cbf004444d64e839bc520559f8047edd707a24ee15171f56648797edad560` | Coastal Boundary Layer & Convective Instability | 91% |
 
 ---
 
-## 🏗️ Architecture
+## 📜 On-Chain Verification Trail (Live Receipts on MST Testnet)
+
+| Protocol Action | Transaction Hash | Block Number |
+|---|---|---|
+| **Deploy MVPControlledResolver** | `0x26b0accb938c823069151578b7a4be46db984852c035650aa0626a27e7caa29d` | `5786336` |
+| **Deploy SwarmMindCore** | `0xadaf2570775d7870f7b58832a8292f768b556b66a5bc39922e4c4be674be7b08` | `5786342` |
+| **Register WEATHER_GAMMA** | `0x6b9a3667c4ec2646d84aa3a758782ee91a3297a76e01a613897ca49aa6027ab1` | `5786518` |
+| **Register WEATHER_ALPHA** | `0xfe05a2fe21262d98dc2157ecad68a3e74b39b0ee7fc390232fa0a9e70196c3f0` | `5786530` |
+| **Register WEATHER_BETA** | `0x3f28fe16a85817d23d8c1157bca18804918e7d727b13766ea9d05e26ec259a36` | `5786539` |
+| **Create Swarm #1** | `0xfdfe37452d3a3d52cb3e4307a68571477ea08d24b6f128e93290e29b19e2fa04` | `5786741` |
+| **Select Swarm Agents** | `0x61c9b6dca0b171638202efd33939634e3204938a923507fb02ee538fe0a9c13e` | `5786744` |
+| **Commit WEATHER_ALPHA** | `0xaf132b26e94c80dab59b97aba539f7e9c1222183fa5349162db11ed7b8544cd2` | `5786998` |
+| **Commit WEATHER_BETA** | `0x807423482efc8911e9d14b70fb323522b30c965fb9750b97dae8148bb993fbb3` | `5787001` |
+| **Commit WEATHER_GAMMA** | `0x735ba75645267922877235ae3a07d376e76b41e890b3769ed61b779a333b3616` | `5787004` |
+| **Reveal WEATHER_ALPHA (YES 60%)** | `0xa15a3ebb895556e7d802accfa43c4a83ca6456ecdb69f64e5bf79981d16ca087` | `5787247` |
+| **Reveal WEATHER_BETA (YES 58%)** | `0xdb6194f685cd953ed262c3d8735433d555feee1d9e540a778b0c74fffad8e9be` | `5787251` |
+| **Reveal WEATHER_GAMMA (YES 73%)** | `0xdba3f80be0bee04e346b942822cc24595d1a623764737d26be9ff950c9fe6d2f` | `5787254` |
+
+---
+
+## 🛠️ Repository Structure
 
 ```
 SwarmMind/
-├── contracts/                     # Solidity smart contracts
-│   ├── SwarmMindCore.sol          # Core protocol: agents, swarms, commit-reveal
+├── contracts/                     # Solidity Smart Contracts
+│   ├── SwarmMindCore.sol          # Main protocol: agents, bonds, commit-reveal, reputation
 │   ├── interfaces/
-│   │   └── IOutcomeResolver.sol   # Resolver interface
+│   │   └── IOutcomeResolver.sol   # Modular resolver interface standard
 │   └── resolvers/
-│       └── MVPControlledResolver.sol  # Controlled outcome resolver
+│       └── MVPControlledResolver.sol  # Controlled empirical oracle resolver
 │
-├── agents/                        # AI agent implementations
-│   ├── weather-alpha/agent.js
-│   ├── weather-beta/agent.js
-│   └── weather-gamma/agent.js
+├── agents/                        # Autonomous AI Agent Reasoning Modules
+│   ├── weather-alpha/agent.js     # Atmospheric physics model
+│   ├── weather-beta/agent.js      # Satellite moisture flux model
+│   └── weather-gamma/agent.js     # Microclimate convective critic
 │
-├── services/                      # Backend protocol services
-│   ├── swarm-coordinator.js       # Orchestrates full swarm lifecycle
-│   ├── blockchain-service.js      # MST Testnet interactions (ethers.js)
-│   ├── problem-compiler.js        # Parses natural language → structured problem
-│   ├── agent-engine.js            # Agent prediction generation
-│   ├── commitment-store.js        # Commit-reveal storage
-│   ├── consensus-engine.js        # Aggregates predictions into consensus
-│   ├── debate-engine.js           # Challenge market logic
-│   ├── outcome-service.js         # Settlement + reputation delta
-│   └── database.js                # In-memory + JSON persistence
+├── services/                      # Protocol Coordination & Consensus Engines
+│   ├── swarm-coordinator.js       # End-to-end swarm lifecycle orchestrator
+│   ├── blockchain-service.js      # MST Testnet Ethers.js integration layer
+│   ├── problem-compiler.js        # Natural language parameter deconstructor
+│   ├── consensus-engine.js        # Reputation-weighted probability synthesis
+│   ├── debate-engine.js           # Adversarial challenge market logic
+│   └── outcome-service.js         # Settlement & trust score updater
 │
 ├── frontend/deploy/
-│   └── index.html                 # Full-stack single-page app (no framework)
+│   └── index.html                 # Synaptic Neural Network Protocol Control Center
 │
-├── scripts/
-│   ├── deploy.js                  # Hardhat deploy to MST Testnet
-│   ├── register-agents.js         # On-chain agent registration
-│   ├── deployment-server.js       # Node.js HTTP server (port 3333)
-│   └── verify-*.js                # Blockchain verification scripts
+├── scripts/                       # Hardhat Deployment & Verification Scripts
+│   ├── deploy.js                  # Automated contract deployment
+│   ├── register-agents.js         # On-chain agent registration script
+│   ├── deployment-server.js       # Local development & API server (port 3333)
+│   └── verify-*.js                # Milestone validation suites
 │
-├── data/                          # Agent registry + oracle data sources
-├── metadata/                      # Agent metadata (IPFS-ready JSON)
-├── test/                          # Mocha test suites (milestones 4–9)
-└── hardhat.config.js              # Hardhat + MST Testnet config
+├── test/                          # Mocha/Chai Protocol Integration Tests
+│   ├── SwarmMindCore.test.js      # Smart contract unit tests
+│   └── milestone4-9/              # Verification gate test suites
+│
+├── hardhat.config.js              # Hardhat configuration with MST Testnet network
+└── vercel.json                    # One-click static deployment configuration
 ```
 
 ---
 
-## 🔄 11-Stage Protocol Flow
+## 🚀 Quick Start & Local Execution
 
-```
-Stage 01 — Problem Compilation        Natural language → structured prediction task
-Stage 02 — Agent Recruitment          Filter agents by domain, reputation, stake
-Stage 03 — Data Sourcing              16 oracle feeds polled (weather, satellite, etc.)
-Stage 04 — Commit & Bonds             Agents commit hash(prediction + nonce), stake MSTC
-Stage 05 — Challenge Market           Agents challenge peers with on-chain evidence
-Stage 06 — Reveal                     Agents reveal prediction + nonce; hash verified
-Stage 07 — Consensus Formation        Weighted aggregation → final YES/NO + confidence %
-Stage 08 — Debate Resolution          Challenge rulings finalized
-Stage 09 — Outcome Settlement         Real-world outcome submitted to resolver
-Stage 10 — Reputation Update          +5% correct / -5% wrong, bond payouts
-Stage 11 — Audit Trail                Full immutable on-chain history
-```
+### 1. Prerequisites
+- **Node.js** 18+
+- **Git**
+- **MetaMask / EVM Injected Wallet** (configured with MST Testnet)
 
----
-
-## 🚀 Quick Start
-
-### Prerequisites
-
-- Node.js 18+
-- Git
-- MetaMask (for on-chain interactions)
-
-### Install
-
+### 2. Installation & Setup
 ```bash
+# Clone repository
 git clone https://github.com/jahnavik1125/SWARMMIND.git
 cd SWARMMIND
+
+# Install dependencies
 npm install
-```
 
-### Configure Environment
-
-```bash
+# Configure environment variables
 cp .env.example .env
-# Edit .env and set:
-# PRIVATE_KEY=your_deployer_private_key
-# MST_RPC_URL=https://testnetrpc.mstblockchain.com
 ```
 
-### Run the Protocol Control Center
-
+### 3. Run Protocol Control Center
 ```bash
 node scripts/deployment-server.js
 ```
+Open **`http://localhost:3333`** in your browser to access the interactive Protocol Control Center.
 
-Then open **http://localhost:3333** in your browser.
-
-### Deploy Contracts (optional — already deployed)
-
+### 4. Run Test Suite
 ```bash
-npx hardhat run scripts/deploy.js --network mstTestnet
-```
-
-### Register Agents (optional — already registered)
-
-```bash
-node scripts/register-agents.js
+npx hardhat test
 ```
 
 ---
 
-## 🖥️ Frontend — Protocol Control Center
+## ⚖️ Technical Highlights & Design Tradeoffs
 
-The frontend is a single `index.html` with zero build-step dependencies. It features:
-
-### Landing Page Tabs
-
-| Tab | Description |
-|---|---|
-| **🌐 Summoner Arena** | Submit a natural language prediction task and watch the swarm execute |
-| **🤖 Agent Registry** | Browse all registered AI agents, filter by domain, view reputation bars |
-| **📡 Data Sources** | 16 live oracle feeds (NOAA, IMD, ECMWF, satellite, IoT sensors) |
-| **📜 Prediction Ledger** | Full history of all past swarms with outcomes |
-| **🔗 MST Testnet** | Contract explorer, copy addresses, add MST Testnet to MetaMask |
-
-### Neural Canvas Animation
-
-- 11 animated stage cards with live status indicators
-- Real-time progress through the protocol lifecycle
-- Commit/reveal cryptographic proof display
-- Challenge market event cards
-- Consensus confidence meter
-- Reputation delta visualization
-
----
-
-## 📡 API Reference
-
-The deployment server exposes these REST endpoints:
-
-| Method | Endpoint | Description |
+| Feature | Implementation | Benefit |
 |---|---|---|
-| `GET` | `/api/network-status` | MST Testnet sync status + block number |
-| `POST` | `/api/swarm/run` | Execute a full swarm prediction |
-| `GET` | `/api/platform/swarms` | List all swarms from DB |
-| `GET` | `/api/platform/agents` | List all registered agents |
-| `GET` | `/api/platform/data-sources` | List all oracle data sources |
-| `POST` | `/api/swarm/:id/resolve` | Submit real-world outcome for settlement |
-
----
-
-## 🧪 Test Suite
-
-```bash
-# Run all milestone tests
-npm test
-
-# Individual milestones
-npx mocha test/milestone4/milestone4-integration.test.js
-npx mocha test/milestone5/milestone5-commitments.test.js
-npx mocha test/milestone6/milestone6-reveal.test.js
-npx mocha test/milestone7/milestone7-challenge.test.js
-npx mocha test/milestone8/milestone8-settlement.test.js
-npx mocha test/milestone9/milestone9-settlement-gate.test.js
-```
-
----
-
-## ⚙️ Smart Contract — SwarmMindCore.sol
-
-### Key Functions
-
-```solidity
-// Register an AI agent on-chain
-function registerAgent(bytes32 agentId, string memory metadataURI) external
-
-// Create a new prediction swarm
-function createSwarm(bytes32 swarmId, string memory question) external
-
-// Commit a hashed prediction (Stage 04)
-function commitPrediction(bytes32 swarmId, bytes32 commitHash) external
-
-// Reveal prediction + nonce (Stage 06)
-function revealPrediction(bytes32 swarmId, bool prediction, uint256 nonce) external
-
-// Settle outcome via resolver (Stage 09)
-function settleOutcome(bytes32 swarmId) external
-```
-
----
-
-## 🔐 Commit-Reveal Scheme
-
-```
-Commit Phase:
-  commitHash = keccak256(abi.encodePacked(prediction, nonce, agentId))
-  → Submitted on-chain — no one can see the prediction
-
-Reveal Phase:
-  prediction + nonce submitted → contract verifies hash matches
-  → Prevents agents from changing prediction after seeing others
-```
-
----
-
-## 💡 Pros & Cons
-
-### ✅ Pros
-- **Tamper-proof** — commit-reveal prevents last-minute manipulation
-- **Stake-aligned** — agents lose bonds for wrong predictions
-- **Decentralized** — no single point of trust or failure
-- **Transparent** — every action on MST Testnet explorer
-- **Extensible** — plug in any oracle, any domain resolver
-- **Gamified accountability** — reputation system creates long-term incentives
-
-### ⚠️ Cons / Limitations
-- **MST Testnet only** — not yet on mainnet
-- **Centralized outcome input** — `MVPControlledResolver` accepts manual outcome entry (MVP design)
-- **No Sybil resistance** — agent registration is permissionless (by design for MVP)
-- **Gas costs** — commit + reveal + settle = 3 on-chain txs per agent per swarm
-- **Oracle latency** — real-world data feeds are simulated in current data layer
-
----
-
-## 🏆 Swarm #1 — Live Case Study
-
-**Question:** *"Will Chennai receive more than 50mm of rainfall in the next 24 hours?"*
-
-**Agents:** WEATHER_ALPHA, WEATHER_BETA, WEATHER_GAMMA  
-**Bonds:** `0.0010 MSTC` each + `0.0050 MSTC` bounty pool  
-**Challenge:** WEATHER_GAMMA challenged WEATHER_ALPHA on boundary layer physics methodology → **Target hypothesis upheld**
-
-**Results:**
-| Agent | Prediction | Confidence |
-|---|---|---|
-| WEATHER_ALPHA | YES | 60% |
-| WEATHER_BETA | YES | 58% |
-| WEATHER_GAMMA | YES | 73% |
-
-**Consensus:** YES (63.7% weighted confidence) — `OUTCOME_PENDING` / `SETTLEMENT LOCKED`
+| **Front-Running Immunity** | Keccak256 Commit-Reveal Scheme | Agents cannot observe peer forecasts before committing |
+| **Economic Skin-in-the-Game** | Mandatory Bond Staking ($0.0010\text{ MSTC}$) | Disincentivizes low-quality or hallucinated outputs |
+| **Decentralized Verification** | EVM Smart Contracts on MST Testnet | Audit trail is immutable and publicly inspectable |
+| **Zero-Collusion Isolation** | Independent Agent Reasoning Modules | Preserves ensemble diversity across scientific domains |
+| **MVP Scope** | Controlled Resolver (`MVPControlledResolver`) | Provides safe, deterministic test verification before decentralized oracle networks |
 
 ---
 
 ## 📄 License
 
-MIT © 2026 SwarmMind
-
----
-
-<div align="center">
-  <b>Built on MST Testnet · Powered by ethers.js · Zero framework frontend</b>
-</div>
+This project is licensed under the **MIT License** — see the [LICENSE](LICENSE) file for details.
